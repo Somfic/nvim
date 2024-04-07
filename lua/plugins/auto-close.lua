@@ -1,4 +1,9 @@
-return {
-	'altermo/ultimate-autopair.nvim',
+return { {
+  'windwp/nvim-autopairs',
+  event = "InsertEnter",
+  config = true
+},
+  {
+    "windwp/nvim-ts-autotag"
+  }
 }
-
