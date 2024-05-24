@@ -1,12 +1,12 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   name = "neo tree",
-  dependencies = { 
+  dependencies = {
 	'nvim-lua/plenary.nvim',
 	'nvim-tree/nvim-web-devicons',
 	'MunifTanjim/nui.nvim'
   },
-  config = function ()
-	vim.keymap.set('n', '<C-p>', ':Neotree filesystem reveal right<CR>')
+    config = function()
+	  vim.keymap.set('n', 'fs', ':Neotree filesystem toggle<CR>')
   end
 }
