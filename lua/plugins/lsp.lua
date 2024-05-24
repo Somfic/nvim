@@ -18,9 +18,9 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
-      { 
+      {
         "williamboman/mason-lspconfig.nvim",
-        opt = { automatic_installation = true, } 
+        opt = { automatic_installation = true, }
       }
     },
     config = function()
