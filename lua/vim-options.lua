@@ -9,6 +9,7 @@ vim.cmd("set smartcase")
 vim.cmd("set ignorecase")
 vim.cmd("set nowrap")
 vim.cmd("set number")
+vim.cmd("language en_US")
 
 -- show diagonstics in insert mode
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
