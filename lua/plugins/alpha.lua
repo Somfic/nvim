@@ -10,13 +10,6 @@ return {
 
     math.randomseed(os.time())
 
-    local function footer()
-      local datetime = os.date(" %d-%m-%Y   %H:%M:%S")
-      local version = vim.version()
-      local nvim_version_info = "   v" .. version.major .. "." .. version.minor .. "." .. version.patch
-
-      return datetime .. "   " .. 0 .. " plugins" .. nvim_version_info
-    end
 
     local function pick_color()
       local colors = { "String", "Identifier", "Keyword", "Number" }
@@ -42,16 +35,14 @@ return {
       hl = pick_color(),
     }
 
-    dashboard.section.buttons.val = {
-      dashboard.button("<Leader>ff", "  File Explorer"),
-      dashboard.button("<Leader>fo", "  Find File"),
-      dashboard.button("<Leader>fw", "  Find Word"),
-      dashboard.button("<Leader>ps", "  Update plugins"),
-      dashboard.button("q", "  Quit", ":qa<cr>")
+    dashboard.section.top_buttons.val = {
+      -- run telescope.extensions.zoxide.list
+      dashboard.button("cd", "find directory", ":Telescope zoxide list<CR>"),
     }
 
-    dashboard.section.footer.val = footer()
-    dashboard.section.footer.opts.hl = "Constant"
+    dashboard.section.bottom_buttons.val = {
+      dashboard.button("q", " quit", ":qa<CR>"),
+    }
 
     alpha.setup(dashboard.opts)
   end,
