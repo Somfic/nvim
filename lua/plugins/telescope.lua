@@ -54,5 +54,6 @@ return
 
         vim.keymap.set('n', '<leader>gb', builtin.git_branches, { desc = 'branches' })
         vim.keymap.set('n', '<leader>gl', builtin.git_commits, { desc = 'logs' })
+        vim.keymap.set('n', '<leader>gs', builtin.git_status, { desc = 'status' })
     end,
 }
