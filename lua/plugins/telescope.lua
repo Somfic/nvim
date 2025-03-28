@@ -39,20 +39,20 @@ return
                 },
             },
         }
-
-        -- Enable Telescope extensions if they are installed
         pcall(telescope.load_extension, 'fzf')
         pcall(telescope.load_extension, 'ui-select')
         pcall(telescope.load_extension, 'zoxide')
 
-        -- See `:help telescope.builtin`
         local builtin = require 'telescope.builtin'
-        vim.keymap.set('n', '<leader>sd', telescope.extensions.zoxide.list, { desc = 'directories' })
-        vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'files' })
-        vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = 'recent' })
-        vim.keymap.set('n', '<leader>sc', builtin.live_grep, { desc = 'code' })
+        vim.keymap.set('n', '<leader>fd', telescope.extensions.zoxide.list, { desc = 'directories' })
+
+        vim.keymap.set('n', '<leader>ff', builtin.git_files, { desc = 'files' })
+        vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'recent files' })
+
+        vim.keymap.set('n', '<leader>fc', builtin.current_buffer_fuzzy_find, { desc = 'code' })
+        vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'all code' })
 
         vim.keymap.set('n', '<leader>gb', builtin.git_branches, { desc = 'branches' })
-        vim.keymap.set('n', '<leader>gl', builtin.git_commits, { desc = 'logs' })
+        vim.keymap.set('n', '<leader>gc', builtin.git_commits, { desc = 'commits' })
     end,
 }

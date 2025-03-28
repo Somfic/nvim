@@ -47,6 +47,7 @@ return {
     config = function(_, opts)
         local wk = require("which-key")
         wk.setup(opts)
-        wk.add({ "<leader>s", group = "Search" })
+        wk.add({ "<leader>f", group = "find" })
+        wk.add({ "<leader>g", group = "git" })
     end,
 }
