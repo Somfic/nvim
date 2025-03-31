@@ -179,13 +179,30 @@ return {
                 },
                 biome = {},
                 lemminx = {},
-                java_language_server = {},
                 kotlin_language_server = {},
                 markdown_oxide = {},
+                jdtls = {
+                    cmd = { "jdtls" },
+                    root_dir = require("lspconfig.util").root_pattern(".git", "mvnw", "gradlew"),
+                    settings = {
+                        java = {
+                            configuration = {
+                                activeProfiles = { "default", "dev", "personal" },
+                            },
+                            -- specifying the main entry for your spring boot app
+                            project = {
+                                mainClass = "cofano.bos.SpringBootBosApplication",
+                            },
+                        },
+                    },
+                    init_options = {
+                        bundles = {},
+                    },
+                },
             }
             local ensure_installed = vim.tbl_keys(servers or {})
             vim.list_extend(ensure_installed, {
-                'stylua',
+                'stylua'
             })
             require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
