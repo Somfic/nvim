@@ -17,6 +17,8 @@ vim.g.have_nerd_font = true
 
 -- language
 vim.cmd("language en_GB")
+vim.opt.autowrite = true;
+vim.opt.autowriteall = true;
 
 -- show diagonstics in insert mode
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(

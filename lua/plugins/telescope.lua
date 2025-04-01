@@ -13,7 +13,7 @@ return
         },
         { 'nvim-telescope/telescope-ui-select.nvim' },
         { 'jvgrootveld/telescope-zoxide' },
-        { 'nvim-tree/nvim-web-devicons' },
+        { 'nvim-tree/nvim-web-devicons' }
     },
     config = function()
         local telescope = require 'telescope'
@@ -42,15 +42,15 @@ return
         pcall(telescope.load_extension, 'fzf')
         pcall(telescope.load_extension, 'ui-select')
         pcall(telescope.load_extension, 'zoxide')
+        pcall(telescope.load_extension, 'projects')
 
         local builtin = require 'telescope.builtin'
         vim.keymap.set('n', '<leader>fd', telescope.extensions.zoxide.list, { desc = 'directories' })
-
         vim.keymap.set('n', '<leader>ff', builtin.git_files, { desc = 'files' })
         vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'recent files' })
 
-        vim.keymap.set('n', '<leader>fc', builtin.current_buffer_fuzzy_find, { desc = 'code' })
-        vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'all code' })
+        vim.keymap.set('n', '<leader>fh', builtin.current_buffer_fuzzy_find, { desc = 'code in file' })
+        vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'code globally' })
 
         vim.keymap.set('n', '<leader>gb', builtin.git_branches, { desc = 'branches' })
         vim.keymap.set('n', '<leader>gc', builtin.git_commits, { desc = 'commits' })

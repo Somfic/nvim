@@ -37,7 +37,7 @@ return {
 
     dashboard.section.top_buttons.val = {
       -- run telescope.extensions.zoxide.list
-      dashboard.button("cd", "find directory", ":Telescope zoxide list<CR>"),
+      dashboard.button("fd", "find directory", ":Telescope zoxide list<CR>"),
     }
 
     dashboard.section.bottom_buttons.val = {
