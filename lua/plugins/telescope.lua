@@ -13,7 +13,8 @@ return
         },
         { 'nvim-telescope/telescope-ui-select.nvim' },
         { 'jvgrootveld/telescope-zoxide' },
-        { 'nvim-tree/nvim-web-devicons' }
+        { 'debugloop/telescope-undo.nvim' },
+        { 'nvim-tree/nvim-web-devicons' },
     },
     config = function()
         local telescope = require 'telescope'
@@ -37,14 +38,17 @@ return
                         },
                     },
                 },
+                ['undo'] = {}
             },
         }
         pcall(telescope.load_extension, 'fzf')
         pcall(telescope.load_extension, 'ui-select')
         pcall(telescope.load_extension, 'zoxide')
         pcall(telescope.load_extension, 'projects')
+        pcall(telescope.load_extension, 'undo')
 
         local builtin = require 'telescope.builtin'
+        vim.keymap.set('n', '<leader>fu', telescope.extensions.undo.undo, { desc = 'undos' })
         vim.keymap.set('n', '<leader>fd', telescope.extensions.zoxide.list, { desc = 'directories' })
         vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'files' })
         vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'recent files' })
