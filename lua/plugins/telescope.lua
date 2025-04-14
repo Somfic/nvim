@@ -46,7 +46,7 @@ return
 
         local builtin = require 'telescope.builtin'
         vim.keymap.set('n', '<leader>fd', telescope.extensions.zoxide.list, { desc = 'directories' })
-        vim.keymap.set('n', '<leader>ff', builtin.git_files, { desc = 'files' })
+        vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'files' })
         vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'recent files' })
 
         vim.keymap.set('n', '<leader>fh', builtin.current_buffer_fuzzy_find, { desc = 'code in file' })
