@@ -49,5 +49,6 @@ return {
         wk.setup(opts)
         wk.add({ "<leader>f", group = "find" })
         wk.add({ "<leader>g", group = "git" })
+        wk.add({ "<leader>v", group = "view" })
     end,
 }
