@@ -14,10 +14,26 @@ return {
 				keymaps = {
 					["-"] = false, -- Disable default keymap for '-'
 				},
+				float = {
+					padding = 0,
+					max_width = 40,
+					max_height = 20,
+					win_options = {
+						winblend = 0,
+						relativenumber = false,
+						number = false,
+						signcolumn = "no",
+						cursorline = false,
+						cursorcolumn = false,
+						foldcolumn = "0",
+						list = false,
+					},
+				}
 			})
 
+			vim.keymap.set("n", "<leader>vf", oil.toggle_float, { desc = "files" })
 			vim.keymap.set("n", "<BS>", oil.open, { desc = "Go to parent directory" })
-			vim.keymap.set("n", "-", oil.toggle_float	, { desc = "Close floating window" })
+			vim.keymap.set("n", "-", oil.toggle_float, { desc = "Close floating window" })
 		end,
 	},
 }
