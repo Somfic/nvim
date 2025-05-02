@@ -12,7 +12,7 @@ return {
 					"icon",
 				},
 				keymaps = {
-					["-"] = false, -- Disable default keymap for '-'
+					["-"] = false,
 				},
 				float = {
 					padding = 0,
@@ -28,11 +28,12 @@ return {
 						foldcolumn = "0",
 						list = false,
 					},
-				}
+				},
 			})
 
 			vim.keymap.set("n", "<leader>vf", oil.toggle_float, { desc = "files" })
 			vim.keymap.set("n", "<BS>", oil.open, { desc = "Go to parent directory" })
+			vim.keymap.set("n", "<ESC>", oil.close, { desc = "Close" })
 			vim.keymap.set("n", "-", oil.toggle_float, { desc = "Close floating window" })
 		end,
 	},
