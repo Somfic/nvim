@@ -84,7 +84,7 @@
       decoration = {
         rounding = 15;
         blur = {
-          size = 8;
+          size = 12;
           passes = 3;
           brightness = 0.45;
           vibrancy = 1.0;
@@ -99,8 +99,7 @@
       };
       windowrulev2 = [
         "float,move 10 10,title:^(initialkitty)$"
-        "opacity 0.85 override 0.85 override, floating:1"
-        "opacity 0.85 override 0.65 override, floating:0"
+        "opacity 0.85 override 0.85 override, class:.*"
       ];
       # windowrule = [ "opacity 0.5,class:vesktop" ];
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
