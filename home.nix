@@ -1,10 +1,6 @@
 { config, pkgs, inputs, lib, ... }:
 
-let
-  findFFProfile = ''
-    ls "$HOME/.mozilla/firefox" | grep '\.default-release$' | head -n1
-  '';
-in {
+{
   programs = {
     home-manager = { enable = true; };
     nushell = {
@@ -20,8 +16,10 @@ in {
         "reload" = "nh os switch ~/dot";
         "update" = "sudo nix flake update --flake ~/dot";
         "clean" = "nh clean all --keep-since 7d";
-        "dev" = "nix-shell --command 'nu'";
+        "dev rust" = "nix develop ~/dot#rust --command 'nu'";
         "clock" = "termdown -zsf roman";
+        "rdev" =
+          "nix develop ~/dot # rust -c code .; nix develop ~/dot#rust -c nu";
       };
       settings = { show_banner = false; };
     };
@@ -58,10 +56,7 @@ in {
     rofi = { enable = true; };
     direnv = { enable = true; };
     lazydocker = { enable = true; };
-    firefox = {
-      enable = true;
-
-    };
+    firefox = { enable = true; };
   };
 
   wayland.windowManager.hyprland = {
@@ -98,11 +93,16 @@ in {
           ignore_opacity = true;
         };
         shadow = {
-          enabled = false;
+          enabled = true;
           range = 8;
         };
       };
-      windowrulev2 = [ "float,move 10 10,title:^(initialkitty)$" ];
+      windowrulev2 = [
+        "float,move 10 10,title:^(initialkitty)$"
+        "opacity 0.85 override 0.85 override, floating:1"
+        "opacity 0.85 override 0.65 override, floating:0"
+      ];
+      # windowrule = [ "opacity 0.5,class:vesktop" ];
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
         "$mod, R, exec, rofi -show drun -show-icons"
@@ -110,7 +110,7 @@ in {
         "$mod, F, exec, firefox"
         "$mod, C, exec, code"
         "$mod, S, exec, spotify"
-        "$mod, D, exec, discord"
+        "$mod, D, exec, vesktop"
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"
         "$mod, M, exit"
@@ -148,33 +148,25 @@ in {
     };
   };
 
+  home.file.".envrc" = {
+    text = ''
+      # auto-detect project type and pick template from your dot flake
+      if [ -f Cargo.toml ]; then
+        nix develop ~/dot#rust --command nu
+      elif [ -f package.json ]; then
+        nix develop ~/dot#node --command nu
+      fi
+    '';
+  };
+
   home.username = "lucas";
   home.homeDirectory = "/home/lucas";
   home.stateVersion = "25.05";
 
-  home.activation.firefoxBlurCss = lib.mkAfter ''
-        profile=$( ${findFFProfile} )
-        fullpath="$HOME/.mozilla/firefox/$profile/chrome"
-        mkdir -p "$fullpath"
-        cat > "$fullpath/userContent.css" <<'EOF'
-    @-moz-document url-prefix("http://"), url-prefix("https://") {
-      /* make the page background fully transparent */
-      html {
-        background: transparent !important;
-      }
-      /* frosted-glass effect */
-      body {
-        background-color: rgba(255,255,255,0.3) !important;
-        backdrop-filter: blur(15px) !important;
-      }
-    }
-    EOF
-  '';
-
   home.packages = with pkgs; [
     ffmpeg-full
-    discord
-    betterdiscordctl
+    vesktop # discord client
+    stremio
     google-chrome
     jetbrains.idea-ultimate
     obs-studio
@@ -182,6 +174,7 @@ in {
     termdown # terminal clock
     just # running commands
     spotify
+    prismlauncher
   ];
 
   nixpkgs.config.allowUnfree = true;

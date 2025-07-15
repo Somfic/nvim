@@ -6,12 +6,18 @@
 
   # system packages
   environment.systemPackages = with pkgs; [
-    neovim
     wget
     curl
     nixfmt
     nix-output-monitor
+    os-prober
+    git
   ];
+
+  environment.sessionVariables = {
+    MOZ_ENABLE_WAYLAND = "1";
+    NIXOS_OZONE_WL = "1";
+  };
 
   # user accounts
   users.users.lucas = {
@@ -34,8 +40,14 @@
   };
 
   # bootloader
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.version = 2;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.useOSProber = true;
+  boot.loader.grub.efiSupport = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot";
 
   # docker
   virtualisation.docker.enable = true;
@@ -44,6 +56,8 @@
   # hostname  
   networking.hostName = "nixos";
 
+  # xdg.portal.enable = true;
+  # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
   programs = {
     hyprland = {
       enable = true;
@@ -116,6 +130,39 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    extraLv2Packages = [ pkgs.rnnoise-plugin ];
+    configPackages = [
+      (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/20-rnnoise.conf" ''
+        context.modules = [
+        {   name = libpipewire-module-filter-chain
+            args = {
+                node.description = "Noise Canceling source"
+                media.name = "Noise Canceling source"
+                filter.graph = {
+                    nodes = [
+                        {
+                            type = lv2
+                            name = rnnoise
+                            plugin = "https://github.com/werman/noise-suppression-for-voice#stereo"
+                            label = noise_suppressor_stereo
+                            control = {
+                            }
+                        }
+                    ]
+                }
+                capture.props = {
+                    node.name =  "capture.rnnoise_source"
+                    node.passive = true
+                }
+                playback.props = {
+                    node.name =  "rnnoise_source"
+                    media.class = Audio/Source
+                }
+            }
+        }
+        ]
+      '')
+    ];
   };
 
   # general nixos settings
@@ -148,7 +195,7 @@
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
-      size = 24;
+      size = 18;
     };
     fonts = {
       monospace = {
