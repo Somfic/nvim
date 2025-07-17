@@ -60,6 +60,18 @@
     };
     lazydocker = { enable = true; };
     firefox = { enable = true; };
+    spicetify =
+      let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};
+      in {
+        enable = true;
+        theme = lib.mkForce spicePkgs.themes.catppuccin;
+        colorScheme = lib.mkForce "mocha";
+        enabledExtensions = with spicePkgs.extensions; [
+          adblockify
+          hidePodcasts
+          shuffle
+        ];
+      };
   };
 
   wayland.windowManager.hyprland = {
@@ -175,7 +187,6 @@
     mprocs # running multiple processes
     termdown # terminal clock
     just # running commands
-    spotify
     prismlauncher
   ];
 

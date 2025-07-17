@@ -32,10 +32,13 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
     users.lucas = import ./home.nix;
-    sharedModules = [{
-      stylix.autoEnable = true;
-      stylix.targets.vscode.enable = false;
-    }];
+    sharedModules = [
+      inputs.spicetify-nix.homeManagerModules.spicetify
+      {
+        stylix.autoEnable = true;
+        stylix.targets.vscode.enable = false;
+      }
+    ];
   };
 
   # bootloader
