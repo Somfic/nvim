@@ -6,10 +6,10 @@
     image = ./../../wallpapers/neon1.jpg;
     polarity = "dark";
     opacity = {
-      applications = 0.9;
-      desktop = 0.5;
-      terminal = 0.9;
-      popups = 0.9;
+      applications = 0.0;
+      desktop = 0.0;
+      terminal = 0.0;
+      popups = 0.0;
     };
     autoEnable = true;
     targets.spicetify.enable = false;
