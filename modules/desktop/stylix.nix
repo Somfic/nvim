@@ -3,7 +3,8 @@
 {
   stylix = {
     enable = true;
-    image = ./../../wallpapers/neon1.jpg;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    image = ./../../wallpapers/neon3.jpg;
     polarity = "dark";
     opacity = {
       applications = 0.0;

@@ -6,7 +6,7 @@
     vesktop # discord client
     stremio
     google-chrome
-    jetbrains.idea-ultimate
+    # jetbrains.idea-ultimate
     obs-studio
     mprocs # running multiple processes
     termdown # terminal clock
