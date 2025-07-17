@@ -50,11 +50,14 @@
     vscode = { enable = true; };
     kitty = {
       enable = true;
-      settings = { window_padding_width = 10; };
+      settings = { window_padding_width = 14; };
     };
     waybar = { enable = true; };
     rofi = { enable = true; };
-    direnv = { enable = true; };
+    direnv = {
+      enable = true;
+      silent = true;
+    };
     lazydocker = { enable = true; };
     firefox = { enable = true; };
   };
@@ -84,7 +87,7 @@
       decoration = {
         rounding = 15;
         blur = {
-          size = 12;
+          size = 24;
           passes = 3;
           brightness = 0.45;
           vibrancy = 1.0;

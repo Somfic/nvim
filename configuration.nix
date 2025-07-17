@@ -34,7 +34,6 @@
     users.lucas = import ./home.nix;
     sharedModules = [{
       stylix.autoEnable = true;
-      stylix.targets.rofi.enable = true;
       stylix.targets.vscode.enable = false;
     }];
   };
