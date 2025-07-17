@@ -47,7 +47,6 @@
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
         "$mod, R, exec, rofi -show drun -show-icons"
-        "$mod, V, togglefloating"
         "$mod, F, exec, firefox"
         "$mod, C, exec, code"
         "$mod, S, exec, spotify"
@@ -55,6 +54,10 @@
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"
         "$mod, M, exit"
+
+        # floating and fullscreen
+        "$mod, V, togglefloating"
+        "$mod SHIFT, V, fullscreen"
 
         # moving focus
         "$mod, left, movefocus, l"
@@ -72,7 +75,9 @@
         "$mod, mouse:274, killactive"
         "$mod, Q, killactive"
 
-        ", Print, exec, grimblast copy area"
+        # Wallpaper controls
+        "$mod, W, exec, bash ~/dot/home/wallpaper-manager.sh next"
+        "$mod SHIFT, W, exec, bash ~/dot/home/wallpaper-manager.sh random"
       ] ++ (
         # workspaces
         # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
@@ -85,6 +90,7 @@
 
       exec-once = [
         "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu' & waybar"
+        "bash ~/dot/home/wallpaper-manager.sh start"
       ];
     };
   };

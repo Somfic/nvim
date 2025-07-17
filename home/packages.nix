@@ -12,5 +12,6 @@
     termdown # terminal clock
     just # running commands
     prismlauncher
+    swww # wallpaper daemon for wayland
   ];
 }

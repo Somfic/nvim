@@ -4,7 +4,7 @@
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-    image = ./../../wallpapers/neon3.jpg;
+    # image = ./../../wallpapers/neon3.jpg;  # Disabled for slideshow
     polarity = "dark";
     opacity = {
       applications = 0.0;
