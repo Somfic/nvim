@@ -32,10 +32,12 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
     users.lucas = import ./home.nix;
+    backupFileExtension = "backup";
     sharedModules = [
       inputs.spicetify-nix.homeManagerModules.spicetify
-      {
+      { 
         stylix.autoEnable = true;
+        stylix.targets.spicetify.enable = false;
         stylix.targets.vscode.enable = false;
       }
     ];
@@ -72,20 +74,12 @@
       gamescopeSession.enable = true;
     };
     gamemode = { enable = true; };
-    # spicetify =
-    #   let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-    #   in {
-    #     enable = true;
-
-    #     enabledExtensions = with spicePkgs.extensions;
-    #       [
-    #         shuffle # shuffle+ (special characters are sanitized out of extension names)
-    #       ];
-    #     enabledCustomApps = with spicePkgs.apps; [ newReleases ncsVisualizer ];
-    #     enabledSnippets = with spicePkgs.snippets; [ rotatingCoverart pointer ];
-
-    #     # theme = spicePkgs.themes.hazy;
+    # spicetify = {
+    #   enable = true;
+    #   theme = {
+    #     name = "hazy";
     #   };
+    # };
   };
 
   # networking 
@@ -188,12 +182,13 @@
     image = ./wallpapers/neon1.jpg;
     polarity = "dark";
     opacity = {
-      applications = 0.0;
+      applications = 0.9;
       desktop = 0.5;
-      terminal = 0.0;
-      popups = 0.0;
+      terminal = 0.9;
+      popups = 0.9;
     };
-    targets = { spicetify.enable = false; };
+    autoEnable = true;
+    targets.spicetify.enable = false;
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
