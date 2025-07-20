@@ -3,6 +3,7 @@
 {
   programs.waybar = {
     enable = true;
+    systemd.enable = true;
     settings = {
       mainBar = {
         layer = "top";
@@ -15,7 +16,7 @@
 
         modules-left = [ "hyprland/workspaces" "hyprland/window" ];
         modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "cpu" "memory" "battery" "tray" ];
+        modules-right = [ "mpris" "pulseaudio" "network" "cpu" "memory" "battery" "tray" ];
 
         "hyprland/workspaces" = {
           disable-scroll = true;
@@ -36,11 +37,11 @@
             urgent = "󰀧";
           };
           persistent-workspaces = {
-            "1" = [];
-            "2" = [];
-            "3" = [];
-            "4" = [];
-            "5" = [];
+            "1" = [ ];
+            "2" = [ ];
+            "3" = [ ];
+            "4" = [ ];
+            "5" = [ ];
           };
         };
 
@@ -50,9 +51,40 @@
           separate-outputs = true;
         };
 
+        mpris = {
+          format = "{player_icon} {dynamic}";
+          format-paused = "{status_icon} {dynamic}";
+          dynamic-order = [ "title" "artist" ];
+          dynamic-importance-order = [ "title" "artist" "album" ];
+          dynamic-len = 40;
+          player-icons = {
+            default = "🎵";
+            mpv = "🎵";
+            spotify = "";
+            firefox = "";
+            chrome = "";
+            vlc = "🎵";
+          };
+          status-icons = {
+            playing = "";
+            paused = "";
+            stopped = "";
+          };
+          ignored-players = [ "firefox" ];
+          max-length = 50;
+          on-click = "playerctl play-pause";
+          on-click-right = "playerctl next";
+          on-click-middle = "playerctl previous";
+          on-scroll-up = "playerctl volume 0.1+";
+          on-scroll-down = "playerctl volume 0.1-";
+          tooltip-format = "{player}: {dynamic}";
+        };
+
         clock = {
           timezone = "Europe/Brussels";
-          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+          tooltip-format = ''
+            <big>{:%Y %B}</big>
+            <tt><small>{calendar}</small></tt>'';
           format = "{:%H:%M}";
           format-alt = "{:%Y-%m-%d}";
         };
@@ -177,6 +209,33 @@
         color: #cdd6f4;
         font-weight: bold;
         margin-left: 10px;
+      }
+
+      /* Media controls */
+      #mpris {
+        background: rgba(30, 30, 46, 0.8);
+        color: #cdd6f4;
+        font-weight: bold;
+        margin: 0 10px;
+        padding: 5px 15px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+      }
+
+      #mpris:hover {
+        background: rgba(137, 180, 250, 0.2);
+      }
+
+      #mpris.playing {
+        color: #a6e3a1;
+      }
+
+      #mpris.paused {
+        color: #f9e2af;
+      }
+
+      #mpris.stopped {
+        color: #6c7086;
       }
 
       /* Clock */

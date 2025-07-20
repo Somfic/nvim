@@ -16,5 +16,6 @@
     waybar # status bar for wayland
     pavucontrol # audio control GUI for pulseaudio
     font-awesome # icons for waybar
+    playerctl # media player control
   ];
 }

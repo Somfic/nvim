@@ -13,6 +13,7 @@
     ./modules/system/users.nix
     ./modules/system/audio.nix
     ./modules/system/packages.nix
+    ./modules/system/bluetooth.nix
 
     # Desktop modules
     ./modules/desktop/hyprland.nix

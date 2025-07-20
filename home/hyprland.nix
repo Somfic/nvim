@@ -78,6 +78,9 @@
         # Wallpaper controls
         "$mod, W, exec, bash ~/dot/home/wallpaper-manager.sh next"
         "$mod SHIFT, W, exec, bash ~/dot/home/wallpaper-manager.sh random"
+
+        # Waybar restart (kill all instances and restart)
+        "$mod SHIFT, B, exec, pkill waybar; waybar"
       ] ++ (
         # workspaces
         # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
@@ -90,7 +93,6 @@
 
       exec-once = [
         "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
-        "waybar"
         "bash ~/dot/home/wallpaper-manager.sh start"
       ];
     };
