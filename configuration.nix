@@ -22,6 +22,7 @@
     # Program modules
     ./modules/programs/gaming.nix
     ./modules/programs/virtualization.nix
+    ./modules/programs/obsidian.nix
   ];
 
   # Home Manager configuration
