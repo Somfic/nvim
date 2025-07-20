@@ -89,7 +89,8 @@
           ]) 9));
 
       exec-once = [
-        "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu' & waybar"
+        "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
+        "waybar"
         "bash ~/dot/home/wallpaper-manager.sh start"
       ];
     };

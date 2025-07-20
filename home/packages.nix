@@ -4,14 +4,17 @@
   home.packages = with pkgs; [
     ffmpeg-full
     vesktop # discord client
-    stremio
+    stremio # media streaming app
     google-chrome
     # jetbrains.idea-ultimate
     obs-studio
     mprocs # running multiple processes
     termdown # terminal clock
     just # running commands
-    prismlauncher
+    prismlauncher # minecraft
     swww # wallpaper daemon for wayland
+    waybar # status bar for wayland
+    pavucontrol # audio control GUI for pulseaudio
+    font-awesome # icons for waybar
   ];
 }
