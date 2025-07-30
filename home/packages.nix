@@ -11,11 +11,12 @@
     mprocs # running multiple processes
     termdown # terminal clock
     just # running commands
-    prismlauncher # minecraft
+    prismlauncher # minecraft 
     swww # wallpaper daemon for wayland
     waybar # status bar for wayland
     pavucontrol # audio control GUI for pulseaudio
     font-awesome # icons for waybar
     playerctl # media player control
+    claude-code # ai
   ];
 }
