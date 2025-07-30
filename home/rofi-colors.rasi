@@ -1,0 +1,16 @@
+/**
+ * ROFI Color theme
+ * Catppuccin Mocha
+ * User: Somfic
+ * Copyright: 2024
+ */
+
+* {
+    background:     #1e1e2eff;
+    background-alt: #181825ff;
+    foreground:     #cdd6f4ff;
+    selected:       #89b4faff;
+    active:         #a6e3a1ff;
+    urgent:         #f38ba8ff;
+    alternate:      #313244ff;
+}

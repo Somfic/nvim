@@ -18,5 +18,6 @@
     font-awesome # icons for waybar
     playerctl # media player control
     claude-code # ai
+    papirus-icon-theme # icons for rofi
   ];
 }
