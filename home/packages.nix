@@ -19,5 +19,6 @@
     playerctl # media player control
     claude-code # ai
     papirus-icon-theme # icons for rofi
+    godot # game engine
   ];
 }

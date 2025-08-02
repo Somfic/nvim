@@ -6,10 +6,10 @@
 
 * {
     /* Import color scheme */
-    bg0:     #2e3440;
-    bg1:     #3b4252;
-    bg2:     #434c5e;
-    bg3:     #4c566a;
+    bg0:     #2e344080;  /* Semi-transparent background */
+    bg1:     #3b425270;  /* Semi-transparent surface */
+    bg2:     #434c5e90;  /* Semi-transparent secondary */
+    bg3:     #4c566aa0;  /* Semi-transparent tertiary */
     fg0:     #eceff4;
     fg1:     #e5e9f0;
     fg2:     #d8dee9;
@@ -40,6 +40,7 @@ window {
     height: 100%;
     x-offset: 0;
     y-offset: 0;
+    transparency: "real";
 }
 
 mainbox {
