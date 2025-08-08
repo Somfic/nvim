@@ -43,7 +43,7 @@
     nh = {
       enable = true;
       clean.enable = true;
-      flake = "/home/lucas/dot/flake.nix";
+      flake = "/home/lucas/dot";
     };
 
     git = {

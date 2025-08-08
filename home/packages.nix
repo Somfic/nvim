@@ -1,10 +1,14 @@
 { config, pkgs, ... }:
 
 {
+  programs.ssh = { enable = true; };
+  programs.java = { enable = true; };
+
   home.packages = with pkgs; [
     ffmpeg-full
     vesktop # discord client
     stremio # media streaming app
+    vlc
     google-chrome
     # jetbrains.idea-ultimate
     obs-studio
@@ -20,5 +24,8 @@
     claude-code # ai
     papirus-icon-theme # icons for rofi
     godot # game engine
+    sshfs
+    sshpass
+    filezilla
   ];
 }
