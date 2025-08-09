@@ -42,5 +42,7 @@
     nixd # nix language server
     jdt-language-server # java
     omnisharp-roslyn # .NET/C#
+    just-lsp # justfile language server
+    dockerfile-language-server-nodejs # dockerfile language server
   ];
 }
