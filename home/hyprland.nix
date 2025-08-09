@@ -14,7 +14,7 @@
         hide_on_key_press = false;
       };
       monitor = [
-        ", preferred, auto, auto"
+        "DP-1, 3440x1440@144, 0x0, 1"
         "DP-2, preferred, auto-right, 1"
         "DP-3, preferred, auto-left, 1"
       ];
