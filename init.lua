@@ -15,13 +15,15 @@ vim.opt.incsearch = true
 vim.opt.swapfile = false
 
 -- auto-write files
-vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI', 'BufLeave', 'FocusLost' }, {
+vim.api.nvim_create_autocmd('InsertLeave', {
 	callback = function()
 		if vim.bo.modified and not vim.bo.readonly and vim.fn.expand('%') ~= '' and vim.bo.buftype == '' then
+			vim.lsp.buf.format()
 			vim.cmd('silent! write')
 		end
 	end
 })
+
 vim.g.mapleader = ' '
 vim.keymap.set('n', '<leader>w', ':write<CR>')
 vim.keymap.set('n', '<leader>q', ':quit<CR>')
@@ -37,22 +39,19 @@ vim.pack.add({
 	{ src = 'https://github.com/nvim-telescope/telescope.nvim' },
 	{ src = 'https://github.com/nvim-lua/plenary.nvim' },
 	{ src = 'https://github.com/lewis6991/gitsigns.nvim' },
+	{ src = 'https://github.com/nvim-tree/nvim-web-devicons' },
+	{ src = 'https://github.com/echasnovski/mini.icons' }
 })
 
--- telescope
 require('telescope').setup()
-
--- oil
 require('oil').setup()
 
--- gitsigns
-require('gitsigns_config')
+require('keybindings')
 
--- LSP configuration
+require('git')
 require('lsp')
+require('diagnostics')
 
--- prettier diagnostics
-require('diagnostics_config')
 
 -- git status
 local git_status = require('git_status')
@@ -216,24 +215,3 @@ vim.api.nvim_create_autocmd({ 'InsertLeave', 'BufWritePost' }, {
 -- initial statusline update
 update_git_statusline()
 update_statusline()
-
--- debug function to check statusline
-function _G.debug_statusline()
-	local parts = git_status.get_parts()
-	print("Directory:", vim.inspect(parts.directory))
-	print("Branch:", vim.inspect(parts.branch))
-	print("Status:", vim.inspect(parts.status))
-	print("Current statusline:", vim.o.statusline)
-
-	-- check if highlight groups exist
-	local hl = vim.api.nvim_get_hl_by_name('StarshipBoldCyan', true)
-	print("StarshipBoldCyan highlight:", vim.inspect(hl))
-
-	-- test simple starship output
-	local handle = io.popen('starship module directory')
-	if handle then
-		local raw = handle:read('*a')
-		handle:close()
-		print("Raw starship directory:", vim.inspect(raw))
-	end
-end

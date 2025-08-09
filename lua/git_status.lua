@@ -129,7 +129,7 @@ local function get_git_branch()
 	if result and result ~= '' then
 		-- strip ANSI and clean up, remove "on " prefix
 		local clean = result:gsub('\027%[[%d;]*m', ''):gsub('on ', ''):gsub('\n', ''):gsub('^%s*', ''):gsub(
-		'%s*$', '')
+			'%s*$', '')
 		return clean ~= '' and ('%#StarshipBoldMagenta#' .. clean .. '%#Normal#') or ''
 	end
 	return ''
