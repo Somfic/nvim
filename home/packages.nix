@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   programs.ssh = { enable = true; };
@@ -27,5 +27,7 @@
     sshfs
     sshpass
     filezilla
+    ripgrep # fast grep for telescope.nvim
+    inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
   ];
 }

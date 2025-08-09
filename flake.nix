@@ -17,10 +17,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     spicetify-nix = { url = "github:Gerg-L/spicetify-nix"; };
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
-    , spicetify-nix }@inputs:
+    , spicetify-nix, neovim-nightly-overlay }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
