@@ -1,7 +1,7 @@
 vim.opt.number = false
 vim.opt.relativenumber = false
 -- show line numbers every 5 lines + git signs + diagnostic signs
-vim.opt.statuscolumn = "%s%{v:lnum % 5 == 0 ? printf('%4d ', v:lnum) : '     '}"
+vim.opt.statuscolumn = "%s%{v:lnum % 5 == 0 ? printf(' %3d ', v:lnum) : '     '}"
 vim.opt.signcolumn = 'auto:2'
 vim.opt.wrap = false
 vim.opt.tabstop = 2
@@ -14,6 +14,8 @@ vim.opt.undofile = true
 vim.opt.incsearch = true
 vim.opt.swapfile = false
 
+require('keybindings')
+
 -- auto-write files
 vim.api.nvim_create_autocmd('InsertLeave', {
 	callback = function()
@@ -22,16 +24,12 @@ vim.api.nvim_create_autocmd('InsertLeave', {
 			vim.cmd('silent! write')
 		end
 	end
+
 })
 
-vim.g.mapleader = ' '
-vim.keymap.set('n', '<leader>w', ':write<CR>')
-vim.keymap.set('n', '<leader>q', ':quit<CR>')
-vim.keymap.set('n', '<leader>cf', vim.lsp.buf.format)
-vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>')
-vim.keymap.set('n', '<leader>cd', ':Oil<CR>')
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 
+
+vim.keymap.set('n', '<leader>cd', ':Oil<CR>')
 
 vim.pack.add({
 	{ src = 'https://github.com/vague2k/vague.nvim' },
@@ -43,18 +41,15 @@ vim.pack.add({
 	{ src = 'https://github.com/echasnovski/mini.icons' }
 })
 
-require('telescope').setup()
 require('oil').setup()
 
-require('keybindings')
-
-require('git')
+require('finder')
+require('git_signs')
 require('lsp')
-require('diagnostics')
 
 
 -- git status
-local git_status = require('git_status')
+local git_status = require('statusline')
 
 -- global function to get git status for statusline
 function _G.get_git_status()
@@ -90,48 +85,6 @@ vim.cmd('colorscheme vague')
 vim.cmd(':hi statusline guibg=NONE')
 vim.opt.winborder = 'rounded'
 
--- create starship highlight groups after colorscheme is loaded
-local function setup_starship_highlights()
-	local highlights = {
-		StarshipBlack = { fg = '#44475a' },
-		StarshipRed = { fg = '#ff5555' },
-		StarshipGreen = { fg = '#50fa7b' },
-		StarshipYellow = { fg = '#f1fa8c' },
-		StarshipBlue = { fg = '#8be9fd' },
-		StarshipMagenta = { fg = '#ff79c6' },
-		StarshipCyan = { fg = '#8be9fd' },
-		StarshipWhite = { fg = '#f8f8f2' },
-		StarshipBrightBlack = { fg = '#6272a4' },
-		StarshipBrightRed = { fg = '#ff6e6e' },
-		StarshipBrightGreen = { fg = '#69ff94' },
-		StarshipBrightYellow = { fg = '#ffffa5' },
-		StarshipBrightBlue = { fg = '#d6acff' },
-		StarshipBrightMagenta = { fg = '#ff92df' },
-		StarshipBrightCyan = { fg = '#a4ffff' },
-		StarshipBrightWhite = { fg = '#ffffff' },
-		StarshipBoldRed = { fg = '#ff5555', bold = true },
-		StarshipBoldGreen = { fg = '#50fa7b', bold = true },
-		StarshipBoldYellow = { fg = '#f1fa8c', bold = true },
-		StarshipBoldBlue = { fg = '#8be9fd', bold = true },
-		StarshipBoldMagenta = { fg = '#ff79c6', bold = true },
-		StarshipBoldCyan = { fg = '#8be9fd', bold = true },
-		StarshipBoldWhite = { fg = '#f8f8f2', bold = true },
-	}
-
-	for group, opts in pairs(highlights) do
-		vim.api.nvim_set_hl(0, group, opts)
-	end
-end
-
-setup_starship_highlights()
-
--- function to manually test highlights
-function _G.test_highlights()
-	setup_starship_highlights()
-	vim.opt.statusline =
-	'%#StarshipBoldCyan#CYAN%#Normal# %#StarshipBoldMagenta#MAGENTA%#Normal# %=%{v:lua.get_lsp_combined()}'
-end
-
 -- cache for statusline parts
 local statusline_cache = {
 	git_part = '',
@@ -166,7 +119,7 @@ local function get_directory_part()
 	if filename == '' then
 		-- no file open, show working directory
 		local dir_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-		return '%#StarshipBoldCyan#' .. dir_name .. '%#Normal#'
+		return dir_name
 	else
 		-- show relative path from cwd to file
 		local cwd = vim.fn.getcwd()
@@ -176,7 +129,7 @@ local function get_directory_part()
 		-- if file is in subdirectory, show subdirectory/filename
 		local display = relative_path
 
-		return '%#StarshipBoldCyan#' .. display .. '%#Normal#'
+		return display
 	end
 end
 
@@ -193,7 +146,8 @@ local function update_statusline()
 	-- always update directory part (it's fast)
 	local directory_part = ' ' .. get_directory_part()
 
-	vim.opt.statusline = directory_part .. statusline_cache.git_part .. ' %=%{v:lua.get_lsp_combined()}'
+	vim.opt.statusline = '▎' ..
+		directory_part .. statusline_cache.git_part .. '%=' .. '%{v:lua.get_lsp_combined()}' .. ' '
 	statusline_cache.last_file = current_file
 end
 

@@ -25,7 +25,7 @@ vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
 	local client = vim.lsp.get_client_by_id(ctx.client_id)
 	local lvl = ({ 'ERROR', 'WARN', 'INFO', 'DEBUG' })[result.type]
 	local highlight = ({ 'ErrorMsg', 'WarningMsg', 'Comment', 'Comment' })[result.type]
-	vim.api.nvim_echo({{client.name .. ': ' .. result.message, highlight}}, false, {})
+	vim.api.nvim_echo({ { client.name .. ': ' .. result.message, highlight } }, false, {})
 end
 
 -- lsp attach notifications
@@ -36,7 +36,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end
 })
 
--- lsp detach notifications  
+-- lsp detach notifications
 vim.api.nvim_create_autocmd('LspDetach', {
 	callback = function(ev)
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
@@ -52,6 +52,15 @@ vim.lsp.config('lua_ls', {
 		Lua = {
 			workspace = {
 				library = vim.api.nvim_get_runtime_file('', true)
+			}
+		}
+	}
+})
+vim.lsp.config('rust_analyzer', {
+	settings = {
+		['rust-analyzer'] = {
+			check = {
+				command = 'clippy'
 			}
 		}
 	}

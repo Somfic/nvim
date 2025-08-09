@@ -118,6 +118,15 @@ end
 
 function _G.lsp_client_detached(client_name)
 	lsp_state.attached_clients[client_name] = nil
+	-- stop loading state if this was the last client
+	local has_clients = false
+	for _ in pairs(lsp_state.attached_clients) do
+		has_clients = true
+		break
+	end
+	if not has_clients then
+		lsp_state.is_loading = false
+	end
 	vim.cmd('redrawstatus')
 end
 

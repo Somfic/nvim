@@ -1,16 +1,8 @@
 vim.pack.add({
-    { src = 'https://github.com/folke/which-key.nvim' },
+	{ src = 'https://github.com/folke/which-key.nvim' },
 })
 
-local wk = require('which-key')
-
-wk.setup({
-    plugins = {
-        spelling = {
-            enabled = true,
-            suggestions = 20,
-        },
-    },
+vim.g.mapleader = ' '
+require('which-key').setup({
+	preset = 'helix',
 })
-
-wk.add({ "<leader>f", group = "find" })
