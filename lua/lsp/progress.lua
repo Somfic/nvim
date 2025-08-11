@@ -10,9 +10,18 @@ local language_icons = {
 	lua_ls = '🌙',
 	rust_analyzer = '🦀',
 	tsserver = '📜',
+	ts_ls = '📜',
+	eslint = '🔧',
 	pyright = '🐍',
 	clangd = '⚡',
+	javascript = '🟨',
+	typescript = '🔷',
+	jsx = '⚛️',
+	tsx = '⚛️',
 }
+
+-- fallback icon for unknown LSP servers
+local fallback_icon = '🔧'
 
 local lsp_state = {
 	attached_clients = {},
@@ -168,13 +177,11 @@ end
 function _G.get_lsp_icons()
 	local icons = {}
 	for client_name, _ in pairs(lsp_state.attached_clients) do
-		local icon = language_icons[client_name]
-		if icon then
-			if lsp_state.is_loading and not lsp_state.blink_visible then
-				-- hide icon during blink
-			else
-				table.insert(icons, icon)
-			end
+		local icon = language_icons[client_name] or fallback_icon
+		if lsp_state.is_loading and not lsp_state.blink_visible then
+			-- hide icon during blink
+		else
+			table.insert(icons, icon)
 		end
 	end
 
@@ -195,10 +202,8 @@ function _G.get_lsp_combined()
 	-- get language icons
 	local icons = {}
 	for client_name, _ in pairs(lsp_state.attached_clients) do
-		local icon = language_icons[client_name]
-		if icon then
-			table.insert(icons, icon)
-		end
+		local icon = language_icons[client_name] or fallback_icon
+		table.insert(icons, icon)
 	end
 
 	local icon_str = #icons > 0 and table.concat(icons, ' ') or ''

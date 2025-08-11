@@ -20,7 +20,18 @@ require('keybindings')
 vim.api.nvim_create_autocmd('InsertLeave', {
 	callback = function()
 		if vim.bo.modified and not vim.bo.readonly and vim.fn.expand('%') ~= '' and vim.bo.buftype == '' then
-			vim.lsp.buf.format()
+			-- Prioritize ESLint for JS/TS/React files
+			local ft = vim.bo.filetype
+			if ft == 'typescript' or ft == 'typescriptreact' or ft == 'javascript' or ft == 'javascriptreact' then
+				vim.lsp.buf.format({
+					filter = function(client)
+						-- Prefer ESLint for formatting
+						return client.name == 'eslint'
+					end
+				})
+			else
+				vim.lsp.buf.format()
+			end
 			vim.cmd('silent! write')
 		end
 	end
@@ -38,7 +49,9 @@ vim.pack.add({
 	{ src = 'https://github.com/nvim-lua/plenary.nvim' },
 	{ src = 'https://github.com/lewis6991/gitsigns.nvim' },
 	{ src = 'https://github.com/nvim-tree/nvim-web-devicons' },
-	{ src = 'https://github.com/echasnovski/mini.icons' }
+	{ src = 'https://github.com/echasnovski/mini.icons' },
+	{ src = 'https://github.com/windwp/nvim-autopairs' },
+	{ src = 'https://github.com/windwp/nvim-ts-autotag' }
 })
 
 require('oil').setup()
@@ -46,6 +59,30 @@ require('oil').setup()
 require('finder')
 require('git_signs')
 require('lsp')
+
+require('nvim-autopairs').setup({
+	check_ts = true,
+	ts_config = {
+		lua = { 'string', 'source' },
+		javascript = { 'string', 'template_string' },
+		typescript = { 'string', 'template_string' },
+	}
+})
+
+require('nvim-ts-autotag').setup({
+	opts = {
+		enable_close = true,
+		enable_rename = true,
+		enable_close_on_slash = false
+	},
+	per_filetype = {
+		['html'] = { enable_close = false },
+		['jsx'] = { enable_close = true },
+		['tsx'] = { enable_close = true },
+		['javascript'] = { enable_close = true },
+		['typescript'] = { enable_close = true },
+	}
+})
 
 
 -- git status

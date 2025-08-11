@@ -12,8 +12,8 @@ require('lsp.autocomplete')
 require('lsp.diagnostics')
 
 -- lsp configuration
-local lsp_servers = { 'lua_ls', 'rust_analyzer' }
-local treesitter_servers = { 'lua', 'rust' }
+local lsp_servers = { 'lua_ls', 'rust_analyzer', 'ts_ls', 'eslint' }
+local treesitter_servers = { 'lua', 'rust', 'javascript', 'typescript', 'tsx', 'jsx' }
 require('mason').setup()
 require('mason-lspconfig').setup({
 	ensure_installed = lsp_servers,
@@ -64,6 +64,50 @@ vim.lsp.config('rust_analyzer', {
 			}
 		}
 	}
+})
+
+vim.lsp.config('ts_ls', {
+	filetypes = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+	settings = {
+		typescript = {
+			preferences = {
+				quoteStyle = 'single',
+				includeCompletionsForImportStatements = true,
+				includeCompletionsForModuleExports = true,
+			}
+		},
+		javascript = {
+			preferences = {
+				quoteStyle = 'single',
+				includeCompletionsForImportStatements = true,
+				includeCompletionsForModuleExports = true,
+			}
+		}
+	}
+})
+
+vim.lsp.config('eslint', {
+	filetypes = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+	settings = {
+		workingDirectories = { mode = 'auto' },
+		format = { enable = true },
+		codeAction = {
+			disableRuleComment = {
+				enable = true,
+				location = "separateLine"
+			},
+			showDocumentation = {
+				enable = true
+			}
+		},
+		validate = 'on'
+	},
+	on_attach = function(client, bufnr)
+		-- Enable ESLint formatting for JS/TS files
+		if client.name == 'eslint' then
+			client.server_capabilities.documentFormattingProvider = true
+		end
+	end
 })
 require('nvim-treesitter').setup({
 	ensure_installed = treesitter_servers,

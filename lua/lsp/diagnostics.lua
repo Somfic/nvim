@@ -25,7 +25,7 @@ vim.diagnostic.config({
 		end
 	},
 	signs = false, -- disable left gutter signs
-	update_in_insert = false,
+	update_in_insert = true,
 	underline = true,
 	severity_sort = true,
 	float = {
