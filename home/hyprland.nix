@@ -93,7 +93,7 @@
 
       exec-once = [
         "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
-        "bash ~/dot/home/wallpaper-manager.sh start"
+        "sleep 3 && bash /home/lucas/dot/home/wallpaper-manager.sh start"
       ];
     };
   };
