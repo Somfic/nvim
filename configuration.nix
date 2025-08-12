@@ -45,4 +45,8 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "25.05";
+  
+  # security
+  security.polkit.enable = true;
+  environment.systemPackages = [ pkgs.hyprpolkitagent ];
 }

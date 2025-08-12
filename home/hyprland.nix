@@ -94,6 +94,7 @@
       exec-once = [
         "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
         "sleep 3 && bash /home/lucas/dot/home/wallpaper-manager.sh start"
+        "systemctl --user start hyprpolkitagent"
       ];
     };
   };
