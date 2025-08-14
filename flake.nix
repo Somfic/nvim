@@ -55,23 +55,5 @@
           extraSpecialArgs = { inherit inputs; };
         };
       };
-      devShells.${system} = {
-        rust = pkgs.mkShell {
-          buildInputs = [
-            pkgs.rustc
-            pkgs.cargo
-            pkgs.clippy
-            pkgs.rustfmt
-            pkgs.rust-analyzer
-            pkgs.pkg-config
-            pkgs.openssl
-            pkgs.bacon
-            pkgs.bun
-          ];
-          shellHook = ''
-            export RUST_LOG=info
-          '';
-        };
-      };
     };
 }

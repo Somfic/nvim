@@ -15,10 +15,8 @@
         "reload" = "nh os switch ~/dot";
         "update" = "sudo nix flake update --flake ~/dot";
         "clean" = "nh clean all --keep-since 7d";
-        "dev rust" = "nix develop ~/dot#rust --command 'nu'";
         "clock" = "termdown -zsf roman";
-        "rdev" =
-          "nix develop ~/dot # rust -c code .; nix develop ~/dot#rust -c nu";
+        "dev" = "nix develop -c nu";
       };
       settings = { show_banner = false; };
     };
