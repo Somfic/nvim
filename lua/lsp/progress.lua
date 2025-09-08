@@ -7,27 +7,47 @@ local progress_popup = nil
 
 -- language icons and lsp state
 local language_icons = {
-	lua_ls = '🌙',
-	rust_analyzer = '🦀',
-	tsserver = '📜',
-	ts_ls = '📜',
-	eslint = '🔧',
-	pyright = '🐍',
-	clangd = '⚡',
-	javascript = '🟨',
-	typescript = '🔷',
-	jsx = '⚛️',
-	tsx = '⚛️',
+	lua_ls = '󰢱',
+	rust_analyzer = '󱘗',
+	tsserver = '󰛦',
+	ts_ls = '󰛦',
+	eslint = '󰱺',
+	pyright = '󰌠',
+	clangd = '󰙱',
+	javascript = '󰌞',
+	typescript = '󰛦',
+	jsx = '󰜈',
+	tsx = '󰜈',
+	dockerls = '󰡨',
+	jdtls = '󰬷',
+	yamlls = '󰈙',
+	graphql = '󰡷',
+	taplo = '󰏗',
 }
 
 -- fallback icon for unknown LSP servers
-local fallback_icon = '🔧'
+local fallback_icon = '󰒋'
+
+-- colored highlight groups for LSP icons
+local icon_colors = {
+	lua_ls = '#51a0cf',      -- Blue
+	rust_analyzer = '#ce422b', -- Orange/Red
+	ts_ls = '#3178c6',       -- TypeScript Blue
+	eslint = '#4b32c3',      -- Purple
+	pyright = '#3776ab',     -- Python Blue
+	clangd = '#00599c',      -- C++ Blue
+	javascript = '#f7df1e',  -- JavaScript Yellow
+	typescript = '#3178c6',  -- TypeScript Blue
+	jsx = '#61dafb',         -- React Cyan
+	tsx = '#61dafb',         -- React Cyan
+	dockerls = '#2496ed',    -- Docker Blue
+}
+
 
 local lsp_state = {
 	attached_clients = {},
+	loading_clients = {},
 	is_loading = false,
-	blink_visible = true,
-	blink_timer = nil,
 }
 
 -- create or update progress popup
@@ -112,11 +132,7 @@ local function update_spinner()
 	vim.cmd('redrawstatus')
 end
 
--- update blink animation for loading state
-local function update_blink()
-	lsp_state.blink_visible = not lsp_state.blink_visible
-	vim.cmd('redrawstatus')
-end
+
 
 -- track lsp client attach/detach
 function _G.lsp_client_attached(client_name)
@@ -124,6 +140,14 @@ function _G.lsp_client_attached(client_name)
 	lsp_state.is_loading = false
 	vim.cmd('redrawstatus')
 end
+
+-- Update statusline when buffer content changes (to show/hide GraphQL icon)
+vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI', 'BufEnter' }, {
+	pattern = '*.ts,*.tsx,*.js,*.jsx',
+	callback = function()
+		vim.cmd('redrawstatus')
+	end
+})
 
 function _G.lsp_client_detached(client_name)
 	lsp_state.attached_clients[client_name] = nil
@@ -173,16 +197,31 @@ function _G.get_lsp_status()
 	return ''
 end
 
+-- check if current buffer has GraphQL content
+local function has_graphql_content()
+	local filetype = vim.bo.filetype
+	if filetype == 'typescript' or filetype == 'typescriptreact' or filetype == 'javascript' or filetype == 'javascriptreact' then
+		local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false) -- check first 100 lines
+		for _, line in ipairs(lines) do
+			if line:match('gql`') or line:match('graphql`') or line:match('useQuery') or line:match('useMutation') or line:match('@apollo/client') then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 -- get language icons for statusline (right side)
 function _G.get_lsp_icons()
 	local icons = {}
 	for client_name, _ in pairs(lsp_state.attached_clients) do
 		local icon = language_icons[client_name] or fallback_icon
-		if lsp_state.is_loading and not lsp_state.blink_visible then
-			-- hide icon during blink
-		else
-			table.insert(icons, icon)
-		end
+		table.insert(icons, icon)
+	end
+	
+	-- Add GraphQL icon if current buffer has GraphQL content
+	if has_graphql_content() then
+		table.insert(icons, language_icons.graphql)
 	end
 
 	if #icons > 0 then
@@ -204,6 +243,11 @@ function _G.get_lsp_combined()
 	for client_name, _ in pairs(lsp_state.attached_clients) do
 		local icon = language_icons[client_name] or fallback_icon
 		table.insert(icons, icon)
+	end
+	
+	-- Add GraphQL icon if current buffer has GraphQL content
+	if has_graphql_content() then
+		table.insert(icons, language_icons.graphql)
 	end
 
 	local icon_str = #icons > 0 and table.concat(icons, ' ') or ''
@@ -249,7 +293,7 @@ vim.lsp.handlers['$/progress'] = function(_, result, ctx)
 		end
 		progress_timer = vim.fn.timer_start(100, update_spinner, { ['repeat'] = -1 })
 
-		-- trigger loading state with blinking
+		-- trigger loading state
 		_G.lsp_client_loading(client.name)
 	elseif value.kind == 'report' then
 		if progress[token] then
@@ -270,13 +314,12 @@ vim.lsp.handlers['$/progress'] = function(_, result, ctx)
 			vim.fn.timer_stop(progress_timer)
 			progress_timer = nil
 
-			-- mark as not loading
+			-- mark as not loading and move to attached
 			lsp_state.is_loading = false
+			_G.lsp_client_attached(client.name)
 
 			-- close progress popup
 			update_progress_popup()
-
-			vim.cmd('redrawstatus')
 		end
 	end
 end

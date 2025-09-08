@@ -51,7 +51,8 @@ vim.pack.add({
 	{ src = 'https://github.com/nvim-tree/nvim-web-devicons' },
 	{ src = 'https://github.com/echasnovski/mini.icons' },
 	{ src = 'https://github.com/windwp/nvim-autopairs' },
-	{ src = 'https://github.com/windwp/nvim-ts-autotag' }
+	{ src = 'https://github.com/windwp/nvim-ts-autotag' },
+	{ src = 'https://github.com/github/copilot.vim' }
 })
 
 require('oil').setup()
@@ -122,6 +123,63 @@ vim.cmd('colorscheme vague')
 vim.cmd(':hi statusline guibg=NONE')
 vim.opt.winborder = 'rounded'
 
+-- get file type icon
+local function get_filetype_icon()
+	local filename = vim.fn.expand('%:t')
+	local extension = vim.fn.expand('%:e')
+
+	if filename == '' then return '' end
+
+	local icons = {
+		-- JSON, YAML, TOML
+		json = '󰘦',
+		jsonc = '󰘦',
+		yaml = '',
+		yml = '',
+		toml = '',
+
+		-- Programming languages
+		lua = '',
+		rust = '',
+		rs = '',
+		js = '',
+		jsx = '',
+		ts = '',
+		tsx = '',
+		java = '',
+		py = '',
+
+		-- Web technologies
+		html = '',
+		css = '',
+		scss = '',
+
+		-- Config files
+		dockerfile = '',
+		gitignore = '',
+
+		-- Documents
+		md = '',
+		txt = '',
+
+		-- Other
+		xml = '󰗀',
+		sql = '',
+		sh = '',
+		zsh = '',
+		bash = '',
+	}
+
+	-- special filenames
+	if filename == 'package.json' then return '' end
+	if filename == 'tsconfig.json' or filename:match('tsconfig%..*%.json') then return '' end
+	if filename == 'Cargo.toml' then return '' end
+	if filename == 'Dockerfile' then return '' end
+	if filename:match('%.env') then return '' end
+
+	return icons[extension] or ''
+end
+
 -- cache for statusline parts
 local statusline_cache = {
 	git_part = '',
@@ -162,9 +220,13 @@ local function get_directory_part()
 		local cwd = vim.fn.getcwd()
 		local relative_path = vim.fn.fnamemodify(filepath, ':~:.')
 
-		-- if file is in cwd, show directory/filename
-		-- if file is in subdirectory, show subdirectory/filename
+		-- add file type icon
+		local icon = get_filetype_icon()
 		local display = relative_path
+
+		if icon ~= '' then
+			display = icon .. ' ' .. display
+		end
 
 		return display
 	end
@@ -184,7 +246,7 @@ local function update_statusline()
 	local directory_part = ' ' .. get_directory_part()
 
 	vim.opt.statusline = '▎' ..
-		directory_part .. statusline_cache.git_part .. '%=' .. '%{v:lua.get_lsp_combined()}' .. ' '
+	    directory_part .. statusline_cache.git_part .. '%=' .. '%{v:lua.get_lsp_combined()}' .. ' '
 	statusline_cache.last_file = current_file
 end
 
