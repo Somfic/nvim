@@ -10,8 +10,6 @@
       settings = { window_padding_width = 14; };
     };
 
-    waybar.enable = true;
-
     rofi = {
       enable = true;
       terminal = "${pkgs.kitty}/bin/kitty";

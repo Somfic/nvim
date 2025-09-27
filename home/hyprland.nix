@@ -74,10 +74,6 @@
         # closing windows
         "$mod, mouse:274, killactive"
         "$mod, Q, killactive"
-
-
-        # Waybar restart (kill all instances and restart)
-        "$mod SHIFT, B, exec, pkill waybar; waybar"
       ] ++ (
         # workspaces
         # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
@@ -95,6 +91,7 @@
         "sleep 1 && swww img --outputs DP-2 /home/lucas/dot/wallpapers/neon1.jpg"
         "sleep 1 && swww img --outputs DP-3 /home/lucas/dot/wallpapers/neon1.jpg"
         "systemctl --user start hyprpolkitagent"
+        "nix run github:caelestia-dots/shell"
       ];
     };
   };

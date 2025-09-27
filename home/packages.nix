@@ -17,9 +17,8 @@
     just # running commands
     prismlauncher # minecraft
     swww # wallpaper daemon for wayland
-    waybar # status bar for wayland
     pavucontrol # audio control GUI for pulseaudio
-    font-awesome # icons for waybar
+    font-awesome # icons
     playerctl # media player control
     claude-code # ai
     papirus-icon-theme # icons for rofi
