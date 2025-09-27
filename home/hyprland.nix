@@ -14,9 +14,9 @@
         hide_on_key_press = false;
       };
       monitor = [
-        "DP-1, 3440x1440@144, 0x0, 1"
-        "DP-2, preferred, auto-right, 1"
-        "DP-3, preferred, auto-left, 1"
+        "DP-1, 3440x1440@144, 0x0, 1.25"
+        "DP-2, preferred, auto-right, 1.25"
+        "DP-3, preferred, auto-left, 1.25"
       ];
       general = {
         border_size = 0;
@@ -75,9 +75,6 @@
         "$mod, mouse:274, killactive"
         "$mod, Q, killactive"
 
-        # Wallpaper controls
-        "$mod, W, exec, bash ~/dot/home/wallpaper-manager.sh next"
-        "$mod SHIFT, W, exec, bash ~/dot/home/wallpaper-manager.sh random"
 
         # Waybar restart (kill all instances and restart)
         "$mod SHIFT, B, exec, pkill waybar; waybar"
@@ -93,7 +90,10 @@
 
       exec-once = [
         "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
-        "sleep 3 && bash /home/lucas/dot/home/wallpaper-manager.sh start"
+        "swww-daemon"
+        "sleep 1 && swww img --outputs DP-1 /home/lucas/dot/wallpapers/neon4.jpg"
+        "sleep 1 && swww img --outputs DP-2 /home/lucas/dot/wallpapers/neon1.jpg"
+        "sleep 1 && swww img --outputs DP-3 /home/lucas/dot/wallpapers/neon1.jpg"
         "systemctl --user start hyprpolkitagent"
       ];
     };

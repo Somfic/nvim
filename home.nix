@@ -21,4 +21,7 @@
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnfreePredicate = _: true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "qtwebengine-5.15.19"
+  ];
 }

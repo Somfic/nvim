@@ -153,7 +153,7 @@
       * {
         border: none;
         border-radius: 0;
-        font-family: "Monocraft", "Font Awesome 6 Free";
+        font-family: "FiraCode Nerd Font", "FiraCode Nerd Font Mono";
         font-size: 12px;
         min-height: 0;
       }

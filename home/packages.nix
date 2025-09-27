@@ -7,7 +7,7 @@
   home.packages = with pkgs; [
     ffmpeg-full
     vesktop # discord client
-    stremio # media streaming app
+    # stremio # media streaming app
     vlc
     google-chrome
     # jetbrains.idea-ultimate

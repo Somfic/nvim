@@ -21,8 +21,8 @@
     };
     fonts = {
       monospace = {
-        package = pkgs.monocraft;
-        name = "Monocraft";
+        package = pkgs.nerd-fonts.fira-code;
+        name = "FiraCode Nerd Font";
       };
       sansSerif = {
         package = pkgs.dejavu_fonts;

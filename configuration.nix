@@ -14,6 +14,7 @@
     ./modules/system/audio.nix
     ./modules/system/packages.nix
     ./modules/system/bluetooth.nix
+    ./modules/system/security.nix
 
     # Desktop modules
     ./modules/desktop/hyprland.nix
@@ -43,6 +44,9 @@
 
   # General NixOS settings
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "qtwebengine-5.15.19"
+  ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "25.05";
   
