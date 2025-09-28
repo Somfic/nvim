@@ -8,6 +8,7 @@
     ./home/hyprland.nix
     ./home/packages.nix
     ./home/dotfiles.nix
+    ./home/caelestia.nix
   ];
 
   programs.home-manager.enable = true;

@@ -91,7 +91,7 @@
         "sleep 1 && swww img --outputs DP-2 /home/lucas/dot/wallpapers/neon1.jpg"
         "sleep 1 && swww img --outputs DP-3 /home/lucas/dot/wallpapers/neon1.jpg"
         "systemctl --user start hyprpolkitagent"
-        "nix run github:caelestia-dots/shell"
+        "caelestia-shell"
       ];
     };
   };

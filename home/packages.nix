@@ -28,7 +28,8 @@
     filezilla
     ripgrep # fast grep for telescope.nvim
     inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
-    
+    inputs.caelestia-shell.packages.${pkgs.system}.default # caelestia shell
+
     # Language servers for neovim
     lua-language-server
     rust-analyzer
