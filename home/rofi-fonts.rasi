@@ -1,8 +1,0 @@
-/**
- * ROFI fonts
- * User: Somfic
- */
-
-* {
-    font: "Monocraft 14";
-}
