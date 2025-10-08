@@ -34,6 +34,7 @@
     backupFileExtension = "backup";
     sharedModules = [
       inputs.spicetify-nix.homeManagerModules.spicetify
+      inputs.vicinae.homeManagerModules.default
       {
         stylix.autoEnable = true;
         stylix.targets.spicetify.enable = false;
@@ -44,12 +45,10 @@
 
   # General NixOS settings
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "qtwebengine-5.15.19"
-  ];
+  nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "25.05";
-  
+
   # security
   security.polkit.enable = true;
   environment.systemPackages = [ pkgs.hyprpolkitagent ];

@@ -22,10 +22,11 @@
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    vicinae.url = "github:vicinaehq/vicinae";
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
-    , spicetify-nix, neovim-nightly-overlay, caelestia-shell }@inputs:
+    , spicetify-nix, neovim-nightly-overlay, caelestia-shell, vicinae }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -48,6 +49,7 @@
           inherit pkgs;
           modules = [
             ./home.nix
+            vicinae.homeManagerModules.default
             {
               wayland.windowManager.hyprland = {
                 enable = true;

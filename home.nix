@@ -9,6 +9,7 @@
     ./home/packages.nix
     ./home/dotfiles.nix
     ./home/caelestia.nix
+    ./home/launcher.nix
   ];
 
   programs.home-manager.enable = true;
@@ -21,7 +22,5 @@
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnfreePredicate = _: true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "qtwebengine-5.15.19"
-  ];
 }
+ 

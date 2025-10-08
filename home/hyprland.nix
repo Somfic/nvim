@@ -46,7 +46,8 @@
       # windowrule = [ "opacity 0.5,class:vesktop" ];
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
-        "$mod, R, exec, rofi -show drun -theme ~/.config/rofi/adi1090x-type3-style3.rasi"
+        "$mod, R, exec, vicinae"
+        "$mod SHIFT, R, exec, rofi -show drun"
         "$mod, F, exec, firefox"
         "$mod, C, exec, code"
         "$mod, S, exec, spotify"
