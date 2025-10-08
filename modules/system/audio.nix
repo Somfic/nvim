@@ -9,6 +9,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    wireplumber.enable = true;
     extraLv2Packages = [ pkgs.rnnoise-plugin ];
     configPackages = [
       (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/20-rnnoise.conf" ''

@@ -6,6 +6,7 @@
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
     # withUWSM = true;
     xwayland.enable = true;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
   environment.sessionVariables = {
@@ -13,7 +14,6 @@
     NIXOS_OZONE_WL = "1";
   };
 
-  # XDG Portal configuration (uncomment if needed)
-  # xdg.portal.enable = true;
+  # XDG Portal configuration - handled globally
   # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
 }
