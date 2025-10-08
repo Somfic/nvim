@@ -9,8 +9,8 @@
     vesktop # discord client
     # stremio # media streaming app
     vlc
-    google-chrome
-    # jetbrains.idea-ultimate
+    # google-chrome
+    jetbrains.idea-ultimate
     obs-studio
     mprocs # running multiple processes
     termdown # terminal clock
@@ -26,23 +26,25 @@
     sshfs
     sshpass
     filezilla
+    openvpn
+    networkmanagerapplet # NetworkManager GUI for VPN management
     ripgrep # fast grep for telescope.nvim
     inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
     inputs.caelestia-shell.packages.${pkgs.system}.default # caelestia shell
 
-    # Language servers for neovim
-    lua-language-server
-    rust-analyzer
-    typescript
-    nodePackages.typescript-language-server
-    nodePackages.vscode-langservers-extracted # html, css, json, eslint
-    python3Packages.python-lsp-server
-    gopls
-    clang-tools # clangd for C/C++
-    nixd # nix language server
-    jdt-language-server # java
-    omnisharp-roslyn # .NET/C#
-    just-lsp # justfile language server
-    dockerfile-language-server-nodejs # dockerfile language server
+    # # Language servers for neovim
+    # lua-language-server
+    # rust-analyzer
+    # typescript
+    # nodePackages.typescript-language-server
+    # nodePackages.vscode-langservers-extracted # html, css, json, eslint
+    # python3Packages.python-lsp-server
+    # gopls
+    # clang-tools # clangd for C/C++
+    # nixd # nix language serverso 
+    # jdt-language-server # java
+    # omnisharp-roslyn # .NET/C#
+    # just-lsp # justfile language server
+    # dockerfile-language-server-nodejs # dockerfile language server
   ];
 }

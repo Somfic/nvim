@@ -43,13 +43,7 @@
       clean.enable = true;
       flake = "/home/lucas/dot";
     };
-
-    git = {
-      enable = true;
-      userEmail = "lucas@somfic.dev";
-      userName = "Lucas";
-    };
-
+    
     gh.enable = true;
     direnv = {
       enable = true;

@@ -15,4 +15,6 @@
   services.printing.enable = true;
 
   services.flatpak.enable = true;
+
+  # XDG Portal is automatically enabled by GNOME and Hyprland
 }

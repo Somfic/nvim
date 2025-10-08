@@ -13,15 +13,18 @@
         no_hardware_cursors = true;
         hide_on_key_press = false;
       };
+      input = {
+        touchpad = {
+          natural_scroll = true;
+        };
+      };
       monitor = [
-        "DP-1, 3440x1440@144, 0x0, 1.25"
-        "DP-2, preferred, auto-right, 1.25"
-        "DP-3, preferred, auto-left, 1.25"
+        "eDP-1, 1920x1080@60, 0x0, 1.25"
       ];
       general = {
         border_size = 0;
-        gaps_in = 7;
-        gaps_out = 14;
+        gaps_in = 4;
+        gaps_out = 8;
       };
       decoration = {
         rounding = 15;
@@ -53,6 +56,7 @@
         "$mod, D, exec, vesktop"
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"
+        "$mod, L, exec, loginctl lock-session"
         "$mod, M, exit"
 
         # floating and fullscreen
