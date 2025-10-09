@@ -35,14 +35,10 @@
           range = 8;
         };
       };
-      windowrulev2 = [
-        "float,move 10 10,title:^(initialkitty)$"
-        "opacity 0.85 override 0.85 override, class:.*"
-      ];
+      windowrulev2 = [ "opacity 0.85 override 0.85 override, class:.*" ];
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
-        "$mod, R, exec, vicinae"
-        "$mod SHIFT, R, exec, rofi -show drun"
+        "$mod, R, exec, rofi -show drun"
         "$mod, F, exec, firefox"
         "$mod, C, exec, code"
         "$mod, S, exec, spotify"
@@ -82,7 +78,7 @@
           ]) 9));
 
       exec-once = [
-        "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
+        "kitty --title hello -e bash -ic 'fastfetch; exec nu'"
         "swww-daemon"
         "systemctl --user start hyprpolkitagent"
         "caelestia-shell"

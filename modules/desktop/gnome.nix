@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.xserver = {
@@ -15,6 +15,12 @@
   services.printing.enable = true;
 
   services.flatpak.enable = true;
+
+  # Override qt platform theme to use gtk2 instead of deprecated gnome
+  qt = {
+    enable = true;
+    platformTheme = lib.mkForce "gtk2";
+  };
 
   # XDG Portal is automatically enabled by GNOME and Hyprland
 }

@@ -1,7 +1,15 @@
 { config, pkgs, inputs, ... }:
 
 {
-  programs.ssh = { enable = true; };
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      controlMaster = "auto";
+      controlPath = "~/.ssh/master-%r@%n:%p";
+      controlPersist = "10m";
+    };
+  };
   programs.java = { enable = true; };
 
   home.packages = with pkgs; [

@@ -2,15 +2,7 @@
 
 {
   programs = {
-    fastfetch = {
-      enable = true;
-      settings = {
-        logo = {
-          source = "nixos";
-          type = "auto";
-        };
-      };
-    };
+    fastfetch = { enable = true; };
 
     nh = {
       enable = true;
