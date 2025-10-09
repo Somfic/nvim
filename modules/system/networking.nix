@@ -2,7 +2,6 @@
 
 {
   networking = {
-    hostName = "home";
     networkmanager = {
       enable = true;
       plugins = with pkgs; [

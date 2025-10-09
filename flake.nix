@@ -32,13 +32,14 @@
       lib = nixpkgs.lib;
 
       # Helper function to create machine configurations
-      mkMachine = hostname: machineModule: hardwareModule: {
+      mkMachine = hostname: machineModule: hardwareModule: systemModule: {
         "${hostname}" = lib.nixosSystem {
           specialArgs = { inherit inputs; };
           inherit system;
           modules = [
             ./configuration.nix
             hardwareModule
+            systemModule
             inputs.home-manager.nixosModules.default
             stylix.nixosModules.stylix
             spicetify-nix.nixosModules.spicetify
@@ -49,8 +50,8 @@
 
     in {
       nixosConfigurations = (mkMachine "home" ./machines/home/default.nix
-        ./machines/home/hardware.nix)
+        ./machines/home/hardware.nix ./machines/home/system.nix)
         // (mkMachine "work" ./machines/work/default.nix
-          ./machines/work/hardware.nix);
+          ./machines/work/hardware.nix ./machines/work/system.nix);
     };
 }
