@@ -1,9 +1,5 @@
 { config, ... }:
 
 {
-  imports = [
-    ../../home.nix
-    ../../profiles/minimal.nix
-    ./monitors.nix
-  ];
+  imports = [ ../../home.nix ../../profiles/desktop-full.nix ./monitors.nix ];
 }

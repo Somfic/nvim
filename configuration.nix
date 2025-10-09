@@ -49,6 +49,7 @@
 
   # Nix settings including Hyprland binary cache
   nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
     substituters = [ "https://hyprland.cachix.org" ];
     trusted-substituters = [ "https://hyprland.cachix.org" ];
     trusted-public-keys =
