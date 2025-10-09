@@ -2,7 +2,7 @@
 
 {
   networking = {
-    hostName = "nixos";
+    hostName = "home";
     networkmanager = {
       enable = true;
       plugins = with pkgs; [
