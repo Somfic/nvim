@@ -7,7 +7,7 @@ require('which-key').setup({
 	preset = 'helix',
 })
 
--- Global completion trigger 
+-- Global completion trigger
 vim.keymap.set('i', '<C-Space>', function()
 	-- Try to trigger nvim-cmp completion first
 	local cmp = require('cmp')

@@ -39,5 +39,7 @@ require('gitsigns').setup({
 
 require('which-key').add({
 	{ '<leader>g',  group = 'git' },
-	{ '<leader>gb', '<cmd>Gitsigns preview_hunk<CR>', desc = 'git blame', mode = 'n' }
+	{ '<leader>gh', '<cmd>Gitsigns preview_hunk<CR>', desc = 'preview hunk', mode = 'n' },
+	{ '<leader>gr', '<cmd>Gitsigns reset_hunk<CR>', desc = 'revert hunk', mode = 'n' },
+	{ '<leader>gd', '<cmd>Telescope git_status<CR>', desc = 'diff', mode = 'n' }
 })

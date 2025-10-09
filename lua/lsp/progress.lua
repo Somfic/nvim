@@ -5,43 +5,27 @@ local spinner_index = 1
 local progress_timer = nil
 local progress_popup = nil
 
--- language icons and lsp state
-local language_icons = {
-	lua_ls = '󰢱',
-	rust_analyzer = '󱘗',
-	tsserver = '󰛦',
-	ts_ls = '󰛦',
-	eslint = '󰱺',
-	pyright = '󰌠',
-	clangd = '󰙱',
-	javascript = '󰌞',
-	typescript = '󰛦',
-	jsx = '󰜈',
-	tsx = '󰜈',
-	dockerls = '󰡨',
-	jdtls = '󰬷',
-	yamlls = '󰈙',
-	graphql = '󰡷',
-	taplo = '󰏗',
-}
+-- load unified language configuration
+local lang_config = require('lsp.config')
+
+-- build language icons and colors from unified config
+local language_icons = {}
+local icon_colors = {}
+
+for lang, config in pairs(lang_config) do
+	if config.lsp_server and config.icon then
+		language_icons[config.lsp_server] = config.icon
+		if config.color then
+			icon_colors[config.lsp_server] = config.color
+		end
+	end
+end
+
+-- add graphql icon for template literal detection
+language_icons.graphql = lang_config.graphql.icon
 
 -- fallback icon for unknown LSP servers
 local fallback_icon = '󰒋'
-
--- colored highlight groups for LSP icons
-local icon_colors = {
-	lua_ls = '#51a0cf',      -- Blue
-	rust_analyzer = '#ce422b', -- Orange/Red
-	ts_ls = '#3178c6',       -- TypeScript Blue
-	eslint = '#4b32c3',      -- Purple
-	pyright = '#3776ab',     -- Python Blue
-	clangd = '#00599c',      -- C++ Blue
-	javascript = '#f7df1e',  -- JavaScript Yellow
-	typescript = '#3178c6',  -- TypeScript Blue
-	jsx = '#61dafb',         -- React Cyan
-	tsx = '#61dafb',         -- React Cyan
-	dockerls = '#2496ed',    -- Docker Blue
-}
 
 
 local lsp_state = {

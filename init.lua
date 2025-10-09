@@ -123,6 +123,31 @@ vim.cmd('colorscheme vague')
 vim.cmd(':hi statusline guibg=NONE')
 vim.opt.winborder = 'rounded'
 
+-- load unified language configuration
+local lang_config = require('lsp.config')
+
+-- build extension to icon lookup from config
+local extension_to_icon = {}
+local special_files = {}
+
+for lang, config in pairs(lang_config) do
+	if config.icon then
+		-- map extensions to icon
+		if config.extensions then
+			for _, ext in ipairs(config.extensions) do
+				extension_to_icon[ext] = config.icon
+			end
+		end
+
+		-- map special files to icon
+		if config.special_files then
+			for pattern, icon in pairs(config.special_files) do
+				special_files[pattern] = icon ~= '' and icon or config.icon
+			end
+		end
+	end
+end
+
 -- get file type icon
 local function get_filetype_icon()
 	local filename = vim.fn.expand('%:t')
@@ -130,54 +155,15 @@ local function get_filetype_icon()
 
 	if filename == '' then return '' end
 
-	local icons = {
-		-- JSON, YAML, TOML
-		json = '󰘦',
-		jsonc = '󰘦',
-		yaml = '',
-		yml = '',
-		toml = '',
+	-- check special filenames first
+	for pattern, icon in pairs(special_files) do
+		if filename == pattern or filename:match(pattern) then
+			return icon
+		end
+	end
 
-		-- Programming languages
-		lua = '',
-		rust = '',
-		rs = '',
-		js = '',
-		jsx = '',
-		ts = '',
-		tsx = '',
-		java = '',
-		py = '',
-
-		-- Web technologies
-		html = '',
-		css = '',
-		scss = '',
-
-		-- Config files
-		dockerfile = '',
-		gitignore = '',
-
-		-- Documents
-		md = '',
-		txt = '',
-
-		-- Other
-		xml = '󰗀',
-		sql = '',
-		sh = '',
-		zsh = '',
-		bash = '',
-	}
-
-	-- special filenames
-	if filename == 'package.json' then return '' end
-	if filename == 'tsconfig.json' or filename:match('tsconfig%..*%.json') then return '' end
-	if filename == 'Cargo.toml' then return '' end
-	if filename == 'Dockerfile' then return '' end
-	if filename:match('%.env') then return '' end
-
-	return icons[extension] or ''
+	-- check extension
+	return extension_to_icon[extension] or ''
 end
 
 -- cache for statusline parts
