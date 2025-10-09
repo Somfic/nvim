@@ -3,7 +3,24 @@
 {
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    base16Scheme = {
+      base00 = "16181a"; # bg
+      base01 = "1e2124"; # bg_alt
+      base02 = "3c4048"; # bg_highlight
+      base03 = "7b8496"; # grey (comments)
+      base04 = "7b8496"; # grey
+      base05 = "ffffff"; # fg
+      base06 = "ffffff"; # fg
+      base07 = "ffffff"; # fg
+      base08 = "ff6e5e"; # red
+      base09 = "ffbd5e"; # orange
+      base0A = "f1ff5e"; # yellow
+      base0B = "5eff6c"; # green
+      base0C = "5ef1ff"; # cyan
+      base0D = "5ea1ff"; # blue
+      base0E = "bd5eff"; # purple
+      base0F = "ff5ea0"; # pink
+    };
     # image = ./../../wallpapers/neon3.jpg;  # Disabled for slideshow
     polarity = "dark";
     opacity = {
