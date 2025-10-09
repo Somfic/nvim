@@ -1,0 +1,22 @@
+{ config, pkgs, inputs, ... }:
+
+{
+  programs.ssh = { enable = true; };
+  programs.java = { enable = true; };
+
+  home.packages = with pkgs; [
+    ripgrep # fast grep for telescope.nvim
+    inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
+    inputs.caelestia-shell.packages.${pkgs.system}.default # caelestia shell
+    jetbrains.idea-ultimate
+    just # running commands
+    mprocs # running multiple processes
+
+    # Network tools
+    sshfs
+    sshpass
+    filezilla
+    openvpn
+    networkmanagerapplet # NetworkManager GUI for VPN management
+  ];
+}

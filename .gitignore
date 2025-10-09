@@ -1,4 +1,6 @@
-nul
 .idea/
 .vscode/
 .claude/
+*.old
+*.backup
+*~

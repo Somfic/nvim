@@ -3,7 +3,6 @@
 {
   programs = {
     vscode.enable = true;
-    firefox.enable = true;
 
     kitty = {
       enable = true;

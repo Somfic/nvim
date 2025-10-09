@@ -1,17 +1,7 @@
 { config, pkgs, inputs, lib, ... }:
 
 {
-  imports = [
-    ./home/shell.nix
-    ./home/desktop-apps.nix
-    ./home/spicetify.nix
-    ./home/hyprland.nix
-    ./home/packages.nix
-    ./home/dotfiles.nix
-    ./home/caelestia.nix
-    ./home/launcher.nix
-  ];
-
+  # Base home configuration shared across all machines
   programs.home-manager.enable = true;
 
   home = {
@@ -20,7 +10,5 @@
     stateVersion = "25.05";
   };
 
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.allowUnfreePredicate = _: true;
+  # nixpkgs config handled by system when using useGlobalPkgs
 }
- 

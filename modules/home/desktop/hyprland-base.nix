@@ -14,12 +14,6 @@
         hide_on_key_press = false;
       };
       input = { touchpad = { natural_scroll = true; }; };
-      monitor = [
-        "DP-1, 3440x1440@144, 0x0, 1.25"
-        "DP-2, preferred, auto-right, 1.25"
-        "DP-3, preferred, auto-left, 1.25"
-        "eDP-1, 1920x1080@60, 0x0, 1.25"
-      ];
       general = {
         border_size = 0;
         gaps_in = 4;
@@ -45,7 +39,6 @@
         "float,move 10 10,title:^(initialkitty)$"
         "opacity 0.85 override 0.85 override, class:.*"
       ];
-      # windowrule = [ "opacity 0.5,class:vesktop" ];
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
         "$mod, R, exec, vicinae"
@@ -91,9 +84,6 @@
       exec-once = [
         "kitty --title initialkitty -e bash -ic 'fastfetch; exec nu'"
         "swww-daemon"
-        "sleep 1 && swww img --outputs DP-1 /home/lucas/dot/wallpapers/neon4.jpg"
-        "sleep 1 && swww img --outputs DP-2 /home/lucas/dot/wallpapers/neon1.jpg"
-        "sleep 1 && swww img --outputs DP-3 /home/lucas/dot/wallpapers/neon1.jpg"
         "systemctl --user start hyprpolkitagent"
         "caelestia-shell"
       ];

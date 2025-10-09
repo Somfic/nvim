@@ -31,35 +31,28 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       lib = nixpkgs.lib;
-    in {
-      nixosConfigurations = {
-        nixos = lib.nixosSystem {
+
+      # Helper function to create machine configurations
+      mkMachine = hostname: machineModule: hardwareModule: {
+        "${hostname}" = lib.nixosSystem {
           specialArgs = { inherit inputs; };
           inherit system;
           modules = [
             ./configuration.nix
+            hardwareModule
             inputs.home-manager.nixosModules.default
             stylix.nixosModules.stylix
             spicetify-nix.nixosModules.spicetify
-          ];
-        };
-      };
-      homeConfigurations = {
-        nixos = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home.nix
-            vicinae.homeManagerModules.default
             {
-              wayland.windowManager.hyprland = {
-                enable = true;
-                package =
-                  inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-              };
+              home-manager.users.lucas = import machineModule;
             }
           ];
-          extraSpecialArgs = { inherit inputs; };
         };
       };
+
+    in {
+      nixosConfigurations =
+        (mkMachine "home" ./machines/home/default.nix ./machines/home/hardware.nix) //
+        (mkMachine "work" ./machines/work/default.nix ./machines/work/hardware.nix);
     };
 }

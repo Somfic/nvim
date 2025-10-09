@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
 
     # System modules
@@ -30,8 +29,9 @@
   # Home Manager configuration
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users.lucas = import ./home.nix;
     backupFileExtension = "backup";
+    useGlobalPkgs = true;
+    useUserPackages = true;
     sharedModules = [
       inputs.spicetify-nix.homeManagerModules.spicetify
       inputs.vicinae.homeManagerModules.default
