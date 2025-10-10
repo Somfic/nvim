@@ -82,6 +82,7 @@
         "swww-daemon"
         "systemctl --user start hyprpolkitagent"
         "caelestia-shell"
+        "swaync"
       ];
     };
   };
