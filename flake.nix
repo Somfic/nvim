@@ -16,7 +16,6 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    spicetify-nix = { url = "github:Gerg-L/spicetify-nix"; };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
@@ -25,7 +24,7 @@
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
-    , spicetify-nix, neovim-nightly-overlay, caelestia-shell }@inputs:
+    , neovim-nightly-overlay, caelestia-shell }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -42,7 +41,6 @@
             systemModule
             inputs.home-manager.nixosModules.default
             stylix.nixosModules.stylix
-            spicetify-nix.nixosModules.spicetify
             { home-manager.users.lucas = import machineModule; }
           ];
         };

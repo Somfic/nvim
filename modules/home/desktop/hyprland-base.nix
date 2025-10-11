@@ -40,9 +40,10 @@
       bind = [
         "$mod, R, exec, rofi -show drun"
         "$mod, P, exec, passbolt-rofi"
+        "$mod, N, exec, vpn-rofi"
         "$mod, F, exec, firefox"
         "$mod, C, exec, code"
-        "$mod, S, exec, spotify"
+        "$mod, S, exec, flatpak run --env=WAYLAND_DISPLAY=wayland-1 --socket=wayland com.spotify.Client --enable-features=UseOzonePlatform --ozone-platform=wayland"
         "$mod, D, exec, vesktop"
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"
@@ -83,7 +84,6 @@
         "swww-daemon"
         "systemctl --user start hyprpolkitagent"
         "caelestia-shell"
-        "swaync"
       ];
     };
   };

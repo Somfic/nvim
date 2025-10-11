@@ -33,10 +33,8 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     sharedModules = [
-      inputs.spicetify-nix.homeManagerModules.spicetify
       {
         stylix.autoEnable = true;
-        stylix.targets.spicetify.enable = false;
         stylix.targets.vscode.enable = false;
         stylix.targets.firefox.profileNames = [ "default" ];
         stylix.targets.qt.platform = "qtct";
