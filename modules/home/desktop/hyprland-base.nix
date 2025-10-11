@@ -39,6 +39,7 @@
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
         "$mod, R, exec, rofi -show drun"
+        "$mod, P, exec, passbolt-rofi"
         "$mod, F, exec, firefox"
         "$mod, C, exec, code"
         "$mod, S, exec, spotify"
