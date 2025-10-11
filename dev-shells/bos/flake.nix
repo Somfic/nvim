@@ -35,6 +35,43 @@
           ];
 
           shellHook = ''
+            # Create wrapper scripts directory
+            mkdir -p .devshell-bin
+
+            # Create gradle wrapper with error summary
+            cat > .devshell-bin/gradle << 'GRADLE_EOF'
+#!/usr/bin/env bash
+output_file=$(mktemp)
+if ./gradlew --console=rich "$@" 2>&1 | tee "$output_file"; then
+    rm "$output_file"
+    exit 0
+else
+    exit_code=$?
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📋 ERROR SUMMARY:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    grep -A 5 "FAILURE:" "$output_file" || true
+    grep "^.*Exception:" "$output_file" | head -5 || true
+    grep "^Caused by:" "$output_file" | head -5 || true
+    grep "execution failed" "$output_file" -i | head -3 || true
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    rm "$output_file"
+    exit $exit_code
+fi
+GRADLE_EOF
+            chmod +x .devshell-bin/gradle
+
+            # Create run shortcut
+            cat > .devshell-bin/run << 'RUN_EOF'
+#!/usr/bin/env bash
+exec "$(dirname "$0")/gradle" bootRun "$@"
+RUN_EOF
+            chmod +x .devshell-bin/run
+
+            # Add to PATH
+            export PATH="$PWD/.devshell-bin:$PATH"
+
             # aws env variables
             export COFANO_AWS_CLI_COMMAND="aws"
             export COFANO_AWS_CLI_PROFILE="cofano"
@@ -45,10 +82,6 @@
             export COLORTERM="truecolor"
             export SPRING_OUTPUT_ANSI_ENABLED="ALWAYS"
             export GRADLE_OPTS="-Dorg.gradle.console=rich -Dspring.output.ansi.enabled=ALWAYS"
-
-            # aliases
-            alias gradle="./gradlew --console=rich"
-            alias run="./gradlew bootRun --console=rich"
 
             # make ./gradlew executable
             if [ -f "./gradlew" ]; then
@@ -94,6 +127,24 @@ EOF
                 aws sso login --profile cofano
             else
                 echo "✓ AWS SSO session is active"
+            fi
+
+            # configure yarn with CodeArtifact using the project's authentication script
+            echo "🧶 Configuring Yarn authentication with CodeArtifact..."
+
+            # The awsCodeArtifactCredentials.cjs script handles authentication for both npm and yarn
+            # It reads COFANO_AWS_CLI_PROFILE which we already set above
+            if [ -f "frontend/awsCodeArtifactCredentials.cjs" ]; then
+                cd frontend
+                node awsCodeArtifactCredentials.cjs
+                cd ..
+                echo "✓ Yarn authentication configured"
+            elif [ -f "awsCodeArtifactCredentials.cjs" ]; then
+                node awsCodeArtifactCredentials.cjs
+                echo "✓ Yarn authentication configured"
+            else
+                echo "⚠️  awsCodeArtifactCredentials.cjs not found"
+                echo "  Make sure you're in the bos project directory"
             fi
 
             echo "🚢 BOS development environment loaded!"
