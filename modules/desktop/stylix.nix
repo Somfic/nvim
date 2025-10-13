@@ -60,7 +60,7 @@
 
   # Additional nerd fonts available system-wide
   fonts.fontconfig.enable = true;
-  home.packages = with pkgs.nerd-fonts; [
+  environment.systemPackages = with pkgs.nerd-fonts; [
     jetbrains-mono
     symbols-only  # Pure icon font with all nerd font symbols
   ];

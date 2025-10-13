@@ -80,27 +80,27 @@ let
           ${pkgs.libnotify}/bin/notify-send "VPN" "Opening terminal for authentication..." -u low
 
           ${pkgs.kitty}/bin/kitty --title "VPN Authentication" -e bash -c "
-            echo 'Connecting to $VPN_NAME...'
-            echo ''
-            echo 'This VPN uses challenge-response 2FA.'
-            echo 'You will be prompted for username, password, and then a 2FA code.'
-            echo ''
-            nmcli connection up '$VPN_NAME' --ask
+            echo \"Connecting to \$VPN_NAME...\"
+            echo \"\"
+            echo \"This VPN uses challenge-response 2FA.\"
+            echo \"You will be prompted for username, password, and then a 2FA code.\"
+            echo \"\"
+            nmcli connection up \"\$VPN_NAME\" --ask
             EXIT_CODE=\$?
 
             if [ \$EXIT_CODE -eq 0 ]; then
-              echo ''
-              echo 'Successfully connected to VPN!'
-              notify-send 'VPN' 'Connected to $VPN_NAME' -u low
-              echo ''
-              echo 'Press Enter to close this window...'
+              echo \"\"
+              echo \"Successfully connected to VPN!\"
+              notify-send \"VPN\" \"Connected to \$VPN_NAME\" -u low
+              echo \"\"
+              echo \"Press Enter to close this window...\"
               read
             else
-              echo ''
-              echo 'Failed to connect to VPN.'
-              notify-send 'VPN' 'Failed to connect to $VPN_NAME' -u critical
-              echo ''
-              echo 'Press Enter to close this window...'
+              echo \"\"
+              echo \"Failed to connect to VPN.\"
+              notify-send \"VPN\" \"Failed to connect to \$VPN_NAME\" -u critical
+              echo \"\"
+              echo \"Press Enter to close this window...\"
               read
             fi
           "
