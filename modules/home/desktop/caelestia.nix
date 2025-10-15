@@ -16,7 +16,7 @@
     general = { apps = { terminal = [ "kitty" ]; }; };
     wallpaper = { current = "/home/lucas/dot/wallpapers/neon1.jpg"; };
     background = {
-      desktopClock.enabled = true;
+      desktopClock.enabled = false;
       visualiser.enabled =
         false; # Disabled to prevent QString assignment errors
     };
