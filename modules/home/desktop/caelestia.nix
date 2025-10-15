@@ -4,15 +4,27 @@
   # Create Caelestia configuration directory and files
   home.file.".config/caelestia/shell.json".text = builtins.toJSON {
     paths = { wallpaperDir = "/home/lucas/dot/wallpapers"; };
+    appearance = { transparency = { enabled = false; }; };
+    border = {
+      rounding = 25;
+      thickness = 8;
+    };
     launcher = {
-      maxWallpapers = 9;
-      maxShownActions = 8;
-      maxShownApplications = 8;
       fuzzySearch = true;
       dangerousActions = true;
-      vimKeybinds = false;
     };
+    general = { apps = { terminal = [ "kitty" ]; }; };
     wallpaper = { current = "/home/lucas/dot/wallpapers/neon1.jpg"; };
+    background = {
+      desktopClock.enabled = true;
+      visualiser.enabled =
+        false; # Disabled to prevent QString assignment errors
+    };
+    lock = { recolourLogo = true; };
+    bar = {
+      status = { showMicrophone = true; };
+      tray = { recolour = true; };
+    };
   };
 
   # Create symlink to wallpapers in the default Pictures directory for convenience

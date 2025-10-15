@@ -62,6 +62,6 @@
   fonts.fontconfig.enable = true;
   environment.systemPackages = with pkgs.nerd-fonts; [
     jetbrains-mono
-    symbols-only  # Pure icon font with all nerd font symbols
+    symbols-only # Pure icon font with all nerd font symbols
   ];
 }

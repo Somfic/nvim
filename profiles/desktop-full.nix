@@ -7,6 +7,7 @@
     ../modules/home/desktop/hyprland-base.nix
     ../modules/home/desktop/caelestia.nix
     ../modules/home/desktop/launcher.nix
+    ../modules/home/desktop/gtk.nix
 
     # Shell and terminal
     ../modules/home/shell/nushell.nix
