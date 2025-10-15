@@ -13,7 +13,10 @@
         no_hardware_cursors = true;
         hide_on_key_press = false;
       };
-      input = { touchpad = { natural_scroll = true; }; };
+      input = {
+        touchpad = { natural_scroll = true; };
+        float_switch_override_focus = 0;
+      };
       general = {
         border_size = 0;
         gaps_in = 4;
@@ -35,10 +38,16 @@
           range = 8;
         };
       };
-      windowrulev2 = [ "opacity 0.85 override 0.85 override, class:.*" ];
+      # windowrulev2 = [ "opacity 0.85 override 0.85 override, class:.*" ];
+
+      # Window rules for pop-ups and dialogs
+      windowrulev2 = [
+        "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)"
+      ];
+
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bind = [
-        "$mod, R, exec, rofi -show drun"
+        "$mod, R, exec, caelestia-shell ipc call drawers toggle launcher"
         "$mod, P, exec, passbolt-rofi"
         "$mod, N, exec, vpn-rofi"
         "$mod, F, exec, firefox"
