@@ -34,176 +34,178 @@
             awscli2
 
             # Database tools
+            mariadb
             mycli # Pretty MySQL CLI with syntax highlighting and auto-completion
             dbeaver-bin # Universal SQL database GUI
             gobang # Cross-platform TUI database management tool
           ];
 
           shellHook = ''
-                        # Create wrapper scripts directory in user cache
-                        DEVSHELL_BIN="$HOME/.cache/nix-devshell-bin/bos"
-                        mkdir -p "$DEVSHELL_BIN"
+                                    # Create wrapper scripts directory in user cache
+                                    DEVSHELL_BIN="$HOME/.cache/nix-devshell-bin/bos"
+                                    mkdir -p "$DEVSHELL_BIN"
 
-                        # Store current directory for scripts to use
-                        PROJECT_DIR="$PWD"
+                                    # Store current directory for scripts to use
+                                    PROJECT_DIR="$PWD"
 
-                        # Create gradle wrapper with error summary
-                        cat > "$DEVSHELL_BIN/gradle" << 'GRADLE_EOF'
-#!/usr/bin/env bash
-cd "''${PROJECT_DIR:-''$PWD}"
-output_file=''$(mktemp)
-if ./gradlew --console=rich "''$@" 2>&1 | tee "''$output_file"; then
-    rm "''$output_file"
-    exit 0
-else
-    exit_code=''$?
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "📋 ERROR SUMMARY:"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    grep -A 5 "FAILURE:" "''$output_file" || true
-    grep "^.*Exception:" "''$output_file" | head -5 || true
-    grep "^Caused by:" "''$output_file" | head -5 || true
-    grep "execution failed" "''$output_file" -i | head -3 || true
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    rm "''$output_file"
-    exit ''$exit_code
-fi
-GRADLE_EOF
-                        chmod +x "$DEVSHELL_BIN/gradle"
+                                    # Create gradle wrapper with error summary
+                                    cat > "$DEVSHELL_BIN/gradle" << 'GRADLE_EOF'
+            #!/usr/bin/env bash
+            cd "''${PROJECT_DIR:-$PWD}"
+            output_file=$(mktemp)
+            if ./gradlew --console=rich "$@" 2>&1 | tee "$output_file"; then
+                rm "$output_file"
+                exit 0
+            else
+                exit_code=$?
+                echo ""
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                echo "📋 ERROR SUMMARY:"
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                grep -A 5 "FAILURE:" "$output_file" || true
+                grep "^.*Exception:" "$output_file" | head -5 || true
+                grep "^Caused by:" "$output_file" | head -5 || true
+                grep "execution failed" "$output_file" -i | head -3 || true
+                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                rm "$output_file"
+                exit $exit_code
+            fi
+            GRADLE_EOF
+                                    chmod +x "$DEVSHELL_BIN/gradle"
 
-                        # Create run shortcut
-                        cat > "$DEVSHELL_BIN/run" << 'RUN_EOF'
-#!/usr/bin/env bash
-exec "''$DEVSHELL_BIN/gradle" bootRun "''$@"
-RUN_EOF
-                        chmod +x "$DEVSHELL_BIN/run"
+                                    # Create run shortcut
+                                    cat > "$DEVSHELL_BIN/run" << 'RUN_EOF'
+            #!/usr/bin/env bash
+            exec "$DEVSHELL_BIN/gradle" bootRun "$@"
+            RUN_EOF
+                                    chmod +x "$DEVSHELL_BIN/run"
 
-                        # Create database connection shortcut
-                        cat > "$DEVSHELL_BIN/db" << 'DB_EOF'
-#!/usr/bin/env bash
-exec mycli -h localhost -P 3308 -u root -p root bos_test_varo "''$@"
-DB_EOF
-                        chmod +x "$DEVSHELL_BIN/db"
+                                    # Create database connection shortcut
+                                    cat > "$DEVSHELL_BIN/db" << 'DB_EOF'
+            #!/usr/bin/env bash
+            exec mycli -h localhost -P 3308 -u root -p root bos_test_varo "$@"
+            DB_EOF
+                                    chmod +x "$DEVSHELL_BIN/db"
 
-                        # Create sql alias
-                        cat > "$DEVSHELL_BIN/sql" << 'SQL_EOF'
-#!/usr/bin/env bash
-exec mycli -h localhost -P 3308 -u root -p root "''$@"
-SQL_EOF
-                        chmod +x "$DEVSHELL_BIN/sql"
+                                    # Create sql alias
+                                    cat > "$DEVSHELL_BIN/sql" << 'SQL_EOF'
+            #!/usr/bin/env bash
+            exec mycli -h localhost -P 3308 -u root -p root "$@"
+            SQL_EOF
+                                    chmod +x "$DEVSHELL_BIN/sql"
 
-                        # Export variables for scripts
-                        export PROJECT_DIR
-                        export DEVSHELL_BIN
+                                    # Export variables for scripts
+                                    export PROJECT_DIR
+                                    export DEVSHELL_BIN
 
-                        # Add to PATH
-                        export PATH="$DEVSHELL_BIN:$PATH"
+                                    # Add to PATH
+                                    export PATH="$DEVSHELL_BIN:$PATH"
 
-                        # aws env variables
-                        export COFANO_AWS_CLI_COMMAND="aws"
-                        export COFANO_AWS_CLI_PROFILE="cofano"
-                        export COFANO_AWS_SSO_PROFILE="cofano"
+                                    # aws env variables
+                                    export COFANO_AWS_CLI_COMMAND="aws"
+                                    export COFANO_AWS_CLI_PROFILE="cofano"
+                                    export COFANO_AWS_SSO_PROFILE="cofano"
 
-                        # java env variables
-                        export SPRING_PROFILES_ACTIVE="standard,dev,personal"                       
+                                    # java env variables
+                                    export SPRING_PROFILES_ACTIVE="standard,dev,personal"                       
 
-                        # terminal colors env variables
-                        export TERM="xterm-256color"
-                        export FORCE_COLOR=1
-                        export COLORTERM="truecolor"
-                        export SPRING_OUTPUT_ANSI_ENABLED="ALWAYS"
-                        export GRADLE_OPTS="-Dorg.gradle.console=rich -Dspring.output.ansi.enabled=ALWAYS"
+                                    # terminal colors env variables
+                                    export TERM="xterm-256color"
+                                    export FORCE_COLOR=1
+                                    export COLORTERM="truecolor"
+                                    export SPRING_OUTPUT_ANSI_ENABLED="ALWAYS"
+                                    export GRADLE_OPTS="-Dorg.gradle.console=rich -Dspring.output.ansi.enabled=ALWAYS"
 
-                        # Simplified Spring Boot logging pattern: LEVEL ClassName : message
-                        export LOGGING_PATTERN_CONSOLE="%clr(%logger{0}){grey}%clr(:){faint} %clr(%m){WARN=yellow,ERROR=red,DEBUG=magenta,TRACE=blue,INFO=faint}%n"
+                                    # Simplified Spring Boot logging pattern: LEVEL ClassName : message
+                                    export LOGGING_PATTERN_CONSOLE="%clr(%logger{0}){grey}%clr(:){faint} %clr(%m){WARN=yellow,ERROR=red,DEBUG=magenta,TRACE=blue,INFO=faint}%n"
 
-                        # make ./gradlew executable
-                        if [ -f "./gradlew" ]; then
-                            chmod +x ./gradlew
-                        fi
+                                    # make ./gradlew executable
+                                    if [ -f "./gradlew" ]; then
+                                        chmod +x ./gradlew
+                                        git update-index - -skip-worktree gradlew
+                                    fi
 
-                        # aws sso
-                        if ! aws configure list --profile cofano &>/dev/null; then
-                            echo "🔧 Auto-configuring AWS SSO profile 'cofano'..."
+                                    # aws sso
+                                    if ! aws configure list --profile cofano &>/dev/null; then
+                                        echo "🔧 Auto-configuring AWS SSO profile 'cofano'..."
 
-                            # Create the AWS config directory if it doesn't exist
-                            mkdir -p ~/.aws
+                                        # Create the AWS config directory if it doesn't exist
+                                        mkdir -p ~/.aws
 
-                            # Check if config file exists, create if not
-                            if [ ! -f ~/.aws/config ]; then
-                                touch ~/.aws/config
-                            fi
+                                        # Check if config file exists, create if not
+                                        if [ ! -f ~/.aws/config ]; then
+                                            touch ~/.aws/config
+                                        fi
 
-                            # Check if cofano profile already exists in config
-                            if ! grep -q "\[profile cofano\]" ~/.aws/config; then
-                                cat >> ~/.aws/config << 'EOF'
-            [profile cofano]
-            sso_session = cofano
-            sso_account_id = 933071262868
-            sso_role_name = Developer
-            region = eu-central-1
-            output = json
+                                        # Check if cofano profile already exists in config
+                                        if ! grep -q "\[profile cofano\]" ~/.aws/config; then
+                                            cat >> ~/.aws/config << 'EOF'
+                        [profile cofano]
+                        sso_session = cofano
+                        sso_account_id = 933071262868
+                        sso_role_name = Developer
+                        region = eu-central-1
+                        output = json
 
-            [sso-session cofano]
-            sso_start_url = https://cofano.awsapps.com/start
-            sso_region = eu-central-1
-            sso_registration_scopes = sso:account:access
-            EOF
-                                echo "✅ AWS SSO profile 'cofano' configured automatically"
-                            else
-                                echo "✅ AWS SSO profile 'cofano' already exists in config"
-                            fi
-                        fi
+                        [sso-session cofano]
+                        sso_start_url = https://cofano.awsapps.com/start
+                        sso_region = eu-central-1
+                        sso_registration_scopes = sso:account:access
+                        EOF
+                                            echo "✅ AWS SSO profile 'cofano' configured automatically"
+                                        else
+                                            echo "✅ AWS SSO profile 'cofano' already exists in config"
+                                        fi
+                                    fi
 
-                        # log in to aws
-                        if ! aws sts get-caller-identity --profile cofano &>/dev/null; then
-                            echo "⚠️  Not logged in to AWS SSO. Opening browser for login..."
-                            aws sso login --profile cofano
-                        else
-                            echo "✅ AWS SSO session is active"
-                        fi
+                                    # log in to aws
+                                    if ! aws sts get-caller-identity --profile cofano &>/dev/null; then
+                                        echo "⚠️  Not logged in to AWS SSO. Opening browser for login..."
+                                        aws sso login --profile cofano
+                                    else
+                                        echo "✅ AWS SSO session is active"
+                                    fi
 
-                        # configure yarn with CodeArtifact using the project's authentication script
-                        echo "🧶 Configuring Yarn authentication with CodeArtifact..."
+                                    # configure yarn with CodeArtifact using the project's authentication script
+                                    echo "🧶 Configuring Yarn authentication with CodeArtifact..."
 
-                        # The awsCodeArtifactCredentials.cjs script handles authentication for both npm and yarn
-                        # It reads COFANO_AWS_CLI_PROFILE which we already set above
-                        if [ -f "frontend/awsCodeArtifactCredentials.cjs" ]; then
-                            cd frontend
-                            node awsCodeArtifactCredentials.cjs
-                            cd ..
-                            echo "✅ Yarn authentication configured"
-                        elif [ -f "awsCodeArtifactCredentials.cjs" ]; then
-                            node awsCodeArtifactCredentials.cjs
-                            echo "✅ Yarn authentication configured"
-                        else
-                            echo "⚠️  awsCodeArtifactCredentials.cjs not found"
-                            echo "  Make sure you're in the bos project directory"
-                        fi
+                                    # The awsCodeArtifactCredentials.cjs script handles authentication for both npm and yarn
+                                    # It reads COFANO_AWS_CLI_PROFILE which we already set above
+                                    if [ -f "frontend/awsCodeArtifactCredentials.cjs" ]; then
+                                        cd frontend
+                                        node awsCodeArtifactCredentials.cjs
+                                        cd ..
+                                        echo "✅ Yarn authentication configured"
+                                    elif [ -f "awsCodeArtifactCredentials.cjs" ]; then
+                                        node awsCodeArtifactCredentials.cjs
+                                        echo "✅ Yarn authentication configured"
+                                    else
+                                        echo "⚠️  awsCodeArtifactCredentials.cjs not found"
+                                        echo "  Make sure you're in the bos project directory"
+                                    fi
 
-                        # Login to AWS ECR for Docker
-                        echo "🔐 Logging in to AWS ECR for Docker..."
-                        if aws ecr get-login-password --region eu-central-1 --profile cofano 2>/dev/null | docker login --username AWS --password-stdin 933071262868.dkr.ecr.eu-central-1.amazonaws.com &>/dev/null; then
-                            echo "✅ Docker logged in to AWS ECR"
-                        else
-                            echo "⚠️  Failed to log in to AWS ECR, Docker images may not pull correctly"
-                        fi
+                                    # Login to AWS ECR for Docker
+                                    echo "🔐 Logging in to AWS ECR for Docker..."
+                                    if aws ecr get-login-password --region eu-central-1 --profile cofano 2>/dev/null | docker login --username AWS --password-stdin 933071262868.dkr.ecr.eu-central-1.amazonaws.com &>/dev/null; then
+                                        echo "✅ Docker logged in to AWS ECR"
+                                    else
+                                        echo "⚠️  Failed to log in to AWS ECR, Docker images may not pull correctly"
+                                    fi
 
-                        # Start Docker services
-                        echo "🐳 Starting Docker services..."
-                        if command -v docker-compose &>/dev/null; then
-                            if docker-compose ps mysql-bos | grep -q "Up"; then
-                                echo "✅ Docker services already running"
-                            else
-                                docker-compose up -d mysql-bos rabbitmq mailhog
-                                echo "✅ Docker services started (mysql-bos, rabbitmq, mailhog)"
-                            fi
-                        else
-                            echo "⚠️  docker-compose not found, skipping Docker service startup"
-                        fi
+                                    # Start Docker services
+                                    echo "🐳 Starting Docker services..."
+                                    if command -v docker-compose &>/dev/null; then
+                                        if docker-compose ps mysql-bos | grep -q "Up"; then
+                                            echo "✅ Docker services already running"
+                                        else
+                                            docker-compose up -d mysql-bos rabbitmq mailhog
+                                            echo "✅ Docker services started (mysql-bos, rabbitmq, mailhog)"
+                                        fi
+                                    else
+                                        echo "⚠️  docker-compose not found, skipping Docker service startup"
+                                    fi
 
-                        echo "🚢 BOS development environment loaded!"
+                                    echo "🚢 BOS development environment loaded!"
           '';
         };
       });

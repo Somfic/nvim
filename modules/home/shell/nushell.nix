@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  services.ssh-agent.enable = true;
+
   programs.nushell = {
     enable = true;
     shellAliases = {

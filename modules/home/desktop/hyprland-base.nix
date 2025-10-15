@@ -23,7 +23,7 @@
         gaps_out = 8;
       };
       decoration = {
-        rounding = 15;
+        rounding = 20;
         blur = {
           size = 24;
           passes = 3;
@@ -51,7 +51,7 @@
         "$mod, R, exec, caelestia-shell ipc call drawers toggle launcher"
         "$mod, P, exec, passbolt-rofi"
         "$mod, N, exec, vpn-rofi"
-        "$mod, F, exec, firefox"
+        "$mod, F, exec, brave"
         "$mod, C, exec, code"
         "$mod, S, exec, flatpak run --env=WAYLAND_DISPLAY=wayland-1 --socket=wayland com.spotify.Client --enable-features=UseOzonePlatform --ozone-platform=wayland"
         "$mod, D, exec, vesktop"
@@ -59,6 +59,10 @@
         "$mod, J, togglesplit,"
         "$mod, L, exec, loginctl lock-session"
         "$mod, M, exit"
+
+        # screenshot
+        ", Print, exec, caelestia-shell ipc call picker openFreeze"
+        "$mod SHIFT, S, exec, caelestia-shell ipc call picker openFreeze"
 
         # floating and fullscreen
         "$mod, V, togglefloating"
