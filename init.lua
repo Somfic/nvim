@@ -15,6 +15,7 @@ vim.opt.incsearch = true
 vim.opt.swapfile = false
 
 require('keybindings')
+require('lsp_keybindings')
 
 -- auto-write files
 vim.api.nvim_create_autocmd('InsertLeave', {

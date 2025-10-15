@@ -3,6 +3,50 @@ vim.pack.add({
 })
 
 require('telescope').setup({
+	defaults = {
+		file_ignore_patterns = { 'node_modules', '.git/' },
+		sorting_strategy = 'ascending',
+	},
+	pickers = {
+		current_buffer_fuzzy_find = {
+			tiebreak = function(current, existing, prompt)
+				-- Prefer exact substring matches
+				local current_lower = current.ordinal:lower()
+				local existing_lower = existing.ordinal:lower()
+				local prompt_lower = prompt:lower()
+
+				local current_exact = current_lower:find(prompt_lower, 1, true)
+				local existing_exact = existing_lower:find(prompt_lower, 1, true)
+
+				if current_exact and not existing_exact then
+					return true
+				elseif existing_exact and not current_exact then
+					return false
+				end
+
+				return current.score < existing.score
+			end,
+		},
+		live_grep = {
+			tiebreak = function(current, existing, prompt)
+				-- Prefer exact substring matches
+				local current_lower = current.ordinal:lower()
+				local existing_lower = existing.ordinal:lower()
+				local prompt_lower = prompt:lower()
+
+				local current_exact = current_lower:find(prompt_lower, 1, true)
+				local existing_exact = existing_lower:find(prompt_lower, 1, true)
+
+				if current_exact and not existing_exact then
+					return true
+				elseif existing_exact and not current_exact then
+					return false
+				end
+
+				return current.score < existing.score
+			end,
+		}
+	},
 	extensions = {
 		['ui-select'] = {
 			require('telescope.themes').get_dropdown {
@@ -15,7 +59,7 @@ require('telescope').setup({
 		}
 	}
 })
-require('telescope').load_extension('ui-select')
+
 
 require('which-key').add({
 	{ '<leader>f',  group = 'find' },
@@ -26,7 +70,7 @@ require('which-key').add({
 		mode = 'n',
 		cond = function()
 			return vim
-				.fn.isdirectory('.git') == 1
+			    .fn.isdirectory('.git') == 1
 		end
 	},
 	{
@@ -36,7 +80,7 @@ require('which-key').add({
 		mode = 'n',
 		cond = function()
 			return vim
-				.fn.isdirectory('.git') == 0
+			    .fn.isdirectory('.git') == 0
 		end
 	},
 
