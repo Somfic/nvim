@@ -41,11 +41,12 @@
       # windowrulev2 = [ "opacity 0.85 override 0.85 override, class:.*" ];
 
       # Window rules for pop-ups and dialogs
-      windowrulev2 = [
-        "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)"
-      ];
+      windowrulev2 =
+        [ "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)" ];
 
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
+      bindi =
+        [ "$mod, SUPER_L, exec, caelestia-shell ipc call drawers toggle launcher" ];
       bind = [
         "$mod, R, exec, caelestia-shell ipc call drawers toggle launcher"
         "$mod, P, exec, passbolt-rofi"
