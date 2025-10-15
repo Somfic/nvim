@@ -26,5 +26,6 @@
     filezilla
     openvpn
     networkmanagerapplet # NetworkManager GUI for VPN management
+    httpie # HTTP client for API testing
   ];
 }
