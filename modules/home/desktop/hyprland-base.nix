@@ -6,8 +6,21 @@
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
     xwayland.enable = true;
     systemd.enable = true;
+
+    plugins = [
+      pkgs.hyprlandPlugins.hyprsplit
+    ];
+
     settings = {
       "$mod" = "SUPER";
+
+      # Hyprsplit plugin configuration
+      plugin = {
+        hyprsplit = {
+          num_workspaces = 10;
+        };
+      };
+
       cursor = {
         inactive_timeout = 10;
         no_hardware_cursors = true;
