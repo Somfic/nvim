@@ -17,5 +17,20 @@
   };
 
   # Ensure XDG environment variables are set for icon discovery
-  home.sessionVariables = { XCURSOR_THEME = "Bibata-Modern-Classic"; };
+  home.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    # QML/Qt icon theme fallback
+    QT_QUICK_CONTROLS_ICON_THEME = "Papirus-Dark";
+  };
+
+  # Create Qt configuration file for icon theme
+  xdg.configFile."qt5ct/qt5ct.conf".text = ''
+    [Appearance]
+    icon_theme=Papirus-Dark
+  '';
+
+  xdg.configFile."qt6ct/qt6ct.conf".text = ''
+    [Appearance]
+    icon_theme=Papirus-Dark
+  '';
 }
