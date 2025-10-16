@@ -195,22 +195,56 @@ in {
     gnused
   ];
 
-  # Custom rofi theme for password manager
+  # Arc-Dark theme with stylix color overrides
+  home.file.".config/rofi/config.rasi".text = ''
+    configuration {
+      modi: "drun,run,filebrowser,window";
+      show-icons: true;
+      display-drun: "  Apps";
+      display-run: "  Run";
+      display-filebrowser: "  Files";
+      display-window: " 﩯 Windows";
+      drun-display-format: "{name}";
+      window-format: "{w} · {c} · {t}";
+      matching: "fuzzy";
+      sort: true;
+      sorting-method: "fzf";
+    }
+
+    @theme "Arc-Dark"
+
+    * {
+      background-color: #${config.lib.stylix.colors.base00};
+      border-color: #${config.lib.stylix.colors.base0D};
+      text-color: #${config.lib.stylix.colors.base05};
+      font: "${config.stylix.fonts.monospace.name} 12";
+      accent: #${config.lib.stylix.colors.base0D};
+    }
+
+    element selected {
+      background-color: #${config.lib.stylix.colors.base0D};
+      text-color: #${config.lib.stylix.colors.base00};
+    }
+  '';
+
+  # Custom rofi theme for password manager (using stylix colors)
   home.file.".config/rofi/passbolt.rasi".text = ''
     * {
-      bg: #1e1e2e;
-      bg-alt: #313244;
-      fg: #cdd6f4;
-      fg-alt: #bac2de;
+      bg: #${config.lib.stylix.colors.base00};
+      bg-alt: #${config.lib.stylix.colors.base01};
+      bg-highlight: #${config.lib.stylix.colors.base02};
+      fg: #${config.lib.stylix.colors.base05};
+      fg-alt: #${config.lib.stylix.colors.base04};
 
-      accent: #89b4fa;
-      urgent: #f38ba8;
+      accent: #${config.lib.stylix.colors.base0D};
+      urgent: #${config.lib.stylix.colors.base08};
+      success: #${config.lib.stylix.colors.base0B};
 
       border-color: @accent;
       background-color: @bg;
       text-color: @fg;
 
-      font: "JetBrainsMono Nerd Font 12";
+      font: "${config.stylix.fonts.monospace.name} 12";
     }
 
     window {
@@ -242,7 +276,7 @@ in {
     prompt {
       background-color: transparent;
       text-color: @accent;
-      font: "JetBrainsMono Nerd Font Bold 12";
+      font: "${config.stylix.fonts.monospace.name} Bold 12";
     }
 
     entry {
