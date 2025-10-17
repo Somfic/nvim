@@ -12,6 +12,7 @@
       "g" = "git";
       "ll" = "ls -l";
       "cls" = "clear";
+      "diff" = "difft";
       "reload-debug" = "sudo nixos-rebuild switch --flake ~/dot#home";
       "reload" = "nh os switch ~/dot --hostname home";
       "reload-work" = "nh os switch ~/dot --hostname work";

@@ -19,6 +19,7 @@
     jetbrains.idea-ultimate
     just # running commands
     mprocs # running multiple processes
+    difftastic # structural diff tool
 
     # Network tools
     sshfs

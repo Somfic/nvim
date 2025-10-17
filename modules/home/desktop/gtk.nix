@@ -5,17 +5,21 @@
   home.packages = with pkgs; [
     papirus-icon-theme
     adwaita-icon-theme # Fallback icon theme
+    libsForQt5.qt5ct # Qt configuration tool
   ];
 
-  # Configure GTK to use Papirus icons (QML apps respect GTK settings)
+  # GTK configuration (Stylix handles theming)
   gtk = {
     enable = true;
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
     };
   };
 
+<<<<<<< HEAD
   # Ensure XDG environment variables are set for icon discovery
   home.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Classic";
@@ -33,4 +37,18 @@
     [Appearance]
     icon_theme=Papirus-Dark
   '';
+=======
+  # Qt configuration (Stylix manages theming via qtct)
+  qt = {
+    enable = true;
+    platformTheme.name = "qtct";
+  };
+
+  # Environment variables for icon and theme discovery
+  home.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    # Ensure icon themes are discoverable
+    ICON_THEME = "Papirus-Dark";
+  };
+>>>>>>> 9a3d9e7 (stuff)
 }
