@@ -22,8 +22,23 @@
     };
     lock = { recolourLogo = true; };
     bar = {
-      status = { showMicrophone = true; };
+      status = {
+        showMicrophone = true;
+        showKbLayout = false;
+      };
       tray = { recolour = true; };
+    };
+    utilities = {
+      toasts = {
+        audioInputChanged = true;
+        audioOutputChanged = true;
+        capsLockChanged = false;
+        chargingChanged = true;
+        configLoaded = true;
+        dndChanged = true;
+        gameModeChanged = true;
+        numLockChanged = false;
+      };
     };
   };
 
