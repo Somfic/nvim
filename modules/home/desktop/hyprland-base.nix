@@ -11,6 +11,11 @@
       inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
     ];
 
+    # Source dynamic monitor configuration from nwg-displays
+    extraConfig = ''
+      source = ~/.config/hypr/monitors.conf
+    '';
+
     settings = {
       "$mod" = "SUPER";
 
@@ -64,6 +69,7 @@
         "$mod, R, exec, caelestia-shell ipc call drawers toggle launcher"
         "$mod, P, exec, passbolt-rofi"
         "$mod, N, exec, vpn-rofi"
+        "$mod, O, exec, monitor-config"
         "$mod, F, exec, brave"
         "$mod, C, exec, code"
         "$mod, S, exec, flatpak run --env=WAYLAND_DISPLAY=wayland-1 --socket=wayland com.spotify.Client --enable-features=UseOzonePlatform --ozone-platform=wayland"
