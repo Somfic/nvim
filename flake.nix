@@ -8,6 +8,10 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    split-monitor-workspaces = {
+      url = "github:Duckonaut/split-monitor-workspaces";
+      inputs.hyprland.follows = "hyprland";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,7 +28,7 @@
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
-    , neovim-nightly-overlay, caelestia-shell }@inputs:
+    , neovim-nightly-overlay, caelestia-shell, split-monitor-workspaces }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};

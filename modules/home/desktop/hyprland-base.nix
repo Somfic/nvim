@@ -8,16 +8,16 @@
     systemd.enable = true;
 
     plugins = [
-      pkgs.hyprlandPlugins.hyprsplit
+      inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
     ];
 
     settings = {
       "$mod" = "SUPER";
 
-      # Hyprsplit plugin configuration
+      # split-monitor-workspaces plugin configuration
       plugin = {
-        hyprsplit = {
-          num_workspaces = 10;
+        split-monitor-workspaces = {
+          count = 10;
         };
       };
 
@@ -98,12 +98,12 @@
         "$mod, Q, killactive"
       ] ++ (
         # workspaces
-        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
+        # binds $mod + [shift +] {1..9} to [move to] split-workspace {1..9}
         builtins.concatLists (builtins.genList (i:
           let ws = i + 1;
           in [
-            "$mod, ${toString ws}, workspace, ${toString ws}"
-            "$mod SHIFT, ${toString ws}, movetoworkspace, ${toString ws}"
+            "$mod, ${toString ws}, split-workspace, ${toString ws}"
+            "$mod SHIFT, ${toString ws}, split-movetoworkspace, ${toString ws}"
           ]) 9));
 
       exec-once = [
