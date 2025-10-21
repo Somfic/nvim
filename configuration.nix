@@ -21,9 +21,9 @@
     ./modules/desktop/stylix.nix
 
     # Program modules
-    ./modules/programs/gaming.nix
     ./modules/programs/virtualization.nix
     ./modules/programs/obsidian.nix
+    # gaming.nix moved to machines/home/system.nix
   ];
 
   # Home Manager configuration
@@ -47,13 +47,21 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
 
-  # Nix settings including Hyprland binary cache
+  # Nix settings including binary caches
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    substituters = [ "https://hyprland.cachix.org" ];
-    trusted-substituters = [ "https://hyprland.cachix.org" ];
-    trusted-public-keys =
-      [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    substituters = [
+      "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+    trusted-substituters = [
+      "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+    trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
   };
 
   system.stateVersion = "25.05";

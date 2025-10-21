@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
@@ -8,8 +8,8 @@
     swww # wallpaper daemon for wayland
     pavucontrol # audio control GUI for pulseaudio
     playerctl # media player control
-    prismlauncher # minecraft
     spotify # broken - using flatpak instead
     # stremio # media streaming app
+    # prismlauncher moved to machines/home/default.nix
   ];
 }

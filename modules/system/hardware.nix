@@ -1,17 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-    nvidia = {
-      modesetting.enable = true;
-      open = false;
-    };
+  # General graphics support (works for both Intel and NVIDIA)
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
   };
 
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia-container-toolkit.enable = true;
+  # NVIDIA-specific settings moved to machines/home/system.nix
 }
