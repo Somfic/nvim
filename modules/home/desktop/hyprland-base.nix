@@ -20,11 +20,7 @@
       "$mod" = "SUPER";
 
       # split-monitor-workspaces plugin configuration
-      plugin = {
-        split-monitor-workspaces = {
-          count = 10;
-        };
-      };
+      plugin = { split-monitor-workspaces = { count = 10; }; };
 
       cursor = {
         inactive_timeout = 10;
@@ -56,15 +52,16 @@
           range = 8;
         };
       };
-      # windowrulev2 = [ "opacity 0.85 override 0.85 override, class:.*" ];
-
       # Window rules for pop-ups and dialogs
-      windowrulev2 =
-        [ "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)" ];
+      windowrulev2 = [
+        "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)"
+        "opacity 0.85 override 0.85 override, class:.*"
+      ];
 
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
-      bindr =
-        [ "$mod, SUPER_L, exec, caelestia-shell ipc call drawers toggle launcher" ];
+      bindr = [
+        "$mod, SUPER_L, exec, caelestia-shell ipc call drawers toggle launcher"
+      ];
       bind = [
         "$mod, R, exec, caelestia-shell ipc call drawers toggle launcher"
         "$mod, P, exec, passbolt-rofi"

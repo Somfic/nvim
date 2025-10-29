@@ -34,10 +34,11 @@
             awscli2
 
             # Database tools
-            mariadb
+            mysql80 # MySQL 8.0 client (compatible with MySQL 8.3 server)
             mycli # Pretty MySQL CLI with syntax highlighting and auto-completion
             dbeaver-bin # Universal SQL database GUI
             gobang # Cross-platform TUI database management tool
+            yq-go # YAML processor for config file updates
           ];
 
           shellHook = ''
@@ -195,17 +196,30 @@ EOF
                                     # Start Docker services
                                     echo "🐳 Starting Docker services..."
                                     if command -v docker-compose &>/dev/null; then
-                                        if docker-compose ps mysql-bos | grep -q "Up"; then
+                                        # Use --project-name to ensure consistent container naming across worktrees
+                                        if docker-compose --project-name bos ps mysql-bos 2>/dev/null | grep -q "Up"; then
                                             echo "✅ Docker services already running"
                                         else
-                                            docker-compose up -d mysql-bos rabbitmq mailhog
+                                            docker-compose --project-name bos up -d mysql-bos rabbitmq mailhog
                                             echo "✅ Docker services started (mysql-bos, rabbitmq, mailhog)"
                                         fi
                                     else
                                         echo "⚠️  docker-compose not found, skipping Docker service startup"
                                     fi
 
+                                    # Install git post-checkout hook for automatic database switching
+                                    if [ -d ".git/hooks" ]; then
+                                        cp ${./post-checkout-hook.sh} .git/hooks/post-checkout
+                                        chmod +x .git/hooks/post-checkout
+                                        echo "✅ Git post-checkout hook installed"
+                                    fi
+
                                     echo "🚢 BOS development environment loaded!"
+
+                                    # Run the database hook for the current branch to ensure database is set up
+                                    if [ -f .git/hooks/post-checkout ]; then
+                                        .git/hooks/post-checkout "" "" 1
+                                    fi
           '';
         };
       });
