@@ -13,6 +13,8 @@
 
     # Source dynamic monitor configuration from nwg-displays
     extraConfig = ''
+      # Source monitor config if it exists (created by nwg-displays)
+      exec-once = mkdir -p ~/.config/hypr && touch ~/.config/hypr/monitors.conf
       source = ~/.config/hypr/monitors.conf
     '';
 

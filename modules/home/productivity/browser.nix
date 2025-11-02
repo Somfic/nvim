@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  programs.brave.enable = true;
+  # Default browser is Brave, but can be overridden per-machine
+  programs.brave.enable = lib.mkDefault true;
+  programs.firefox.enable = lib.mkDefault false;
+  programs.google-chrome.enable = lib.mkDefault false;
 }

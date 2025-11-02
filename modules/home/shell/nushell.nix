@@ -25,6 +25,11 @@
     settings = { show_banner = false; };
   };
 
+  programs.carapace = {
+    enable = true;
+    enableNushellIntegration = true;
+  };
+
   programs.starship = {
     enable = true;
     settings = { add_newline = true; };

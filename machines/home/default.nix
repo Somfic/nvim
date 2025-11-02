@@ -7,4 +7,13 @@
     ./monitors.nix
     ../../modules/home/gaming/packages.nix
   ];
+
+  # Home profile uses Firefox instead of Brave
+  programs.brave.enable = false;
+  programs.firefox.enable = true;
+
+  # Override Super+F to open Firefox
+  wayland.windowManager.hyprland.settings.bind = [
+    "$mod, F, exec, firefox"
+  ];
 }
