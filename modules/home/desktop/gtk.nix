@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Install icon theme for desktop apps
@@ -26,8 +26,8 @@
   # Qt configuration - use gtk2 platform theme so Qt apps use GTK settings
   qt = {
     enable = true;
-    platformTheme.name = "gtk2";
-    style.name = "adwaita-dark";
+    platformTheme.name = lib.mkForce "gtk2";
+    style.name = lib.mkForce "adwaita-dark";
   };
 
   # Environment variables for icon and theme discovery

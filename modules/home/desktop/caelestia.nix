@@ -4,7 +4,10 @@
   # Create Caelestia configuration directory and files
   home.file.".config/caelestia/shell.json".text = builtins.toJSON {
     paths = { wallpaperDir = "/home/lucas/dot/wallpapers"; };
-    appearance = { transparency = { enabled = false; }; };
+    appearance = {
+      transparency = { enabled = false; };
+      iconTheme = "Papirus-Dark";
+    };
     border = {
       rounding = 25;
       thickness = 8;
