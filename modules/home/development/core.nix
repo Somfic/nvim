@@ -20,6 +20,7 @@
     just # running commands
     mprocs # running multiple processes
     difftastic # structural diff tool
+    opencode # AI coding agent for the terminal
 
     # Network tools
     sshfs
