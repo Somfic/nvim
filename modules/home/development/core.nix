@@ -17,6 +17,8 @@
     inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
     inputs.caelestia-shell.packages.${pkgs.system}.default # caelestia shell
     jetbrains.idea-ultimate
+    android-studio
+    ngrok
     just # running commands
     mprocs # running multiple processes
     difftastic # structural diff tool
