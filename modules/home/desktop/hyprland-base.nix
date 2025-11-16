@@ -55,10 +55,8 @@
         };
       };
       # Window rules for pop-ups and dialogs
-      windowrulev2 = [
-        "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)"
-        "opacity 0.85 override 0.85 override, class:.*"
-      ];
+      windowrulev2 =
+        [ "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)" ];
 
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bindr = [
