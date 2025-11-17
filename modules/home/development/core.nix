@@ -18,11 +18,9 @@
     inputs.caelestia-shell.packages.${pkgs.system}.default # caelestia shell
     jetbrains.idea-ultimate
     android-studio
-    ngrok
     just # running commands
     mprocs # running multiple processes
     difftastic # structural diff tool
-    opencode # AI coding agent for the terminal
 
     # Network tools
     sshfs
