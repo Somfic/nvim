@@ -6,7 +6,7 @@
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
     # withUWSM = true;
     xwayland.enable = true;
-    # portalPackage removed - managed centrally in portals.nix
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
   environment.sessionVariables = {

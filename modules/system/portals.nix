@@ -5,9 +5,10 @@
   xdg.portal = {
     enable = true;
 
+    # Note: xdg-desktop-portal-hyprland is provided by programs.hyprland
+    # Only add gtk portal here to avoid conflicts
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-hyprland
     ];
 
     # Configure which portal to use for which interface
