@@ -14,6 +14,7 @@
     ./modules/system/packages.nix
     ./modules/system/bluetooth.nix
     ./modules/system/security.nix
+    ./modules/system/portals.nix
 
     # Desktop modules
     ./modules/desktop/hyprland.nix

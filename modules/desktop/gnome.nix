@@ -22,5 +22,12 @@
     platformTheme = lib.mkForce "gtk2";
   };
 
-  # XDG Portal is automatically enabled by GNOME and Hyprland
+  # Exclude some GNOME apps to reduce bloat
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    epiphany  # gnome web browser
+    geary     # email client
+  ];
+
+  # XDG Portal configuration - handled in modules/system/portals.nix
 }
