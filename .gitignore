@@ -4,3 +4,4 @@
 *.old
 *.backup
 *~
+.hardware.nix
