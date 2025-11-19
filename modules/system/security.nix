@@ -4,12 +4,12 @@
   environment.systemPackages = with pkgs; [
     cryptsetup
     gnupg
-    veracrypt
+    # veracrypt
   ];
 
   # Enable cryptsetup service for LUKS encryption
   services.udisks2.enable = true;
-  
+
   # Enable GPG agent for key management
   programs.gnupg.agent = {
     enable = true;
