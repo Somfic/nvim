@@ -1,18 +1,34 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    cryptsetup
-    gnupg
-    # veracrypt
-  ];
+  options = {
+    security.clamav.enable = lib.mkEnableOption "ClamAV antivirus";
+  };
 
-  # Enable cryptsetup service for LUKS encryption
-  services.udisks2.enable = true;
+  config = {
+    environment.systemPackages = with pkgs; [
+      cryptsetup
+      gnupg
+      # veracrypt
+    ] ++ lib.optionals config.security.clamav.enable [
+      clamav
+    ];
 
-  # Enable GPG agent for key management
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
+    # Enable cryptsetup service for LUKS encryption
+    services.udisks2.enable = true;
+
+    # Enable GPG agent for key management
+    programs.gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+
+    # ClamAV antivirus configuration
+    services.clamav = lib.mkIf config.security.clamav.enable {
+      daemon.enable = true;
+      updater.enable = true;
+      updater.frequency = 12; # Update virus definitions every 12 hours
+      updater.interval = "hourly";
+    };
   };
 }

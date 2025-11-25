@@ -29,7 +29,10 @@
         showMicrophone = true;
         showKbLayout = false;
       };
-      tray = { recolour = true; };
+      tray = {
+        enabled = false;
+        recolour = true;
+      };
     };
     utilities = {
       toasts = {

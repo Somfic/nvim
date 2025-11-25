@@ -16,8 +16,7 @@
     ripgrep # fast grep for telescope.nvim
     inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
     inputs.caelestia-shell.packages.${pkgs.system}.default # caelestia shell
-    jetbrains.idea-ultimate
-    android-studio
+    jetbrains-toolbox
     just # running commands
     mprocs # running multiple processes
     difftastic # structural diff tool

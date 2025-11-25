@@ -8,5 +8,6 @@
     nix-output-monitor
     os-prober
     git
+    git-lfs
   ];
 }

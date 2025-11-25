@@ -27,6 +27,7 @@
     gnome-tour
     epiphany  # gnome web browser
     geary     # email client
+    orca      # screen reader
   ];
 
   # XDG Portal configuration - handled in modules/system/portals.nix
