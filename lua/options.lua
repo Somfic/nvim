@@ -1,0 +1,39 @@
+local o = vim.opt
+
+-- line numbers
+o.number = true
+o.relativenumber = true
+
+-- indentation
+o.tabstop = 2
+o.shiftwidth = 2
+o.expandtab = true
+o.smartindent = true
+
+-- search
+o.ignorecase = true
+o.smartcase = true
+o.hlsearch = true
+
+-- ui
+o.termguicolors = true
+o.signcolumn = 'yes'
+o.cursorline = true
+o.scrolloff = 8
+o.wrap = false
+o.hlsearch = true
+
+-- behaviour
+o.mouse = 'a'
+o.clipboard = 'unnamedplus'
+o.undofile = true
+o.swapfile = false
+o.backup = false
+
+-- splits
+o.splitright = true
+o.splitbelow = true
+
+-- peformance
+o.updatetime = 250
+o.timeoutlen = 300

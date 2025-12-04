@@ -1,49 +1,40 @@
-vim.pack.add({
-	{ src = 'https://github.com/folke/which-key.nvim' },
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+local function map(mode, lhs, rhs, desc)
+    vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
+end
+
+local function maps(mode, mappings)
+    for _, mapping in ipairs(mappings) do
+        map(mode, mapping[1], mapping[2], mapping[3])
+    end
+end
+
+local function group(prefix, group_name, mappings)
+    -- register the group with which-key
+    if pcall(require, "which-key") then
+        require("which-key").add({
+            { prefix, group = group_name }
+        })
+    end
+
+    -- set all the keymaps in the group
+    for _, mapping in ipairs(mappings) do
+        map("n", prefix .. mapping[1], mapping[2], mapping[3])
+    end
+end
+
+-- unbind arrow keys
+maps("n", {
+    { "<up>",    "<nop>", "Unbind Up Arrow" },
+    { "<down>",  "<nop>", "Unbind Down Arrow" },
+    { "<left>",  "<nop>", "Unbind Left Arrow" },
+    { "<right>", "<nop>", "Unbind Right Arrow" },
 })
 
-vim.g.mapleader = ' '
-require('which-key').setup({
-	preset = 'helix',
+-- jump list
+maps("n", {
+    { "gb", "<C-o>", "Go back to previous position" },
+    { "gf", "<C-i>", "Go forward in jump list" },
 })
-
--- line navigation
-vim.keymap.set({ 'n', 'v' }, 'w', 'k', { desc = 'Line up' })
-vim.keymap.set({ 'n', 'v' }, 's', 'j', { desc = 'Line down' })
-vim.keymap.set({ 'n', 'v' }, 'A', '^', { desc = 'Beginning of line' })
-vim.keymap.set({ 'n', 'v' }, 'D', '$', { desc = 'End of line' })
-
--- block navigation
-vim.keymap.set({ 'n', 'v' }, 'W', '{', { desc = 'Jump to previous block' })
-vim.keymap.set({ 'n', 'v' }, 'S', '}', { desc = 'Jump to next block' })
-
--- character navigation
-vim.keymap.set({ 'n', 'v' }, 'a', 'h', { desc = 'Move left' })
-vim.keymap.set({ 'n', 'v' }, 'd', 'l', { desc = 'Move right' })
-
--- word navigation
-vim.keymap.set({ 'n', 'v' }, 'q', 'b', { desc = 'Word backward' })
-vim.keymap.set({ 'n', 'v' }, 'e', 'w', { desc = 'Word forward' })
-
--- clipboard
-vim.keymap.set({ 'n', 'v' }, 'x', 'dd', { desc = 'Cut' })
-vim.keymap.set({ 'n', 'v' }, 'p', 'p', { desc = 'Paste' })
-
--- moving lines
-vim.keymap.set('i', '<M-w>', '<Esc>:m .-2<CR>==gi', { desc = 'Move line up', noremap = true, silent = true })
-vim.keymap.set('n', '<M-w>', ':m .-2<CR>==', { desc = 'Move line up', noremap = true, silent = true })
-vim.keymap.set('n', '<M-s>', ':m .+1<CR>==', { desc = 'Move line down', noremap = true, silent = true })
-vim.keymap.set('i', '<M-s>', '<Esc>:m .+1<CR>==gi', { desc = 'Move line down', noremap = true, silent = true })
-vim.keymap.set('v', '<M-w>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up', noremap = true, silent = true })
-vim.keymap.set('v', '<M-s>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down', noremap = true, silent = true })
-
--- Global completion trigger
-vim.keymap.set('i', '<C-Space>', function()
-	-- Try to trigger nvim-cmp completion first
-	local cmp = require('cmp')
-	if cmp.visible() then
-		cmp.select_next_item()
-	else
-		cmp.complete()
-	end
-end, { desc = 'Trigger completion' })
