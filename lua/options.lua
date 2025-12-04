@@ -22,6 +22,10 @@ o.cursorline = true
 o.scrolloff = 8
 o.wrap = false
 o.hlsearch = true
+o.ruler = false
+o.showcmd = false
+o.showmode = false
+o.cmdheight = 0
 
 -- behaviour
 o.mouse = 'a'
