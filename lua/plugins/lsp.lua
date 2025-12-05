@@ -31,6 +31,7 @@ return {
                     "ts_ls",         -- TypeScript/JavaScript
                     "rust_analyzer", -- Rust
                     "eslint",        -- ESLint
+                    "jdtls",         -- Java
                 },
                 automatic_installation = true,
             })

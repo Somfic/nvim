@@ -18,7 +18,7 @@ return {
           lualine_b = { "branch", "diff", "diagnostics" },
           lualine_c = { { "filename", path = 1 } }, -- relative path
           lualine_x = { "filetype" },
-          lualine_y = {},
+          lualine_y = { "location" },
           lualine_z = {
             {
               function()

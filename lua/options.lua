@@ -1,8 +1,8 @@
 local o = vim.opt
 
--- line numbers
-o.number = true
-o.relativenumber = true
+-- line numbers (shown in statusline instead)
+o.number = false
+o.relativenumber = false
 
 -- indentation
 o.tabstop = 2
@@ -16,6 +16,7 @@ o.smartcase = true
 o.hlsearch = true
 
 -- ui
+o.fillchars = { eob = ' ' }
 o.termguicolors = true
 o.signcolumn = 'yes'
 o.cursorline = true
