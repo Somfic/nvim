@@ -35,6 +35,7 @@ o.clipboard = 'unnamedplus'
 o.undofile = true
 o.swapfile = false
 o.backup = false
+o.shell = 'nu'
 
 -- splits
 o.splitright = true
