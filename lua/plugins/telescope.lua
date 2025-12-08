@@ -11,14 +11,37 @@ return {
 
             telescope.setup({
                 defaults = {
-                    prompt_prefix = " ",
-                    selection_caret = " ",
+                    prompt_prefix = "> ",
+                    selection_caret = "> ",
+                    entry_prefix = "  ",
                     path_display = { "smart" },
+                    dynamic_preview_title = true,
+                    layout_config = {
+                        prompt_position = "top",
+                    },
+                    sorting_strategy = "ascending",
+                    vimgrep_arguments = {
+                        "rg",
+                        "--color=never",
+                        "--no-heading",
+                        "--with-filename",
+                        "--line-number",
+                        "--column",
+                        "--smart-case",
+                    },
                     mappings = {
                         i = {
                             ["<C-j>"] = actions.move_selection_next,
                             ["<C-k>"] = actions.move_selection_previous,
                             ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+                            ["<C-c>"] = actions.close,
+                        },
+                        n = {
+                            ["j"] = actions.move_selection_next,
+                            ["k"] = actions.move_selection_previous,
+                            ["h"] = actions.select_horizontal,
+                            ["l"] = actions.select_default,
+                            ["q"] = actions.close,
                             ["<Esc>"] = actions.close,
                         },
                     },

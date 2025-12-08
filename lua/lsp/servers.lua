@@ -28,6 +28,9 @@ return {
         },
     },
 
+    -- Svelte
+    svelte = {},
+
     -- ESLint
     eslint = {},
 

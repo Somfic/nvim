@@ -38,3 +38,16 @@ maps("n", {
     { "gb", "<C-o>", "Go back to previous position" },
     { "gf", "<C-i>", "Go forward in jump list" },
 })
+
+-- buffer navigation
+maps("n", {
+    { "<Tab>", "<cmd>BufferLineCycleNext<cr>", "Next buffer" },
+    { "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", "Previous buffer" },
+    { "d<Tab>", "<cmd>bd<cr>", "Delete buffer" },
+})
+
+-- buffer management
+group("<leader>b", "Buffer", {
+    { "n", "<cmd>Telescope find_files<cr>", "New buffer" },
+    { "b", "<cmd>Telescope buffers<cr>", "Find buffer" },
+})

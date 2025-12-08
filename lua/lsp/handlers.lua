@@ -6,7 +6,7 @@ function M.setup()
     vim.diagnostic.config({
         virtual_text = true,
         signs = true,
-        update_in_insert = false,
+        update_in_insert = true,
         underline = true,
         severity_sort = true,
         float = {
@@ -68,11 +68,21 @@ function M.on_attach(client, bufnr)
     vim.keymap.set("n", "<leader>fm", function()
         local clients = vim.lsp.get_clients({ bufnr = bufnr })
         local has_eslint = false
+        local has_formatter = false
+
         for _, c in ipairs(clients) do
             if c.name == "eslint" then
                 has_eslint = true
+                has_formatter = true
                 break
             end
+            if c.server_capabilities.documentFormattingProvider then
+                has_formatter = true
+            end
+        end
+
+        if not has_formatter then
+            return
         end
 
         if has_eslint then

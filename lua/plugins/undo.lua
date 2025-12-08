@@ -22,7 +22,7 @@ return {
 
         -- Set the highlight color
         vim.cmd([[
-          hi HighlightUndo guibg=#444444 guifg=NONE
+          hi HighlightUndo guibg=#ff9e64 guifg=#1a1b26 gui=bold
         ]])
     end,
 }

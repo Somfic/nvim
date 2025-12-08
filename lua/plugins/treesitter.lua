@@ -14,6 +14,8 @@ return {
                     "json",
                     "html",
                     "css",
+                    "scss",
+                    "svelte",
                     "rust",
                     "python",
                     "go",

@@ -5,7 +5,7 @@ o.number = false
 o.relativenumber = false
 
 -- indentation
-o.tabstop = 2
+o.tabstop = 3
 o.shiftwidth = 2
 o.expandtab = true
 o.smartindent = true
@@ -18,6 +18,7 @@ o.hlsearch = true
 -- ui
 o.fillchars = { eob = ' ' }
 o.termguicolors = true
+
 o.signcolumn = 'yes'
 o.cursorline = true
 o.scrolloff = 8

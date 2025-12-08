@@ -29,11 +29,28 @@ return {
                 ensure_installed = {
                     "lua_ls",        -- Lua
                     "ts_ls",         -- TypeScript/JavaScript
+                    "svelte",        -- Svelte
                     "rust_analyzer", -- Rust
                     "eslint",        -- ESLint
                     "jdtls",         -- Java
                 },
                 automatic_installation = true,
+            })
+        end,
+    },
+
+    -- Mason tool installer (formatters, linters, etc.)
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        enabled = c.lsp,
+        dependencies = { "williamboman/mason.nvim" },
+        config = function()
+            require("mason-tool-installer").setup({
+                ensure_installed = {
+                    "stylua", -- Lua formatter
+                },
+                auto_update = false,
+                run_on_start = true,
             })
         end,
     },

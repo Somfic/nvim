@@ -1,7 +1,7 @@
 return {
-    file_explorer = 'oil',
-    theme = 'vague',
-    lsp = true,
-    statusline = true,
-    copilot = false,
+  file_explorer = 'oil',
+  theme = 'tokyodark',
+  lsp = true,
+  statusline = true,
+  copilot = false,
 }
