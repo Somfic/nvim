@@ -46,6 +46,16 @@ maps("n", {
     { "d<Tab>", "<cmd>bd<cr>", "Delete buffer" },
 })
 
+-- move lines up/down
+maps("n", {
+    { "<A-j>", "<cmd>m .+1<cr>==", "Move line down" },
+    { "<A-k>", "<cmd>m .-2<cr>==", "Move line up" },
+})
+maps("v", {
+    { "<A-j>", ":m '>+1<cr>gv=gv", "Move selection down" },
+    { "<A-k>", ":m '<-2<cr>gv=gv", "Move selection up" },
+})
+
 -- buffer management
 group("<leader>b", "Buffer", {
     { "n", "<cmd>Telescope find_files<cr>", "New buffer" },
