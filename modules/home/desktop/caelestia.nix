@@ -57,4 +57,13 @@
   # Caelestia will create:
   # - ~/.local/state/caelestia/wallpaper/path.txt (current wallpaper)
   # - ~/.local/state/caelestia/scheme.json (generated color scheme)
+
+  # Initialize wallpaper state if missing
+  home.activation.initCaelestiaWallpaper = config.lib.dag.entryAfter ["writeBoundary"] ''
+    WALLPAPER_STATE="$HOME/.local/state/caelestia/wallpaper/path.txt"
+    if [ ! -f "$WALLPAPER_STATE" ]; then
+      $DRY_RUN_CMD mkdir -p "$(dirname "$WALLPAPER_STATE")"
+      $DRY_RUN_CMD echo "/home/lucas/dot/wallpapers/neon1.jpg" > "$WALLPAPER_STATE"
+    fi
+  '';
 }

@@ -34,7 +34,7 @@
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
-      size = 16;
+      size = 8;
     };
     iconTheme = {
       enable = true;

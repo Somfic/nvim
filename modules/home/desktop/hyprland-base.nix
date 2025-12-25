@@ -35,8 +35,8 @@
       };
       general = {
         border_size = 0;
-        gaps_in = 4;
-        gaps_out = 8;
+        gaps_in = 3;
+        gaps_out = 6;
       };
       decoration = {
         rounding = 20;
