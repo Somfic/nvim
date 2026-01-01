@@ -74,12 +74,98 @@ fi
 GRADLE_EOF
                                     chmod +x "$DEVSHELL_BIN/gradle"
 
-                                    # Create run shortcut
+                                    # Create run shortcut (runs database setup first)
                                     cat > "$DEVSHELL_BIN/run" << 'RUN_EOF'
 #!/usr/bin/env bash
+# Run database setup for current branch before starting
+if [ -f "$DEVSHELL_BIN/db-setup" ]; then
+    "$DEVSHELL_BIN/db-setup"
+fi
 exec "$DEVSHELL_BIN/gradle" bootRun "$@"
 RUN_EOF
                                     chmod +x "$DEVSHELL_BIN/run"
+
+                                    # Create database setup script (extracted from post-checkout hook)
+                                    cat > "$DEVSHELL_BIN/db-setup" << 'DBSETUP_EOF'
+#!/usr/bin/env bash
+# Database setup: Create and switch to branch-specific database
+
+# MySQL connection details
+MYSQL_HOST="127.0.0.1"
+MYSQL_PORT="3308"
+MYSQL_USER="root"
+MYSQL_PASS="root"
+SOURCE_DB="develop"
+CONFIG_FILE="webapp/src/main/resources/application-personal.yml"
+
+# Get the current branch name
+BRANCH_NAME=$(git branch --show-current 2>/dev/null)
+
+# Skip if no branch name (detached HEAD state or not in git repo)
+if [ -z "$BRANCH_NAME" ]; then
+    echo "⚠️  Not on a branch, skipping database setup"
+    exit 0
+fi
+
+# Sanitize branch name for MySQL database name
+DB_NAME=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | tr '/.-' '_')
+
+echo "🔄 Current branch: $BRANCH_NAME"
+echo "📊 Target database: $DB_NAME"
+
+# Set password via environment variable to avoid warnings
+export MYSQL_PWD="$MYSQL_PASS"
+
+# Check if MySQL is running
+if ! mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -e "SELECT 1;" 2>/dev/null 1>&2; then
+    echo "⚠️  MySQL is not running, skipping database setup"
+    exit 0
+fi
+
+# Check if database exists
+if mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -e "USE $DB_NAME;" 2>/dev/null; then
+    echo "✅ Database $DB_NAME already exists"
+else
+    echo "🔨 Creating new database: $DB_NAME"
+    mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null
+
+    echo "📋 Copying schema and data from $SOURCE_DB..."
+    if mysqldump -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" \
+        --column-statistics=0 \
+        --set-gtid-purged=OFF \
+        --no-tablespaces \
+        "$SOURCE_DB" 2>/dev/null | mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" "$DB_NAME"; then
+        echo "✅ Database copied successfully"
+
+        echo "🧹 Cleaning Flyway schema history..."
+        mysql -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" "$DB_NAME" \
+            -e "TRUNCATE TABLE flyway_schema_history;" 2>/dev/null || true
+        echo "✅ Flyway history cleared"
+    else
+        echo "❌ Failed to copy database"
+        exit 1
+    fi
+fi
+
+# Update application-personal.yml if it exists
+if [ -f "$CONFIG_FILE" ]; then
+    # Check if already configured for this database
+    if grep -q "jdbcurl:.*$DB_NAME" "$CONFIG_FILE" 2>/dev/null; then
+        echo "✅ Config already set to $DB_NAME"
+    else
+        echo "🔧 Updating $CONFIG_FILE..."
+        if command -v yq &>/dev/null; then
+            yq eval ".spring.datasource.jdbcurl = \"jdbc:mysql://localhost:3308/$DB_NAME?serverTimezone=UTC\"" -i "$CONFIG_FILE"
+        else
+            sed -i "s|jdbcurl: jdbc:mysql://localhost:3308/[^?]*|jdbcurl: jdbc:mysql://localhost:3308/$DB_NAME|" "$CONFIG_FILE"
+        fi
+        echo "✅ Configuration updated"
+    fi
+fi
+
+echo "✨ Database ready!"
+DBSETUP_EOF
+                                    chmod +x "$DEVSHELL_BIN/db-setup"
 
                                     # Create database connection shortcut
                                     cat > "$DEVSHELL_BIN/db" << 'DB_EOF'
@@ -207,19 +293,9 @@ EOF
                                         echo "⚠️  docker-compose not found, skipping Docker service startup"
                                     fi
 
-                                    # Install git post-checkout hook for automatic database switching
-                                    if [ -d ".git/hooks" ]; then
-                                        cp ${./post-checkout-hook.sh} .git/hooks/post-checkout
-                                        chmod +x .git/hooks/post-checkout
-                                        echo "✅ Git post-checkout hook installed"
-                                    fi
-
                                     echo "🚢 BOS development environment loaded!"
-
-                                    # Run the database hook for the current branch to ensure database is set up
-                                    if [ -f .git/hooks/post-checkout ]; then
-                                        .git/hooks/post-checkout "" "" 1
-                                    fi
+                                    echo "💡 Use 'run' to start the app (automatically sets up branch database)"
+                                    echo "💡 Use 'db-setup' to manually set up the database for current branch"
           '';
         };
       });
