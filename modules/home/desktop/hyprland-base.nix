@@ -55,10 +55,14 @@
         };
       };
       # Window rules for pop-ups and dialogs
-      # windowrule = [
-      #   "noinitialfocus, class:^(jetbrains-.*), title:^(win.*)"
-      #   "opacity 0.85 override 0.85 override, class:.*"
-      # ];
+      windowrule = [
+        # Transparent GTK apps
+        "opacity 0.85 0.85, match:class ^(org\\.gnome\\.).*"
+        "opacity 0.85 0.85, match:class ^(nautilus)$"
+        "opacity 0.85 0.85, match:class ^(thunar)$"
+        # JetBrains IDE popup windows - auto focus and keep visible
+        "stay_focused on, match:class ^(jetbrains-.*)$, match:float yes"
+      ];
 
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
       bindr = [
