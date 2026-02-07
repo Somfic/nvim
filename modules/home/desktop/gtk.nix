@@ -4,20 +4,22 @@
   # Install icon theme for desktop apps
   home.packages = with pkgs; [
     papirus-icon-theme
-    adwaita-icon-theme # Fallback icon theme
-    libsForQt5.qt5ct # Qt configuration tool
+    adwaita-icon-theme
+    libsForQt5.qt5ct
   ];
 
-  # GTK configuration (Stylix handles theming)
+  # GTK configuration - Stylix provides the dark theme
   gtk = {
     enable = true;
-    # iconTheme = {
-    #   name = "Papirus-Dark";
-    #   package = pkgs.papirus-icon-theme;
-    # };
-    gtk3.extraConfig = { gtk-application-prefer-dark-theme = true; };
-    gtk4.extraConfig = { gtk-application-prefer-dark-theme = true; };
   };
+
+  # Append transparency to Stylix's GTK CSS
+  stylix.targets.gtk.extraCss = ''
+    window, window.background, .background { background: transparent; }
+    .sidebar, .navigation-sidebar, placessidebar { background: transparent; }
+    .view, scrolledwindow, viewport { background: transparent; }
+  '';
+
 
   # Qt configuration - use gtk2 platform theme so Qt apps use GTK settings
   qt = {
