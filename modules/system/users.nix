@@ -6,6 +6,6 @@
     description = "lucas";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [ ];
-    shell = pkgs.nushell;
+    shell = pkgs.bash;
   };
 }

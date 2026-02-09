@@ -118,7 +118,7 @@
           ]) 9));
 
       exec-once = [
-        "kitty --title hello -e bash -ic 'fastfetch; exec nu'"
+        "kitty --title hello -e bash -ic 'fastfetch; exec ${pkgs.nushell}/bin/nu'"
         "swww-daemon"
         "systemctl --user start hyprpolkitagent"
         "caelestia-shell"

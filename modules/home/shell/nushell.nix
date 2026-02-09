@@ -3,6 +3,17 @@
 {
   services.ssh-agent.enable = true;
 
+  # Use bash as login shell but launch nushell for interactive sessions
+  # This allows VS Code Remote SSH to work (needs POSIX shell for setup)
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+      if [[ $- == *i* ]] && [[ -z "$VSCODE_IPC_HOOK_CLI" ]]; then
+        exec ${pkgs.nushell}/bin/nu
+      fi
+    '';
+  };
+
   programs.nushell = {
     enable = true;
     shellAliases = {
