@@ -22,8 +22,8 @@ let
 
       # === main.js patches ===
 
-      # Add enable-transparent-visuals flag
-      sed -i 's/appendSwitch("disable-blink-features",o);const/appendSwitch("disable-blink-features",o);Oe.commandLine.appendSwitch("enable-transparent-visuals");const/' \
+      # Add enable-transparent-visuals flag (capture minified var name dynamically)
+      sed -i -E 's/(\w+)(\.commandLine\.appendSwitch\("disable-blink-features",o\);)const/\1\2\1.commandLine.appendSwitch("enable-transparent-visuals");const/' \
         $out/lib/vscode/resources/app/out/main.js || true
 
       # Make getBackgroundColor always return transparent
