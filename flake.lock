@@ -647,6 +647,22 @@
         "type": "github"
       }
     },
+    "liquid-glass": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764237742,
+        "narHash": "sha256-awTwcDRSwV1HtBLA8+V+4exIFcqb2hmDzntlshd6Uf8=",
+        "owner": "purple-lines",
+        "repo": "liquid-glass-plugin-hyprpm",
+        "rev": "1fba07fa7d894d0e4f39e9642556a64c77d19643",
+        "type": "github"
+      },
+      "original": {
+        "owner": "purple-lines",
+        "repo": "liquid-glass-plugin-hyprpm",
+        "type": "github"
+      }
+    },
     "neovim-nightly-overlay": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -820,6 +836,7 @@
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
+        "liquid-glass": "liquid-glass",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs_3",
         "split-monitor-workspaces": "split-monitor-workspaces",
