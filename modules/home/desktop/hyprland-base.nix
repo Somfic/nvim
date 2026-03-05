@@ -1,6 +1,20 @@
 { config, pkgs, inputs, ... }:
 
 {
+  # Add gtk portal to home-manager's portal config so file pickers work.
+  # The HM hyprland module auto-enables xdg.portal and sets NIX_XDG_DESKTOP_PORTAL_DIR
+  # to the per-user profile, which only contains hyprland.portal by default.
+  # Without gtk.portal there, FileChooser has no backend and hangs.
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.config = {
+    common.default = [ "gtk" ];
+    hyprland = {
+      default = [ "hyprland" "gtk" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
