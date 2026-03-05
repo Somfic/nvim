@@ -10,9 +10,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
-  # Use default stable kernel for NVIDIA driver compatibility
-  # (linuxPackages_latest has kernel 6.19 which is too new for the NVIDIA driver in 25.11)
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/9a97e3d9-01e7-4dc2-afb2-8e4954201820";
