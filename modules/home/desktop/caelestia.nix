@@ -24,9 +24,8 @@
         false; # Disabled to prevent QString assignment errors
     };
     lock = { recolourLogo = true; };
+    workspaces = { showWindows = false; };
     bar = {
-      clock = { showIcon = false; };
-      workspaces = { showWindows = false; };
       status = {
         showMicrophone = true;
         showKbLayout = false;
