@@ -12,6 +12,10 @@
       url = "github:Duckonaut/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
     };
+    liquid-glass = {
+      url = "github:purple-lines/liquid-glass-plugin-hyprpm";
+      flake = false;
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,7 +32,8 @@
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
-    , neovim-nightly-overlay, caelestia-shell, split-monitor-workspaces }@inputs:
+    , neovim-nightly-overlay, caelestia-shell, split-monitor-workspaces
+    , liquid-glass }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};

@@ -1,14 +1,43 @@
 { config, pkgs, inputs, ... }:
 
-{
+let
+  hyprlandPkg = inputs.hyprland.packages.${pkgs.system}.hyprland;
+  liquid-glass-plugin = hyprlandPkg.stdenv.mkDerivation {
+    pname = "liquid-glass-plugin";
+    version = "0-unstable";
+    src = inputs.liquid-glass;
+
+    patches = [ ../../../liquid-glass-hyprland054.patch ];
+
+    nativeBuildInputs = [ pkgs.pkg-config ];
+
+    buildInputs = [ hyprlandPkg.dev ] ++ hyprlandPkg.buildInputs;
+
+    buildPhase = ''
+      runHook preBuild
+      make all
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/lib
+      cp liquid-glass.so $out/lib/libliquid-glass-plugin.so
+      runHook postInstall
+    '';
+
+    meta.description = "Liquid glass visual effect plugin for Hyprland";
+  };
+in {
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+    package = hyprlandPkg;
     xwayland.enable = true;
     systemd.enable = true;
 
     plugins = [
       inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
+      liquid-glass-plugin
     ];
 
     # Source dynamic monitor configuration from nwg-displays
@@ -41,7 +70,7 @@
       decoration = {
         rounding = 20;
         blur = {
-          size = 24;
+          size = 12;
           passes = 3;
           brightness = 0.45;
           vibrancy = 1.0;
@@ -82,7 +111,7 @@
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"
         "$mod, L, exec, loginctl lock-session"
-        "$mod, M, exit"
+        "$mod, M, exec, loginctl terminate-session self"
 
         # screenshot
         ", Print, exec, caelestia-shell ipc call picker openFreeze"
