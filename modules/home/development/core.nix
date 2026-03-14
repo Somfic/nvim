@@ -41,7 +41,7 @@
         };
       });
     })
-    jetbrains-toolbox
+    jetbrains.idea
     just # running commands
     mprocs # running multiple processes
     difftastic # structural diff tool

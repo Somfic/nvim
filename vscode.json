@@ -7,7 +7,7 @@
     "workbench.layoutControl.enabled": false,
     "workbench.startupEditor": "none",
     "workbench.colorCustomizations": {
-        "editor.background": "#0000",
+        "editor.background": "#00000000",
         "editorGutter.background": "#00000000",
         "sideBar.background": "#00000000",
         "sideBarTitle.background": "#00000000",

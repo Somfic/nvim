@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, inputs, ... }:
 
 let
   hyprlandPkg = inputs.hyprland.packages.${pkgs.system}.hyprland;
@@ -36,18 +36,16 @@ in {
         float_switch_override_focus = 0;
       };
       general = {
-        border_size = 6;
-        gaps_in = 2;
-        gaps_out = 3;
-        "col.active_border" = lib.mkForce "rgba(00000000)";
-        "col.inactive_border" = lib.mkForce "rgba(00000000)";
+        border_size = 0;
+        gaps_in = 3;
+        gaps_out = 6;
       };
       decoration = {
         rounding = 20;
         blur = {
           size = 12;
           passes = 3;
-          brightness = 0.82;
+          brightness = 0.45;
           vibrancy = 1.0;
           noise = 5.0e-2;
           new_optimizations = true;
