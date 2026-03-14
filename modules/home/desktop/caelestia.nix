@@ -3,21 +3,21 @@
 {
   # Create Caelestia configuration directory and files
   home.file.".config/caelestia/shell.json".text = builtins.toJSON {
-    paths = { wallpaperDir = "/home/lucas/dot/wallpapers"; };
+    paths = { wallpaperDir = "${config.home.homeDirectory}/dot/wallpapers"; };
     appearance = {
       transparency = { enabled = false; };
       iconTheme = "Papirus-Dark";
     };
     border = {
       rounding = 25;
-      thickness = 8;
+      thickness = 1;
     };
     launcher = {
       fuzzySearch = true;
       dangerousActions = true;
     };
     general = { apps = { terminal = [ "kitty" ]; }; };
-    wallpaper = { current = "/home/lucas/dot/wallpapers/neon1.jpg"; };
+    wallpaper = { current = "${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"; };
     background = {
       desktopClock.enabled = false;
       visualiser.enabled =
@@ -51,7 +51,7 @@
 
   # Create symlink to wallpapers in the default Pictures directory for convenience
   home.file."Pictures/Wallpapers".source =
-    config.lib.file.mkOutOfStoreSymlink "/home/lucas/dot/wallpapers";
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dot/wallpapers";
 
   # Note: Caelestia manages its own state files in ~/.local/state/caelestia/
   # These files need to be writable by Caelestia, so we don't create them here.
@@ -65,7 +65,7 @@
       WALLPAPER_STATE="$HOME/.local/state/caelestia/wallpaper/path.txt"
       if [ ! -f "$WALLPAPER_STATE" ]; then
         $DRY_RUN_CMD mkdir -p "$(dirname "$WALLPAPER_STATE")"
-        $DRY_RUN_CMD echo "/home/lucas/dot/wallpapers/neon1.jpg" > "$WALLPAPER_STATE"
+        $DRY_RUN_CMD echo "${config.home.homeDirectory}/dot/wallpapers/neon1.jpg" > "$WALLPAPER_STATE"
       fi
     '';
 }

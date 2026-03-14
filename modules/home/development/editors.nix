@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   # Create a patched VS Code with transparency support
@@ -115,7 +115,10 @@ in
 
     kitty = {
       enable = true;
-      settings = { window_padding_width = 14; };
+      settings = {
+        window_padding_width = 14;
+        background_opacity = lib.mkForce "0.85";
+      };
     };
   };
 

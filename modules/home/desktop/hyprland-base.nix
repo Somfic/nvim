@@ -1,33 +1,7 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 let
   hyprlandPkg = inputs.hyprland.packages.${pkgs.system}.hyprland;
-  liquid-glass-plugin = hyprlandPkg.stdenv.mkDerivation {
-    pname = "liquid-glass-plugin";
-    version = "0-unstable";
-    src = inputs.liquid-glass;
-
-    patches = [ ../../../liquid-glass-hyprland054.patch ];
-
-    nativeBuildInputs = [ pkgs.pkg-config ];
-
-    buildInputs = [ hyprlandPkg.dev ] ++ hyprlandPkg.buildInputs;
-
-    buildPhase = ''
-      runHook preBuild
-      make all
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/lib
-      cp liquid-glass.so $out/lib/libliquid-glass-plugin.so
-      runHook postInstall
-    '';
-
-    meta.description = "Liquid glass visual effect plugin for Hyprland";
-  };
 in {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -37,7 +11,6 @@ in {
 
     plugins = [
       inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
-      liquid-glass-plugin
     ];
 
     # Source dynamic monitor configuration from nwg-displays
@@ -63,16 +36,18 @@ in {
         float_switch_override_focus = 0;
       };
       general = {
-        border_size = 0;
-        gaps_in = 3;
-        gaps_out = 6;
+        border_size = 6;
+        gaps_in = 2;
+        gaps_out = 3;
+        "col.active_border" = lib.mkForce "rgba(00000000)";
+        "col.inactive_border" = lib.mkForce "rgba(00000000)";
       };
       decoration = {
         rounding = 20;
         blur = {
           size = 12;
           passes = 3;
-          brightness = 0.45;
+          brightness = 0.82;
           vibrancy = 1.0;
           noise = 5.0e-2;
           new_optimizations = true;
@@ -104,9 +79,8 @@ in {
         "$mod, P, exec, passbolt-rofi"
         "$mod, N, exec, vpn-rofi"
         "$mod, O, exec, monitor-config"
-        "$mod, F, exec, brave"
         "$mod, C, exec, code"
-        "$mod, S, exec, flatpak run --env=WAYLAND_DISPLAY=wayland-1 --socket=wayland com.spotify.Client --enable-features=UseOzonePlatform --ozone-platform=wayland"
+        "$mod, S, exec, spotify"
         "$mod, D, exec, vesktop"
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"

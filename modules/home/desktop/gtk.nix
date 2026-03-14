@@ -3,7 +3,6 @@
 {
   # Install icon theme for desktop apps
   home.packages = with pkgs; [
-    papirus-icon-theme
     adwaita-icon-theme
     libsForQt5.qt5ct
   ];
@@ -30,7 +29,6 @@
   qt = {
     enable = true;
     platformTheme.name = lib.mkForce "gtk2";
-    style.name = lib.mkForce "adwaita-dark";
   };
 
   # Environment variables for icon and theme discovery

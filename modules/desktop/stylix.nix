@@ -21,7 +21,6 @@
       base0E = "bd5eff"; # purple
       base0F = "ff5ea0"; # pink
     };
-    # image = ./../../wallpapers/neon3.jpg;  # Disabled for slideshow
     polarity = "dark";
     opacity = {
       applications = 0.0;
@@ -36,7 +35,7 @@
       name = "Bibata-Modern-Classic";
       size = 8;
     };
-    iconTheme = {
+    icons = {
       enable = true;
       package = pkgs.papirus-icon-theme;
       dark = "Papirus-Dark";

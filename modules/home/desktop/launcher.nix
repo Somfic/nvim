@@ -187,12 +187,7 @@ in {
     go-passbolt-cli
     passbolt-rofi
     vpn-rofi
-    networkmanager
-    wl-clipboard
-    libnotify
     jq
-    gawk
-    gnused
   ];
 
   # Arc-Dark theme with stylix color overrides

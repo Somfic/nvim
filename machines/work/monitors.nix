@@ -14,6 +14,18 @@
 
   # Work machine wallpaper setup
   wayland.windowManager.hyprland.settings.exec-once = [
-    "sleep 1 && swww img --outputs eDP-1 /home/lucas/dot/wallpapers/neon1.jpg"
+    "sleep 1 && swww img --outputs eDP-1 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
   ];
+
+  # Niri monitor configuration
+  xdg.configFile."niri/monitors.kdl".text = ''
+    output "eDP-1" {
+        mode "1920x1080@60.000"
+        scale 1.25
+        position x=0 y=0
+    }
+
+    // Wallpaper
+    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs eDP-1 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
+  '';
 }

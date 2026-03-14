@@ -16,4 +16,11 @@
   wayland.windowManager.hyprland.settings.bind = [
     "$mod, F, exec, firefox"
   ];
+
+  # Niri: override browser to Firefox
+  xdg.configFile."niri/machine.kdl".text = ''
+    binds {
+        Mod+F { spawn "firefox"; }
+    }
+  '';
 }

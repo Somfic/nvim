@@ -54,10 +54,31 @@ in {
     clipboard-clear
   ];
 
-  # Start cliphist store on login
-  # This watches for clipboard changes and stores them in the history database
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store"
-    "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store"
-  ];
+  # Start cliphist store on login via systemd user services
+  # Compositor-agnostic: works for both Hyprland and Niri
+  systemd.user.services.cliphist-text = {
+    Unit = {
+      Description = "Clipboard history watcher (text)";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store'";
+      Restart = "on-failure";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.cliphist-image = {
+    Unit = {
+      Description = "Clipboard history watcher (images)";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store'";
+      Restart = "on-failure";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 }

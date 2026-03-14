@@ -7,7 +7,7 @@
     nh = {
       enable = true;
       clean.enable = true;
-      flake = "/home/lucas/dot";
+      flake = "${config.home.homeDirectory}/dot";
     };
 
     gh.enable = true;
@@ -18,5 +18,6 @@
     };
 
     lazydocker.enable = true;
+    lazygit.enable = true;
   };
 }

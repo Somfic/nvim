@@ -20,6 +20,7 @@
     # Desktop modules
     ./modules/desktop/hyprland.nix
     ./modules/desktop/gnome.nix
+    ./modules/desktop/niri.nix
     ./modules/desktop/stylix.nix
 
     # Program modules
@@ -49,20 +50,29 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
 
+  # Nix store optimisation (hard-link identical files)
+  nix.optimise.automatic = true;
+
   # Nix settings including binary caches
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     substituters = [
       "https://hyprland.cachix.org"
       "https://nix-community.cachix.org"
+      "https://spicetify-nix.cachix.org"
+      "https://ags.cachix.org"
     ];
     trusted-substituters = [
       "https://hyprland.cachix.org"
       "https://nix-community.cachix.org"
+      "https://spicetify-nix.cachix.org"
+      "https://ags.cachix.org"
     ];
     trusted-public-keys = [
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "spicetify-nix.cachix.org-1:jjnwULkvMdu0E5KGBbtgrISEfDdJTGSZ4ATkiFzZn5I="
+      "ags.cachix.org-1:naAvMrz0CuYqeyGNyLgE010iUiuf/qx6kYrUv3NwAJ8="
     ];
   };
 

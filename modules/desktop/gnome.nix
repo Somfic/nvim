@@ -14,8 +14,6 @@
   services.desktopManager.gnome.enable = true;
   services.printing.enable = true;
 
-  services.flatpak.enable = true;
-
   # Override qt platform theme to use gtk2 instead of deprecated gnome
   qt = {
     enable = true;

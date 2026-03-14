@@ -15,8 +15,32 @@
 
   # Home machine wallpaper setup
   wayland.windowManager.hyprland.settings.exec-once = [
-    "sleep 1 && swww img --outputs DP-1 /home/lucas/dot/wallpapers/neon4.jpg"
-    "sleep 1 && swww img --outputs DP-2 /home/lucas/dot/wallpapers/neon1.jpg"
-    "sleep 1 && swww img --outputs DP-3 /home/lucas/dot/wallpapers/neon1.jpg"
+    "sleep 1 && swww img --outputs DP-1 ${config.home.homeDirectory}/dot/wallpapers/neon4.jpg"
+    "sleep 1 && swww img --outputs DP-2 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
+    "sleep 1 && swww img --outputs DP-3 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
   ];
+
+  # Niri monitor configuration
+  xdg.configFile."niri/monitors.kdl".text = ''
+    output "DP-1" {
+        mode "3440x1440@143.998"
+        scale 1.25
+        position x=0 y=0
+    }
+
+    output "DP-2" {
+        scale 1.25
+        position x=2752 y=0
+    }
+
+    output "DP-3" {
+        scale 1.25
+        position x=-1536 y=0
+    }
+
+    // Wallpapers per monitor
+    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs DP-1 ${config.home.homeDirectory}/dot/wallpapers/neon4.jpg"
+    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs DP-2 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
+    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs DP-3 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
+  '';
 }

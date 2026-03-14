@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland/v0.54.2";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -11,10 +11,6 @@
     split-monitor-workspaces = {
       url = "github:Duckonaut/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
-    };
-    liquid-glass = {
-      url = "github:purple-lines/liquid-glass-plugin-hyprpm";
-      flake = false;
     };
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -26,14 +22,27 @@
     };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     caelestia-shell = {
-      url = "github:caelestia-dots/shell";
+      url = "github:caelestia-dots/shell/v1.5.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    astal-niri = {
+      url = "github:sameoldlab/astal/feat/niri";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ags = {
+      url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.astal.follows = "astal-niri";
+    };
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
     , neovim-nightly-overlay, caelestia-shell, split-monitor-workspaces
-    , liquid-glass }@inputs:
+    , astal-niri, ags, spicetify-nix }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};

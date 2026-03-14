@@ -6,7 +6,9 @@
     # Desktop environment
     ../modules/home/desktop/hyprland-base.nix
     ../modules/home/desktop/caelestia.nix
+    ../modules/home/desktop/niri.nix
     ../modules/home/desktop/launcher.nix
+    ../modules/home/desktop/clipboard.nix
     ../modules/home/desktop/gtk.nix
     ../modules/home/desktop/monitor-config.nix
 

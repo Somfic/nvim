@@ -11,4 +11,11 @@
   # Override Super+F to open Chrome
   wayland.windowManager.hyprland.settings.bind =
     [ "$mod, F, exec, google-chrome-stable" ];
+
+  # Niri: override browser to Chrome
+  xdg.configFile."niri/machine.kdl".text = ''
+    binds {
+        Mod+F { spawn "google-chrome-stable"; }
+    }
+  '';
 }
