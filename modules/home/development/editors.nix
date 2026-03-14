@@ -1,6 +1,61 @@
 { config, pkgs, ... }:
 
 let
+  # Override github-desktop to patch transparency BEFORE auto-patchelf runs
+  github-desktop-transparent = pkgs.github-desktop.overrideAttrs (old: {
+    pname = "github-desktop-transparent";
+
+    # Patch main.js and renderer.css after unpack, before auto-patchelf
+    postUnpack = (old.postUnpack or "") + ''
+      # Patch main.js — enable BrowserWindow transparency
+      perl -pi -e 's/backgroundColor:"#fff"/transparent:!0,backgroundColor:"#00000000"/' \
+        $TMP/github-desktop/usr/lib/github-desktop/resources/app/main.js
+
+      # Patch renderer.css — transparent backgrounds + hide title bar
+      cat >> $TMP/github-desktop/usr/lib/github-desktop/resources/app/renderer.css << 'CSSEOF'
+
+/* Transparency overrides — use high specificity to beat body.theme-dark */
+:root, body.theme-dark, body.theme-light {
+  --background-color: transparent !important;
+  --box-background-color: transparent !important;
+  --box-alt-background-color: transparent !important;
+  --tab-bar-background-color: transparent !important;
+  --tab-bar-hover-background-color: rgba(255, 255, 255, 0.05) !important;
+  --win32-title-bar-background-color: transparent !important;
+  --toolbar-background-color: transparent !important;
+  --box-border-color: rgba(255, 255, 255, 0.15) !important;
+  --box-border-contrast-color: rgba(255, 255, 255, 0.2) !important;
+  --toolbar-border-color: rgba(255, 255, 255, 0.15) !important;
+  --diff-border-color: rgba(255, 255, 255, 0.15) !important;
+  --base-border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  --contrast-border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  --diff-gutter-background-color: transparent !important;
+  --diff-gutter-color: transparent !important;
+  --diff-empty-row-background-color: transparent !important;
+  --diff-empty-row-gutter-background-color: transparent !important;
+  --diff-hunk-background-color: transparent !important;
+  --diff-hunk-gutter-background-color: transparent !important;
+  --diff-add-background-color: rgba(46, 160, 67, 0.15) !important;
+  --diff-add-gutter-background-color: rgba(46, 160, 67, 0.2) !important;
+  --diff-add-inner-background-color: rgba(46, 160, 67, 0.3) !important;
+  --diff-delete-background-color: rgba(248, 81, 73, 0.15) !important;
+  --diff-delete-gutter-background-color: rgba(248, 81, 73, 0.2) !important;
+  --diff-delete-inner-background-color: rgba(248, 81, 73, 0.3) !important;
+}
+html, body, #content, #desktop-app-title-bar {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+#desktop-app-title-bar,
+#app-menu-bar {
+  display: none !important;
+}
+CSSEOF
+    '';
+
+    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.perl ];
+  });
+
   # Create a patched VS Code with transparency support
   vscode-transparent = pkgs.stdenv.mkDerivation {
     pname = "vscode-transparent";
@@ -101,7 +156,7 @@ in
     };
   };
 
-  home.packages = with pkgs; [
-    github-desktop
+  home.packages = [
+    github-desktop-transparent
   ];
 }

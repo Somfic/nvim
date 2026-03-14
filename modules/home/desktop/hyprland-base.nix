@@ -64,6 +64,8 @@ in {
         "opacity 0.85 0.85, match:class ^(thunar)$"
         # VSCodium transparency
         "opacity 0.85 0.85, match:class ^(codium|Codium|vscodium|VSCodium|code|Code)$"
+        # GitHub Desktop transparency
+        "opacity 0.85 0.85, match:class ^(GitHub Desktop|github-desktop)$"
         # JetBrains IDE popup windows - auto focus and keep visible
         "stay_focused on, match:class ^(jetbrains-.*)$, match:float yes"
       ];
