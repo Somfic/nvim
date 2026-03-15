@@ -36,7 +36,9 @@ in {
         float_switch_override_focus = 0;
       };
       general = {
-        border_size = 0;
+        border_size = 1;
+        "col.active_border" = "rgb(808080)";
+        "col.inactive_border" = "rgb(505050)";
         gaps_in = 3;
         gaps_out = 6;
       };
@@ -66,6 +68,8 @@ in {
         "opacity 0.85 0.85, match:class ^(codium|Codium|vscodium|VSCodium|code|Code)$"
         # GitHub Desktop transparency
         "opacity 0.85 0.85, match:class ^(GitHub Desktop|github-desktop)$"
+        # Firefox transparency
+        "opacity 0.85 0.85, match:class ^(firefox|Firefox)$"
         # JetBrains IDE popup windows - auto focus and keep visible
         "stay_focused on, match:class ^(jetbrains-.*)$, match:float yes"
       ];
