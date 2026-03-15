@@ -12,10 +12,8 @@
     # Add work-specific monitors here
   ];
 
-  # Work machine wallpaper setup
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "sleep 1 && swww img --outputs eDP-1 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
-  ];
+  # Wallpaper: random unique wallpaper per monitor
+  wayland.windowManager.hyprland.settings.exec-once = [ "set-wallpaper" ];
 
   # Niri monitor configuration
   xdg.configFile."niri/monitors.kdl".text = ''
@@ -25,7 +23,7 @@
         position x=0 y=0
     }
 
-    // Wallpaper
-    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs eDP-1 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
+    // Random unique wallpaper per monitor
+    spawn-at-startup "set-wallpaper"
   '';
 }

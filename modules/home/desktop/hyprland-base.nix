@@ -2,7 +2,33 @@
 
 let
   hyprlandPkg = inputs.hyprland.packages.${pkgs.system}.hyprland;
+
+  # Script that assigns a random unique wallpaper to each connected monitor
+  set-wallpaper = pkgs.writeShellScriptBin "set-wallpaper" ''
+    WALLPAPER_DIR="''${1:-$HOME/dot/wallpapers}"
+
+    # Wait for swww-daemon to be ready
+    for i in $(seq 1 20); do
+      ${pkgs.swww}/bin/swww query &>/dev/null && break
+      sleep 0.25
+    done
+
+    # Get connected outputs
+    mapfile -t outputs < <(${pkgs.swww}/bin/swww query | cut -d: -f1)
+
+    # Get wallpapers and shuffle
+    mapfile -t wallpapers < <(find "$WALLPAPER_DIR" -maxdepth 1 -type f \( -name '*.jpg' -o -name '*.png' -o -name '*.jpeg' -o -name '*.webp' \) | shuf)
+
+    # Assign one wallpaper per monitor (no duplicates)
+    for i in "''${!outputs[@]}"; do
+      if [[ $i -lt ''${#wallpapers[@]} ]]; then
+        ${pkgs.swww}/bin/swww img --outputs "''${outputs[$i]}" "''${wallpapers[$i]}"
+      fi
+    done
+  '';
 in {
+  home.packages = [ set-wallpaper ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = hyprlandPkg;
@@ -66,6 +92,8 @@ in {
         "opacity 0.85 0.85, match:class ^(codium|Codium|vscodium|VSCodium|code|Code)$"
         # GitHub Desktop transparency
         "opacity 0.85 0.85, match:class ^(GitHub Desktop|github-desktop)$"
+        # Firefox transparency
+        "opacity 0.85 0.85, match:class ^(firefox|Firefox|firefox-esr)$"
         # JetBrains IDE popup windows - auto focus and keep visible
         "stay_focused on, match:class ^(jetbrains-.*)$, match:float yes"
       ];

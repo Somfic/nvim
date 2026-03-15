@@ -13,12 +13,8 @@
     "DP-3, preferred, auto-left, 1.25"
   ];
 
-  # Home machine wallpaper setup
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "sleep 1 && swww img --outputs DP-1 ${config.home.homeDirectory}/dot/wallpapers/neon4.jpg"
-    "sleep 1 && swww img --outputs DP-2 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
-    "sleep 1 && swww img --outputs DP-3 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
-  ];
+  # Wallpaper: random unique wallpaper per monitor
+  wayland.windowManager.hyprland.settings.exec-once = [ "set-wallpaper" ];
 
   # Niri monitor configuration
   xdg.configFile."niri/monitors.kdl".text = ''
@@ -38,9 +34,7 @@
         position x=-1536 y=0
     }
 
-    // Wallpapers per monitor
-    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs DP-1 ${config.home.homeDirectory}/dot/wallpapers/neon4.jpg"
-    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs DP-2 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
-    spawn-at-startup "bash" "-c" "sleep 1 && swww img --outputs DP-3 ${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"
+    // Random unique wallpaper per monitor
+    spawn-at-startup "set-wallpaper"
   '';
 }
