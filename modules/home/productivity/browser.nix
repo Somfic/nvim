@@ -10,6 +10,7 @@
   programs.firefox.profiles.default = {
     settings = {
       "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      "layout.css.moz-document.content.enabled" = true;
     };
     userChrome = ''
       /* Transparent Firefox UI */
@@ -34,6 +35,30 @@
       /* Transparent page backgrounds for blur effect */
       @-moz-document url-prefix("about:") {
         html, body {
+          background: transparent !important;
+        }
+      }
+
+      @-moz-document domain("google.com") {
+        html, body {
+          background: transparent !important;
+        }
+      }
+
+      @-moz-document domain("localhost") {
+        html, body {
+          background: transparent !important;
+        }
+      }
+
+      @-moz-document domain("127.0.0.1") {
+        html, body {
+          background: transparent !important;
+        }
+      }
+
+      @-moz-document domain("youtube.com") {
+        html, body, ytd-app {
           background: transparent !important;
         }
       }
