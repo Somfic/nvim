@@ -19,9 +19,7 @@
     general = { apps = { terminal = [ "kitty" ]; }; };
     wallpaper = { current = "${config.home.homeDirectory}/dot/wallpapers/neon1.jpg"; };
     background = {
-      desktopClock.enabled = false;
-      visualiser.enabled =
-        false; # Disabled to prevent QString assignment errors
+      enabled = false; # Using swww for wallpaper management instead
     };
     lock = { recolourLogo = true; };
     workspaces = { showWindows = false; };

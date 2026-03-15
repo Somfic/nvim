@@ -43,8 +43,8 @@
     };
     fonts = {
       monospace = {
-        package = pkgs.monocraft;
-        name = "Monocraft";
+        package = pkgs.nerd-fonts.jetbrains-mono;
+        name = "JetBrainsMono Nerd Font";
       };
       sansSerif = {
         package = pkgs.dejavu_fonts;
