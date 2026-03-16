@@ -5,6 +5,10 @@
   programs.brave.enable = lib.mkDefault true;
   programs.firefox.enable = lib.mkDefault false;
   programs.google-chrome.enable = lib.mkDefault false;
+  programs.google-chrome.commandLineArgs = [
+    "--force-dark-mode"
+    "--enable-features=WebUiDarkMode"
+  ];
 
   # Firefox transparency via home-manager managed profile
   programs.firefox.profiles.default = {
@@ -34,6 +38,14 @@
       }
       #urlbar[focused] #urlbar-background {
         background-color: rgba(0,0,0,0.3) !important;
+      }
+
+      /* Tab hover/selected backgrounds */
+      .tabbrowser-tab:hover .tab-background {
+        background-color: rgba(255,255,255,0.1) !important;
+      }
+      .tabbrowser-tab[selected] .tab-background {
+        background-color: rgba(255,255,255,0.15) !important;
       }
     '';
     userContent = ''

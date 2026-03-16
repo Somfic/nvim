@@ -33,7 +33,14 @@
       "clock" = "termdown -zsf roman";
       "dev" = "nix develop -c nu";
     };
-    settings = { show_banner = false; };
+    settings = {
+      show_banner = false;
+      completions = {
+        algorithm = "fuzzy";
+        quick = true;
+        partial = true;
+      };
+    };
   };
 
   programs.carapace = {

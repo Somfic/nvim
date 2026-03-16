@@ -17,6 +17,11 @@
     # Enable cryptsetup service for LUKS encryption
     services.udisks2.enable = true;
 
+    # Enable GNOME Keyring for secret storage and auto-unlock on login
+    services.gnome.gnome-keyring.enable = true;
+    security.pam.services.login.enableGnomeKeyring = true;
+    security.pam.services.gdm-password.enableGnomeKeyring = true;
+
     # Enable GPG agent for key management
     programs.gnupg.agent = {
       enable = true;
