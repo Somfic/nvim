@@ -8,9 +8,10 @@
     ../../modules/home/gaming/packages.nix
   ];
 
-  # Home profile uses Firefox instead of Brave
+  # Home profile uses Firefox and Chrome instead of Brave
   programs.brave.enable = false;
   programs.firefox.enable = true;
+  programs.google-chrome.enable = true;
 
   # Override Super+F to open Firefox
   wayland.windowManager.hyprland.settings.bind = [

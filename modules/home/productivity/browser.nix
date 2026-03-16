@@ -11,24 +11,29 @@
     settings = {
       "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
       "layout.css.moz-document.content.enabled" = true;
+      "widget.wayland.opaque-region.enabled" = false;
+      "browser.display.background_color" = "#00000000";
+      "browser.display.background_color.dark" = "#00000000";
+      "browser.display.use_system_colors" = false;
     };
     userChrome = ''
-      /* Transparent Firefox UI */
+      /* Force ALL browser chrome to transparent — catches GTK-themed containers */
+      *, *::before, *::after {
+        background-color: transparent !important;
+        background-image: none !important;
+      }
+
+      /* Re-apply specific styles for interactive elements */
       :root {
         --toolbar-bgcolor: transparent !important;
         --lwt-accent-color: transparent !important;
         --lwt-toolbarbutton-hover-background: rgba(255,255,255,0.1) !important;
       }
-      #navigator-toolbox, #toolbar-menubar, #TabsToolbar,
-      #PersonalToolbar, #nav-bar, #urlbar-background {
-        background: transparent !important;
+      #urlbar-background {
         background-color: transparent !important;
       }
-      #main-window, #browser, #appcontent {
-        background: transparent !important;
-      }
-      #sidebar-box, #sidebar-header {
-        background: transparent !important;
+      #urlbar[focused] #urlbar-background {
+        background-color: rgba(0,0,0,0.3) !important;
       }
     '';
     userContent = ''

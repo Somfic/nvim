@@ -40,7 +40,7 @@
         stylix.autoEnable = true;
         stylix.targets.vscode.enable = false;
         stylix.targets.rofi.enable = false;  # Use custom rofi theme
-        stylix.targets.firefox.profileNames = [ "default" ];
+        stylix.targets.firefox.enable = false;
         stylix.targets.qt.platform = "qtct";
       }
     ];
