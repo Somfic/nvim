@@ -32,6 +32,7 @@
       enableSSHSupport = true;
     };
 
+
     # ClamAV antivirus configuration
     services.clamav = lib.mkIf config.security.clamav.enable {
       daemon.enable = true;
