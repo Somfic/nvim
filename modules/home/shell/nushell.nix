@@ -22,6 +22,7 @@
       ".." = "z ..";
       "g" = "git";
       "ll" = "ls -l";
+      "c" = "committer";
       "cls" = "clear";
       "diff" = "difft";
       "reload-debug" = "sudo nixos-rebuild switch --flake ~/dot#home";
@@ -33,6 +34,9 @@
       "clock" = "termdown -zsf roman";
       "dev" = "nix develop -c nu";
     };
+    extraEnv = ''
+      $env.PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".cargo" "bin"))
+    '';
     settings = {
       show_banner = false;
       completions = {

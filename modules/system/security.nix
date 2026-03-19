@@ -9,6 +9,7 @@
     environment.systemPackages = with pkgs; [
       cryptsetup
       gnupg
+      yubikey-manager
       # veracrypt
     ] ++ lib.optionals config.security.clamav.enable [
       clamav
@@ -21,6 +22,9 @@
     services.gnome.gnome-keyring.enable = true;
     security.pam.services.login.enableGnomeKeyring = true;
     security.pam.services.gdm-password.enableGnomeKeyring = true;
+
+    # Enable smart card daemon for YubiKey
+    services.pcscd.enable = true;
 
     # Enable GPG agent for key management
     programs.gnupg.agent = {
