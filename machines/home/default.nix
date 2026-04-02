@@ -24,6 +24,9 @@
     format = lib.mkForce "openpgp";
   };
 
+  # GNOME: override browser to Firefox
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4".command = "firefox";
+
   # Niri: override browser to Firefox
   xdg.configFile."niri/machine.kdl".text = ''
     binds {

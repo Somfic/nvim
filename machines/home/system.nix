@@ -1,11 +1,15 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
     ../../modules/programs/gaming.nix
+    ../../modules/system/tor.nix
   ];
 
   networking.hostName = "home";
+
+  # Flatpak for apps not available in nixpkgs (e.g., Stremio)
+  services.flatpak.enable = true;
 
   # NVIDIA GPU configuration
   hardware.nvidia = {

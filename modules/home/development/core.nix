@@ -27,7 +27,9 @@
   };
   programs.java = { enable = true; };
 
-  home.packages = with pkgs; [
+  home.packages = [
+    inputs.committer.packages.${pkgs.system}.default
+  ] ++ (with pkgs; [
     ripgrep # fast grep for telescope.nvim
     inputs.neovim-nightly-overlay.packages.${pkgs.system}.default # neovim nightly
     (inputs.caelestia-shell.packages.${pkgs.system}.default.override {
@@ -53,5 +55,5 @@
     openvpn
     networkmanagerapplet # NetworkManager GUI for VPN management
     httpie # HTTP client for API testing
-  ];
+  ]);
 }

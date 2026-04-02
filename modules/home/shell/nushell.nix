@@ -33,6 +33,8 @@
       "clean" = "nh clean all --keep-since 7d";
       "clock" = "termdown -zsf roman";
       "dev" = "nix develop -c nu";
+      "q" = "exit";
+      ":q" = "exit";
     };
     extraEnv = ''
       $env.PATH = ($env.PATH | split row (char esep) | prepend ($env.HOME | path join ".cargo" "bin"))

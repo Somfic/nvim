@@ -14,6 +14,16 @@
   services.desktopManager.gnome.enable = true;
   services.printing.enable = true;
 
+  # Ensure GDM restarts after Hyprland session exits
+  systemd.services.display-manager = {
+    serviceConfig = {
+      Restart = lib.mkForce "always";
+      RestartSec = lib.mkForce 2;
+    };
+    startLimitIntervalSec = lib.mkForce 30;
+    startLimitBurst = lib.mkForce 5;
+  };
+
   # Override qt platform theme to use gtk2 instead of deprecated gnome
   qt = {
     enable = true;

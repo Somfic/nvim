@@ -48,7 +48,7 @@
 
   # General NixOS settings
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
+  # nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
 
   # Nix store optimisation (hard-link identical files)
   nix.optimise.automatic = true;

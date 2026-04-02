@@ -122,7 +122,7 @@ html, body,
       # Create wrapper script with transparent visuals flag
       mkdir -p $out/bin
       makeWrapper $out/lib/vscode/bin/code $out/bin/code \
-        --add-flags "--enable-transparent-visuals" \
+        --set ELECTRON_EXTRA_LAUNCH_ARGS "--enable-transparent-visuals" \
         --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.xdg-utils ]}
 
       # Copy share directory for desktop files

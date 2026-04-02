@@ -12,6 +12,9 @@
   wayland.windowManager.hyprland.settings.bind =
     [ "$mod, F, exec, google-chrome-stable" ];
 
+  # GNOME: override browser to Chrome
+  dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4".command = "google-chrome-stable";
+
   # Niri: override browser to Chrome
   xdg.configFile."niri/machine.kdl".text = ''
     binds {

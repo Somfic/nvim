@@ -27,7 +27,10 @@ let
     done
   '';
 in {
-  home.packages = [ set-wallpaper ];
+  home.packages = [
+    set-wallpaper
+    pkgs.xdg-desktop-portal-gtk  # Needed in user profile for FileChooser portal
+  ];
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -103,7 +106,7 @@ in {
         "$mod, T, exec, kitty"
         "$mod, J, togglesplit,"
         "$mod, L, exec, loginctl lock-session"
-        "$mod, M, exec, loginctl terminate-session self"
+        "$mod, M, exec, hyprctl dispatch exit"
 
         # screenshot
         ", Print, exec, caelestia-shell ipc call picker openFreeze"
@@ -142,7 +145,7 @@ in {
         "kitty --title hello -e bash -ic 'fastfetch; exec ${pkgs.nushell}/bin/nu'"
         "swww-daemon"
         "systemctl --user start hyprpolkitagent"
-        "caelestia-shell"
+        "env QSG_RHI_BACKEND=vulkan caelestia-shell"
       ];
     };
   };

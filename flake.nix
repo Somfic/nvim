@@ -9,7 +9,7 @@
       inputs.hyprland.follows = "hyprland";
     };
     split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces";
+      url = "github:Duckonaut/split-monitor-workspaces/34c266b";
       inputs.hyprland.follows = "hyprland";
     };
     home-manager = {
@@ -38,11 +38,15 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    committer = {
+      url = "github:somfic/committer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, hyprland-plugins, stylix
     , neovim-nightly-overlay, caelestia-shell, split-monitor-workspaces
-    , astal-niri, ags, spicetify-nix }@inputs:
+    , astal-niri, ags, spicetify-nix, committer }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -65,9 +69,21 @@
       };
 
     in {
-      nixosConfigurations = (mkMachine "home" ./machines/home/default.nix
-        ./machines/home/hardware.nix ./machines/home/system.nix)
-        // (mkMachine "work" ./machines/work/default.nix
+      nixosConfigurations = {
+        home = lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          inherit system;
+          modules = [
+            ./configuration.nix
+            ./machines/home/hardware.nix
+            ./machines/home/system.nix
+            inputs.home-manager.nixosModules.default
+            stylix.nixosModules.stylix
+            { home-manager.users.lucas = import ./machines/home/default.nix; }
+            { home-manager.users.ghost = import ./machines/home/ghost.nix; }
+          ];
+        };
+      } // (mkMachine "work" ./machines/work/default.nix
           ./machines/work/hardware.nix ./machines/work/system.nix);
     };
 }

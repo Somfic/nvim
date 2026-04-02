@@ -23,6 +23,7 @@
         default = [ "hyprland" "gtk" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
         "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
       };
 
       # GNOME-specific configuration
@@ -41,6 +42,6 @@
     };
   };
 
-  # Ensure PipeWire is available for screen sharing
-  # (already configured in audio.nix, but explicitly noted here)
+  # Note: xdg-desktop-portal-gtk must also be in home.packages (hyprland-base.nix)
+  # so its .portal file is visible via NIX_XDG_DESKTOP_PORTAL_DIR
 }

@@ -6,6 +6,13 @@
   };
 
   config = {
+    # Fail2ban for SSH brute-force protection
+    services.fail2ban = {
+      enable = true;
+      maxretry = 5;
+      bantime = "1h";
+    };
+
     environment.systemPackages = with pkgs; [
       cryptsetup
       gnupg
@@ -32,6 +39,18 @@
       enableSSHSupport = true;
     };
 
+
+    # Restrict polkit for ghost — deny system-level actions
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (subject.user == "ghost" && action.id.indexOf("org.freedesktop.systemd1") === 0) {
+          return polkit.Result.NO;
+        }
+        if (subject.user == "ghost" && action.id.indexOf("org.freedesktop.login1") === 0) {
+          return polkit.Result.AUTH_ADMIN;
+        }
+      });
+    '';
 
     # ClamAV antivirus configuration
     services.clamav = lib.mkIf config.security.clamav.enable {

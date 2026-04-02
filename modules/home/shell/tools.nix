@@ -18,6 +18,26 @@
     };
 
     lazydocker.enable = true;
-    lazygit.enable = true;
+    lazygit = {
+      enable = true;
+      settings = {
+        customCommands = [
+          {
+            key = "C";
+            description = "Commit with committer";
+            command = "committer";
+            context = "files";
+            output = "terminal";
+          }
+          {
+            key = "A";
+            description = "AI-assisted commit";
+            command = ''git commit -e -m "$(committer generate)"'';
+            context = "files";
+            output = "terminal";
+          }
+        ];
+      };
+    };
   };
 }
