@@ -18,5 +18,6 @@
     nushell
     ntfs3g
     nwg-displays
+    android-tools
   ];
 }

@@ -56,6 +56,56 @@ CSSEOF
     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.perl ];
   });
 
+  # Adaptive VS Code: transparent on Wayland compositors, regular on GNOME
+  vscode-adaptive = (pkgs.runCommand "vscode" {
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    inherit (pkgs.vscode) pname version;
+  } ''
+    mkdir -p $out/bin $out/share $out/lib
+    # Copy lib directory for product.json (needed by home-manager vscode module)
+    cp -r ${pkgs.vscode}/lib $out/
+    chmod -R u+w $out/lib
+    # Copy share directory for desktop files and icons
+    if [ -d "${pkgs.vscode}/share" ]; then
+      cp -r ${pkgs.vscode}/share/* $out/share/
+      chmod -R u+w $out/share
+      for f in $out/share/applications/*.desktop; do
+        [ -f "$f" ] && substituteInPlace "$f" --replace-quiet "${pkgs.vscode}" "$out" || true
+      done
+    fi
+    # Wrapper script that picks the right binary based on desktop session
+    cat > $out/bin/code << 'WRAPPER'
+#!/bin/sh
+if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ] || [ "$XDG_CURRENT_DESKTOP" = "ubuntu:GNOME" ]; then
+  exec ${pkgs.vscode}/bin/code "$@"
+else
+  exec ${vscode-transparent}/bin/code "$@"
+fi
+WRAPPER
+    chmod +x $out/bin/code
+  '') // { inherit (pkgs.vscode) pname version; };
+
+  # Adaptive GitHub Desktop: transparent on Wayland, regular on GNOME
+  github-desktop-adaptive = pkgs.runCommand "github-desktop-adaptive" {} ''
+    mkdir -p $out/bin $out/share
+    if [ -d "${pkgs.github-desktop}/share" ]; then
+      cp -r ${pkgs.github-desktop}/share/* $out/share/
+      chmod -R u+w $out/share
+      for f in $out/share/applications/*.desktop; do
+        [ -f "$f" ] && substituteInPlace "$f" --replace-quiet "${pkgs.github-desktop}" "$out" || true
+      done
+    fi
+    cat > $out/bin/github-desktop << 'WRAPPER'
+#!/bin/sh
+if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ] || [ "$XDG_CURRENT_DESKTOP" = "ubuntu:GNOME" ]; then
+  exec ${pkgs.github-desktop}/bin/github-desktop "$@"
+else
+  exec ${github-desktop-transparent}/bin/github-desktop "$@"
+fi
+WRAPPER
+    chmod +x $out/bin/github-desktop
+  '';
+
   # Create a patched VS Code with transparency support
   vscode-transparent = pkgs.stdenv.mkDerivation {
     pname = "vscode-transparent";
@@ -146,7 +196,7 @@ in
   programs = {
     vscode = {
       enable = true;
-      package = vscode-transparent;
+      package = vscode-adaptive;
       mutableExtensionsDir = true;
     };
 
@@ -157,6 +207,6 @@ in
   };
 
   home.packages = [
-    github-desktop-transparent
+    github-desktop-adaptive
   ];
 }

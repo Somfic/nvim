@@ -81,4 +81,8 @@
   # security
   security.polkit.enable = true;
   environment.systemPackages = [ pkgs.hyprpolkitagent ];
+
+  # Allow non-root users to use `-o allow_other` with FUSE mounts
+  # (needed for gocryptfs mounts that are read by containers running as other users)
+  programs.fuse.userAllowOther = true;
 }

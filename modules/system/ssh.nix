@@ -17,7 +17,11 @@ in
     enable = true;
     settings = {
       PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
       PermitRootLogin = "no";
+      AllowTcpForwarding = true;
+      AllowStreamLocalForwarding = false;
+      PermitOpen = "any";
     };
   };
 
@@ -29,6 +33,6 @@ in
   };
 
   users.users.lucas.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC6CPzUXNeFyJWtAoTXlToGe5Fa8PDvSLl+apbC8tUHS somfic@gmail.com"
+    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIMBuxkyheSEiT2B0Q1KwZenMGXC5vEOArQxhUrtZiqZ8AAAABHNzaDo= lucas@home"
   ];
 }

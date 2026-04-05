@@ -46,6 +46,49 @@ let
     # Override kitty opacity
     mkdir -p "$HOME/.config/kitty"
     echo "background_opacity 1.0" > "$HOME/.config/kitty/session-override.conf"
+
+    # Override Firefox transparency — replace userChrome/userContent symlinks with opaque versions
+    for profile_dir in "$HOME/.mozilla/firefox/"*; do
+      [ -d "$profile_dir" ] || continue
+
+      chrome_dir="$profile_dir/chrome"
+      [ -d "$chrome_dir" ] || continue
+
+      # Strip transparency from userChrome.css
+      if [ -L "$chrome_dir/userChrome.css" ] || [ -f "$chrome_dir/userChrome.css" ]; then
+        target="$chrome_dir/userChrome.css"
+        [ -L "$target" ] && cp --remove-destination "$(readlink "$target")" "$target"
+        ${pkgs.gnused}/bin/sed -i \
+          -e '/background-color: transparent/d' \
+          -e '/background: transparent/d' \
+          -e '/background-image: none/d' \
+          -e '/--toolbar-bgcolor: transparent/d' \
+          -e '/--lwt-accent-color: transparent/d' \
+          "$target"
+      fi
+
+      # Remove userContent.css transparent backgrounds
+      if [ -L "$chrome_dir/userContent.css" ] || [ -f "$chrome_dir/userContent.css" ]; then
+        target="$chrome_dir/userContent.css"
+        [ -L "$target" ] && cp --remove-destination "$(readlink "$target")" "$target"
+        ${pkgs.gnused}/bin/sed -i \
+          -e '/background: transparent/d' \
+          "$target"
+      fi
+
+      # Override transparency-related prefs in user.js
+      userjs="$profile_dir/user.js"
+      if [ -L "$userjs" ]; then
+        cp --remove-destination "$(readlink "$userjs")" "$userjs"
+      fi
+      if [ -f "$userjs" ]; then
+        ${pkgs.gnused}/bin/sed -i \
+          -e 's/user_pref("widget.wayland.opaque-region.enabled", false)/user_pref("widget.wayland.opaque-region.enabled", true)/' \
+          -e 's/user_pref("browser.display.background_color", "#00000000")/user_pref("browser.display.background_color", "#1C1B22")/' \
+          -e 's/user_pref("browser.display.background_color.dark", "#00000000")/user_pref("browser.display.background_color.dark", "#1C1B22")/' \
+          "$userjs"
+      fi
+    done
   '';
 in
 {

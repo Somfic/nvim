@@ -23,6 +23,10 @@
       controlMaster = "auto";
       controlPath = "~/.ssh/master-%r@%n:%p";
       controlPersist = "10m";
+      identityFile = ["~/.ssh/id_ed25519_sk"];
+      extraOptions = {
+        IdentityAgent = "none";
+      };
     };
   };
   programs.java = { enable = true; };

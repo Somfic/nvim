@@ -13,6 +13,15 @@
       bantime = "1h";
     };
 
+    # Auditd — records security-relevant kernel events to /var/log/audit/audit.log
+    security.auditd.enable = true;
+    security.audit = {
+      enable = true;
+      rules = [
+        "-a exit,always -F arch=b64 -S execve"
+      ];
+    };
+
     environment.systemPackages = with pkgs; [
       cryptsetup
       gnupg
