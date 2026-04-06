@@ -19,6 +19,7 @@ return {
                     "rust",
                     "python",
                     "go",
+                    "c",
                     "markdown",
                     "markdown_inline",
                 },

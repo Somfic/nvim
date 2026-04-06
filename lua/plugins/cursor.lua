@@ -12,7 +12,9 @@ return {
                         unit = "total"
                     }),
                     path = require("mini.animate").gen_path.line({
-                        predicate = function() return true end,
+                        predicate = function()
+                            return vim.bo.filetype ~= "oil"
+                        end,
                     }),
                 },
                 scroll = {

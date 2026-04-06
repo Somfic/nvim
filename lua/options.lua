@@ -1,5 +1,10 @@
 local o = vim.opt
 
+-- silence deprecation warnings from plugins (prevents "press any key" with cmdheight=0)
+local orig_deprecate = vim.deprecate
+vim.deprecate = function() end
+vim.schedule(function() vim.deprecate = orig_deprecate end)
+
 -- line numbers (shown in statusline instead)
 o.number = false
 o.relativenumber = false
@@ -28,6 +33,9 @@ o.ruler = false
 o.showcmd = false
 o.showmode = false
 o.cmdheight = 0
+o.shortmess:append('I')  -- suppress intro message
+o.shortmess:append('c')  -- suppress completion messages
+o.shortmess:append('s')  -- suppress search wrap messages
 
 -- behaviour
 o.mouse = 'a'
@@ -36,6 +44,9 @@ o.undofile = true
 o.swapfile = false
 o.backup = false
 o.shell = 'nu'
+o.shellcmdflag = '-c'
+o.shellquote = ''
+o.shellxquote = ''
 
 -- splits
 o.splitright = true

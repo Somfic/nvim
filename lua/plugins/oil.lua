@@ -55,6 +55,7 @@ return {
                 ["<C-c>"] = "actions.close",
                 ["<C-r>"] = "actions.refresh",
                 ["-"] = "actions.parent",
+                ["<BS>"] = "actions.parent",
                 ["_"] = "actions.open_cwd",
                 ["`"] = "actions.cd",
                 ["~"] = "actions.tcd",
@@ -101,7 +102,19 @@ return {
         })
 
         -- Keymaps for opening Oil
-        vim.keymap.set("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open file explorer" })
-        vim.keymap.set("n", "<leader>E", "<CMD>Oil --float<CR>", { desc = "Open file explorer (float)" })
+        vim.keymap.set("n", "<leader>e", "<CMD>Oil --float<CR>", { desc = "Open file explorer" })
+        vim.keymap.set("n", "<leader>E", "<CMD>Oil --float<CR>", { desc = "Open file explorer (root)" })
+
+        -- Open Oil float on startup if no file was specified or a directory was opened
+        vim.api.nvim_create_autocmd("VimEnter", {
+            callback = function()
+                local arg = vim.fn.argv(0)
+                if arg == "" or vim.fn.isdirectory(arg) == 1 then
+                    vim.schedule(function()
+                        require("oil").open_float()
+                    end)
+                end
+            end,
+        })
     end,
 }
