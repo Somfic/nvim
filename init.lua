@@ -4,6 +4,7 @@ require('keybindings')
 require('autocmd.auto_save')
 require('autocmd.auto_create_directory')
 require('autocmd.highlight_yank')
+require('autocmd.quit_with_q')
 
 -- setup lazyvim
 local lazy = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
