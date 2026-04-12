@@ -23,6 +23,7 @@
       "g" = "git";
       "ll" = "ls -l";
       "c" = "lazygit";
+      "ff" = "fastfetch";
       "cls" = "clear";
       "diff" = "difft";
       "reload-debug" = "sudo nixos-rebuild switch --flake ~/dot#home";
