@@ -8,6 +8,19 @@
     ../../modules/home/gaming/packages.nix
   ];
 
+  home.packages = with pkgs; [
+    unityhub
+  ];
+
+  xdg.desktopEntries.unityhub = {
+    name = "Unity Hub";
+    exec = "unityhub";
+    icon = "unityhub";
+    comment = "Unity Hub";
+    categories = [ "Development" ];
+    terminal = false;
+  };
+
   # Home profile uses Firefox and Chrome instead of Brave
   programs.brave.enable = false;
   programs.firefox.enable = true;
