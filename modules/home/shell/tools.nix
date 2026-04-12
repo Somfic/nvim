@@ -22,6 +22,7 @@
     lazygit = {
       enable = true;
       settings = {
+        promptToReturnFromSubprocess = false;
         customCommands = [
           {
             key = "C";
