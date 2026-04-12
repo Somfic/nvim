@@ -10,18 +10,18 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 -- Setup each server using new vim.lsp.config API
 for server_name, server_config in pairs(servers) do
-    local opts = {
-        capabilities = capabilities,
-        on_attach = handlers.on_attach,
-    }
+  local opts = {
+    capabilities = capabilities,
+    on_attach = handlers.on_attach,
+  }
 
-    -- Merge server-specific config
-    if server_config then
-        opts = vim.tbl_deep_extend("force", opts, server_config)
-    end
+  -- Merge server-specific config
+  if server_config then
+    opts = vim.tbl_deep_extend("force", opts, server_config)
+  end
 
-    -- Use new vim.lsp.config API
-    vim.lsp.config(server_name, opts)
+  -- Use new vim.lsp.config API
+  vim.lsp.config(server_name, opts)
 end
 
 -- Enable servers

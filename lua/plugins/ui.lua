@@ -67,7 +67,9 @@ return {
                 { "<leader>d", group = "Diagnostics" },
                 { "<leader>f", group = "Find" },
                 { "<leader>g", group = "Git" },
+                { "<leader>h", group = "Harpoon" },
                 { "<leader>j", group = "Java" },
+                { "<leader>s", group = "Session" },
                 { "<leader>t", group = "Terminal" },
                 { "<leader>x", group = "Trouble" },
             })

@@ -64,39 +64,6 @@ function M.on_attach(client, bufnr)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
     vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
 
-    -- Formatting (prefer ESLint when available)
-    vim.keymap.set("n", "<leader>cf", function()
-        local clients = vim.lsp.get_clients({ bufnr = bufnr })
-        local has_eslint = false
-        local has_formatter = false
-
-        for _, c in ipairs(clients) do
-            if c.name == "eslint" then
-                has_eslint = true
-                has_formatter = true
-                break
-            end
-            if c.server_capabilities.documentFormattingProvider then
-                has_formatter = true
-            end
-        end
-
-        if not has_formatter then
-            return
-        end
-
-        if has_eslint then
-            vim.lsp.buf.format({
-                async = true,
-                filter = function(c)
-                    return c.name == "eslint"
-                end
-            })
-        else
-            vim.lsp.buf.format({ async = true })
-        end
-    end, vim.tbl_extend("force", opts, { desc = "Format document" }))
-
     -- Diagnostics
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
