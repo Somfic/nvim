@@ -23,6 +23,7 @@
       enable = true;
       settings = {
         promptToReturnFromSubprocess = false;
+        git.paging.externalDiffCommand = "difft --color=always";
         customCommands = [
           {
             key = "C";
