@@ -105,7 +105,7 @@ return {
 
             -- Keymaps
             vim.keymap.set("n", "<leader>tn", create_named_terminal, { desc = "New named terminal" })
-            vim.keymap.set("n", "<leader>ft", select_terminal, { desc = "Find terminal" })
+            vim.keymap.set("n", "<leader>tf", select_terminal, { desc = "Find terminal" })
             vim.keymap.set("n", "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", { desc = "Terminal horizontal" })
             vim.keymap.set("n", "<leader>tv", "<cmd>ToggleTerm direction=vertical<cr>", { desc = "Terminal vertical" })
 

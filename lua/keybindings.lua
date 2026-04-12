@@ -11,20 +11,6 @@ local function maps(mode, mappings)
   end
 end
 
-local function group(prefix, group_name, mappings)
-  -- register the group with which-key
-  if pcall(require, "which-key") then
-    require("which-key").add({
-      { prefix, group = group_name }
-    })
-  end
-
-  -- set all the keymaps in the group
-  for _, mapping in ipairs(mappings) do
-    map("n", prefix .. mapping[1], mapping[2], mapping[3])
-  end
-end
-
 -- unbind arrow keys
 maps("n", {
   { "<up>",    "<nop>", "Unbind Up Arrow" },
@@ -44,6 +30,14 @@ maps("n", {
   { "<Tab>",   "<cmd>BufferLineCycleNext<cr>", "Next buffer" },
   { "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", "Previous buffer" },
   { "d<Tab>",  "<cmd>bd<cr>",                  "Delete buffer" },
+})
+
+-- window/pane navigation
+maps("n", {
+  { "<C-h>", "<C-w>h", "Window left" },
+  { "<C-j>", "<C-w>j", "Window down" },
+  { "<C-k>", "<C-w>k", "Window up" },
+  { "<C-l>", "<C-w>l", "Window right" },
 })
 
 -- move lines up/down

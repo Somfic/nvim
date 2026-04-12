@@ -63,11 +63,11 @@ return {
                 delay = 500,
             })
             wk.add({
+                { "<leader>b", group = "Buffer" },
                 { "<leader>c", group = "Code" },
                 { "<leader>d", group = "Diagnostics" },
                 { "<leader>f", group = "Find" },
                 { "<leader>g", group = "Git" },
-                { "<leader>h", group = "Harpoon" },
                 { "<leader>j", group = "Java" },
                 { "<leader>s", group = "Session" },
                 { "<leader>t", group = "Terminal" },
@@ -82,6 +82,36 @@ return {
         event = "VeryLazy",
         dependencies = "nvim-tree/nvim-web-devicons",
         config = function()
+            -- Look up a buffer's harpoon slot index, or nil if not pinned.
+            local function harpoon_index_for(bufname)
+                local ok, harpoon = pcall(require, "harpoon")
+                if not ok or bufname == "" then
+                    return nil
+                end
+                local relpath = vim.fn.fnamemodify(bufname, ":.")
+                for i, item in ipairs(harpoon:list().items) do
+                    if item.value == relpath or item.value == bufname then
+                        return i
+                    end
+                end
+                return nil
+            end
+
+            -- Expose globally so harpoon.lua can re-trigger a sort after add/remove.
+            _G.bufferline_harpoon_sort = function(a, b)
+                local ai = harpoon_index_for(a.path)
+                local bi = harpoon_index_for(b.path)
+                if ai and bi then
+                    return ai < bi
+                elseif ai then
+                    return true
+                elseif bi then
+                    return false
+                else
+                    return a.id < b.id
+                end
+            end
+
             require("bufferline").setup({
                 options = {
                     mode = "buffers",
@@ -93,6 +123,11 @@ return {
                     diagnostics = "nvim_lsp",
                     icon_pinned = "",
                     show_duplicate_prefix = false,
+                    sort_by = _G.bufferline_harpoon_sort,
+                    numbers = function(opts)
+                        local i = harpoon_index_for(vim.api.nvim_buf_get_name(opts.id))
+                        return i and (" " .. i) or ""
+                    end,
                     offsets = {
                         {
                             filetype = "oil",

@@ -33,9 +33,9 @@ o.ruler = false
 o.showcmd = false
 o.showmode = false
 o.cmdheight = 0
-o.shortmess:append('I')  -- suppress intro message
-o.shortmess:append('c')  -- suppress completion messages
-o.shortmess:append('s')  -- suppress search wrap messages
+o.shortmess:append('I') -- suppress intro message
+o.shortmess:append('c') -- suppress completion messages
+o.shortmess:append('s') -- suppress search wrap messages
 
 -- behaviour
 o.mouse = 'a'
@@ -54,4 +54,4 @@ o.splitbelow = true
 
 -- peformance
 o.updatetime = 250
-o.timeoutlen = 300
+o.timeoutlen = 400
