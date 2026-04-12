@@ -19,6 +19,18 @@ maps("n", {
   { "<right>", "<nop>", "Unbind Right Arrow" },
 })
 
+-- disable the search history windows (q/, q?)
+maps("n", {
+  { "q/", "<nop>", "Disable search history window" },
+  { "q?", "<nop>", "Disable backward search history window" },
+})
+
+-- qq and q: both quit the current window
+maps("n", {
+  { "qq", "<cmd>q<cr>", "Quit window" },
+  { "q:", "<cmd>q<cr>", "Quit window (typo-friendly)" },
+})
+
 -- jump list
 maps("n", {
   { "gb", "<C-o>", "Go back to previous position" },

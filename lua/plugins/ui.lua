@@ -62,7 +62,7 @@ return {
                 preset = "modern",
                 delay = 500,
             })
-            wk.add({
+            pcall(wk.add, {
                 { "<leader>b", group = "Buffer" },
                 { "<leader>c", group = "Code" },
                 { "<leader>d", group = "Diagnostics" },
@@ -73,6 +73,19 @@ return {
                 { "<leader>t", group = "Terminal" },
                 { "<leader>x", group = "Trouble" },
             })
+
+            -- Collapse harpoon slot families into a single display row each.
+            -- Done in a separate pcall so any failure here can't break the
+            -- group registrations above.
+            local harpoon_entries = {
+                { "<leader>1", desc = "Jump pinned buffer 1..9" },
+                { "<leader>bp1", desc = "Pin buffer to slot 1..9" },
+            }
+            for i = 2, 9 do
+                table.insert(harpoon_entries, { "<leader>" .. i, hidden = true })
+                table.insert(harpoon_entries, { "<leader>bp" .. i, hidden = true })
+            end
+            pcall(wk.add, harpoon_entries)
         end,
     },
 

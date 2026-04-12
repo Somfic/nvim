@@ -1,5 +1,6 @@
 require('options')
 require('keybindings')
+require('commands')
 
 require('autocmd.auto_save')
 require('autocmd.auto_create_directory')
