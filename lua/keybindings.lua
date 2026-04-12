@@ -55,9 +55,3 @@ maps("v", {
     { "<A-j>", ":m '>+1<cr>gv=gv", "Move selection down" },
     { "<A-k>", ":m '<-2<cr>gv=gv", "Move selection up" },
 })
-
--- buffer management
-group("<leader>b", "Buffer", {
-    { "n", "<cmd>Telescope find_files<cr>", "New buffer" },
-    { "b", "<cmd>Telescope buffers<cr>", "Find buffer" },
-})

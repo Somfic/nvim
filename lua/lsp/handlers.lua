@@ -62,10 +62,10 @@ function M.on_attach(client, bufnr)
 
     -- Code actions
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
+    vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
 
     -- Formatting (prefer ESLint when available)
-    vim.keymap.set("n", "<leader>fm", function()
+    vim.keymap.set("n", "<leader>cf", function()
         local clients = vim.lsp.get_clients({ bufnr = bufnr })
         local has_eslint = false
         local has_formatter = false
@@ -100,10 +100,10 @@ function M.on_attach(client, bufnr)
     -- Diagnostics
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
-    vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float,
+    vim.keymap.set("n", "<leader>dd", vim.diagnostic.open_float,
         vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
     vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist,
-        vim.tbl_extend("force", opts, { desc = "Diagnostic list" }))
+        vim.tbl_extend("force", opts, { desc = "Diagnostic loclist" }))
 
     -- Highlight symbol under cursor
     if client.server_capabilities.documentHighlightProvider then

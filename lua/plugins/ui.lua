@@ -57,9 +57,19 @@ return {
         "folke/which-key.nvim",
         event = "VeryLazy",
         config = function()
-            require("which-key").setup({
+            local wk = require("which-key")
+            wk.setup({
                 preset = "modern",
                 delay = 500,
+            })
+            wk.add({
+                { "<leader>c", group = "Code" },
+                { "<leader>d", group = "Diagnostics" },
+                { "<leader>f", group = "Find" },
+                { "<leader>g", group = "Git" },
+                { "<leader>j", group = "Java" },
+                { "<leader>t", group = "Terminal" },
+                { "<leader>x", group = "Trouble" },
             })
         end,
     },
