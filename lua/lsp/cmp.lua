@@ -40,6 +40,7 @@ cmp.setup({
   }),
 
   sources = cmp.config.sources({
+    { name = "lazydev", group_index = 0 },
     { name = "nvim_lsp" },
     { name = "luasnip" },
     { name = "buffer" },
@@ -50,9 +51,10 @@ cmp.setup({
     format = function(entry, vim_item)
       vim_item.menu = ({
         nvim_lsp = "[LSP]",
-        luasnip = "[Snip]",
-        buffer = "[Buf]",
-        path = "[Path]",
+        lazydev  = "[Dev]",
+        luasnip  = "[Snip]",
+        buffer   = "[Buf]",
+        path     = "[Path]",
       })[entry.source.name]
       return vim_item
     end,
