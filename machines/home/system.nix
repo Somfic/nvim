@@ -14,7 +14,7 @@
   # NVIDIA GPU configuration
   hardware.nvidia = {
     modesetting.enable = true;
-    open = false;
+    open = true;
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
