@@ -22,7 +22,7 @@
       ".." = "z ..";
       "g" = "git";
       "ll" = "ls -l";
-      "c" = "committer";
+      "c" = "lazygit";
       "cls" = "clear";
       "diff" = "difft";
       "reload-debug" = "sudo nixos-rebuild switch --flake ~/dot#home";
