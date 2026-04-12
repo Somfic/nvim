@@ -10,7 +10,7 @@ let
     { name = "VS Code"; command = "code"; binding = "<Super>c"; }
     { name = "Spotify"; command = "spotify"; binding = "<Super>s"; }
     { name = "Vesktop"; command = "vesktop"; binding = "<Super>d"; }
-    { name = "Terminal"; command = "kgx"; binding = "<Super>t"; }
+    { name = "Terminal"; command = "kitty"; binding = "<Super>t"; }
     { name = "Browser"; command = lib.mkDefault "firefox"; binding = "<Super>f"; }
     { name = "Logout"; command = "gnome-session-quit --logout --no-prompt"; binding = "<Super>m"; }
   ];
