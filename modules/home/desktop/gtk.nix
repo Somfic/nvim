@@ -12,6 +12,10 @@
     enable = true;
   };
 
+  # Force overwrite of GTK CSS files (avoids stale .backup conflicts on activation)
+  xdg.configFile."gtk-3.0/gtk.css".force = true;
+  xdg.configFile."gtk-4.0/gtk.css".force = true;
+
   # Append transparency to Stylix's GTK CSS
   stylix.targets.gtk.extraCss = ''
     window, window.background, .background { background: transparent; }

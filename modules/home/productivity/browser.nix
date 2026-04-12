@@ -10,6 +10,11 @@
     "--enable-features=WebUiDarkMode"
   ];
 
+  # Force overwrite of Firefox profile files (avoids stale .backup conflicts on activation)
+  home.file.".mozilla/firefox/default/user.js".force = true;
+  home.file.".mozilla/firefox/default/chrome/userChrome.css".force = true;
+  home.file.".mozilla/firefox/default/chrome/userContent.css".force = true;
+
   # Firefox transparency via home-manager managed profile
   programs.firefox.profiles.default = {
     settings = {
