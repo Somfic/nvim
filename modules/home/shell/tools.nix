@@ -23,9 +23,9 @@
       enable = true;
       settings = {
         promptToReturnFromSubprocess = false;
-        git.pagers.diff = "difft --color=always";
-        git.pagers.show = "difft --color=always";
-        git.pagers.log = "difft --color=always";
+        git.pagers = [
+          { externalDiffCommand = "difft --color=always"; }
+        ];
         customCommands = [
           {
             key = "C";
