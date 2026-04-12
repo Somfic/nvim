@@ -15,6 +15,11 @@
   # GNOME: override browser to Chrome
   dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4".command = "google-chrome-stable";
 
+  # Open new terminals in ~/bos
+  programs.nushell.extraConfig = ''
+    cd ~/bos
+  '';
+
   # Niri: override browser to Chrome
   xdg.configFile."niri/machine.kdl".text = ''
     binds {
