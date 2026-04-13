@@ -34,6 +34,7 @@ return {
                     "jdtls",         -- Java
                 },
                 automatic_installation = true,
+                automatic_enable = false, -- don't auto-enable random Mason packages as LSP
             })
         end,
     },
