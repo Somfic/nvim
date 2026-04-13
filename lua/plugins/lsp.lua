@@ -28,7 +28,6 @@ return {
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     "lua_ls",        -- Lua
-                    "ts_ls",         -- TypeScript/JavaScript
                     "svelte",        -- Svelte
                     "rust_analyzer", -- Rust
                     "eslint",        -- ESLint
