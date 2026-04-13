@@ -4,8 +4,16 @@ return {
         build = ":TSUpdate",
         dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects",
+            "windwp/nvim-ts-autotag",
         },
         config = function()
+            require("nvim-ts-autotag").setup({
+                opts = {
+                    enable_close = true,
+                    enable_rename = true,
+                    enable_close_on_slash = true,
+                },
+            })
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
                     "lua",
