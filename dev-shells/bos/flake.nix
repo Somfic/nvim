@@ -81,7 +81,10 @@
             if [ -f "$DEVSHELL_BIN/db-setup" ]; then
                 "$DEVSHELL_BIN/db-setup"
             fi
-            exec "$DEVSHELL_BIN/gradle" bootRun "$@"
+            # Expose JDWP on :5005 (server=y, suspend=n) so the debugger can attach on demand
+            exec "$DEVSHELL_BIN/gradle" bootRun \
+                "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" \
+                "$@"
             RUN_EOF
                                                 chmod +x "$DEVSHELL_BIN/run"
 
