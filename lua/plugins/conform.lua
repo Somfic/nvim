@@ -50,7 +50,7 @@ return {
         end, { desc = "Re-enable autoformat-on-save" })
 
         -- Manual format keybind (replaces the LSP-only one in handlers.lua)
-        vim.keymap.set({ "n", "v" }, "<leader>cf", function()
+        vim.keymap.set({ "n", "v" }, "<leader>rf", function()
             conform.format({ async = true, lsp_fallback = true })
         end, { desc = "Format buffer/selection" })
     end,

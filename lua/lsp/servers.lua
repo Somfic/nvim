@@ -12,6 +12,13 @@ return {
                     checkThirdParty = false,
                 },
                 telemetry = { enable = false },
+                hint = {
+                    enable = true,
+                    arrayIndex = "Disable",
+                    setType = true,
+                    paramName = "All",
+                    paramType = true,
+                },
             },
         },
     },
@@ -22,7 +29,25 @@ return {
             typescript = {
                 inlayHints = {
                     includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
                     includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                },
+            },
+            javascript = {
+                inlayHints = {
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
                 },
             },
         },
@@ -52,6 +77,13 @@ return {
             ["rust-analyzer"] = {
                 checkOnSave = {
                     command = "clippy",
+                },
+                inlayHints = {
+                    bindingModeHints = { enable = true },
+                    closureReturnTypeHints = { enable = "always" },
+                    lifetimeElisionHints = { enable = "skip_trivial" },
+                    typeHints = { enable = true },
+                    parameterHints = { enable = true },
                 },
             },
         },

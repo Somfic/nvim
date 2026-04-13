@@ -5,7 +5,14 @@ function M.setup()
     -- Configure diagnostics
     vim.diagnostic.config({
         virtual_text = true,
-        signs = true,
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = "",
+                [vim.diagnostic.severity.WARN]  = "",
+                [vim.diagnostic.severity.INFO]  = "",
+                [vim.diagnostic.severity.HINT]  = "",
+            },
+        },
         update_in_insert = true,
         underline = true,
         severity_sort = true,
@@ -17,18 +24,6 @@ function M.setup()
         },
     })
 
-    -- Diagnostic signs
-    local signs = {
-        { name = "DiagnosticSignError", text = "" },
-        { name = "DiagnosticSignWarn",  text = "" },
-        { name = "DiagnosticSignHint",  text = "" },
-        { name = "DiagnosticSignInfo",  text = "" },
-    }
-
-    for _, sign in ipairs(signs) do
-        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-    end
-
     -- LSP handlers with borders
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = "rounded",
@@ -36,6 +31,18 @@ function M.setup()
 
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
         border = "rounded",
+    })
+
+    -- Italic inlay hints (preserve existing fg/bg from colorscheme)
+    local function italicize_inlay_hints()
+        local existing = vim.api.nvim_get_hl(0, { name = "LspInlayHint", link = false })
+        existing.italic = true
+        existing.cterm = vim.tbl_extend("force", existing.cterm or {}, { italic = true })
+        vim.api.nvim_set_hl(0, "LspInlayHint", existing)
+    end
+    italicize_inlay_hints()
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = italicize_inlay_hints,
     })
 end
 
@@ -47,22 +54,31 @@ function M.on_attach(client, bufnr)
     -- Keybindings
     local opts = { buffer = bufnr, silent = true }
 
-    -- Navigation
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
-    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Show references" }))
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation,
-        vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
-    vim.keymap.set("n", "gt", vim.lsp.buf.type_definition,
-        vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+    -- Bind a keymap only if the attached LSP supports the given method
+    local tb = require("telescope.builtin")
+    local function map_if(method, mode, lhs, rhs, desc)
+        if client:supports_method(method) then
+            vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
+        end
+    end
+
+    -- Goto (Trouble panel — grouped by file with inline preview)
+    map_if("textDocument/definition",     "n", "<leader>gd",  "<cmd>Trouble lsp_definitions toggle focus=true<cr>",       "Definitions")
+    map_if("textDocument/references",     "n", "<leader>gu",  "<cmd>Trouble lsp_references toggle focus=true<cr>",        "Usages")
+    map_if("textDocument/implementation", "n", "<leader>gi",  "<cmd>Trouble lsp_implementations toggle focus=true<cr>",   "Implementations")
+    map_if("textDocument/typeDefinition", "n", "<leader>gt",  "<cmd>Trouble lsp_type_definitions toggle focus=true<cr>",  "Type definitions")
+    map_if("textDocument/documentSymbol", "n", "<leader>gs",  "<cmd>Trouble lsp_document_symbols toggle focus=true<cr>",  "Document symbols")
+    map_if("textDocument/prepareCallHierarchy", "n", "<leader>gci", "<cmd>Trouble lsp_incoming_calls toggle focus=true<cr>", "Incoming calls")
+    map_if("textDocument/prepareCallHierarchy", "n", "<leader>gco", "<cmd>Trouble lsp_outgoing_calls toggle focus=true<cr>", "Outgoing calls")
 
     -- Hover and help
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
-    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
+    map_if("textDocument/hover",         "n", "K",     vim.lsp.buf.hover,          "Hover documentation")
+    map_if("textDocument/signatureHelp", "n", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
 
-    -- Code actions
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
-    vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
+    -- Refactor
+    map_if("textDocument/codeAction", "n", "<leader>ra", vim.lsp.buf.code_action, "Code action")
+    map_if("textDocument/codeAction", "n", "<leader>.",  vim.lsp.buf.code_action, "Code action")
+    map_if("textDocument/rename",     "n", "<leader>rr", vim.lsp.buf.rename,      "Rename symbol")
 
     -- Diagnostics
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
@@ -71,6 +87,14 @@ function M.on_attach(client, bufnr)
         vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
     vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist,
         vim.tbl_extend("force", opts, { desc = "Diagnostic loclist" }))
+
+    -- Inlay hints
+    if client:supports_method("textDocument/inlayHint") then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        vim.keymap.set("n", "<leader>uh", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+        end, vim.tbl_extend("force", opts, { desc = "Toggle inlay hints" }))
+    end
 
     -- Highlight symbol under cursor
     if client.server_capabilities.documentHighlightProvider then

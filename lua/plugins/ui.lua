@@ -64,13 +64,19 @@ return {
             })
             pcall(wk.add, {
                 { "<leader>b", group = "Buffer" },
-                { "<leader>c", group = "Code" },
+                { "<leader>c", desc = "LazyGit" },
+                { "<leader>.", desc = "Code action" },
+                { "<leader>o", desc = "Outline" },
                 { "<leader>d", group = "Diagnostics" },
                 { "<leader>f", group = "Find" },
-                { "<leader>g", group = "Git" },
+                { "<leader>g", group = "Goto" },
+                { "<leader>gc", group = "Calls" },
+                { "<leader>gp", group = "Peek" },
                 { "<leader>j", group = "Java" },
+                { "<leader>r", group = "Refactor" },
                 { "<leader>s", group = "Session" },
                 { "<leader>t", group = "Terminal" },
+                { "<leader>u", group = "UI / Toggle" },
                 { "<leader>x", group = "Trouble" },
             })
 

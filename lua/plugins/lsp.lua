@@ -48,7 +48,7 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     "stylua",              -- Lua formatter
-                    "prettierd",           -- JS/TS/JSON/YAML/MD/HTML/CSS/Svelte formatter
+                    "prettier",            -- JS/TS/JSON/YAML/MD/HTML/CSS/Svelte formatter
                     "google-java-format",  -- Java formatter
                     "shfmt",               -- Shell formatter
                 },
