@@ -13,7 +13,25 @@
       user.email = "lucas@somfic.dev";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
+      core.hooksPath = "~/.config/git/hooks";
     };
+  };
+
+  home.file.".config/git/hooks/prepare-commit-msg" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      # Prefix commit messages with the Jira ticket from the branch name.
+      case "$2" in message|commit|merge|squash) exit 0 ;; esac
+      branch=$(git symbolic-ref --short HEAD 2>/dev/null) || exit 0
+      ticket=$(printf '%s' "$branch" | grep -oE '[A-Z]+-[0-9]+' | head -1)
+      [ -z "$ticket" ] && exit 0
+      grep -qE "^$ticket[: ]" "$1" && exit 0
+      tmp=$(mktemp)
+      printf '%s: ' "$ticket" > "$tmp"
+      cat "$1" >> "$tmp"
+      mv "$tmp" "$1"
+    '';
   };
 
   programs.ssh = {
