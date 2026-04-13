@@ -53,6 +53,7 @@ return {
                     "shfmt",               -- Shell formatter
                     "java-debug-adapter",  -- Java DAP (jdtls bundle)
                     "java-test",           -- Java test runner (jdtls bundle)
+                    "codelldb",            -- Rust/C/C++ DAP
                 },
                 auto_update = false,
                 run_on_start = true,

@@ -31,9 +31,26 @@ return {
                 "noice",
                 "fidget",
                 "qf",
+                "dap-repl",
+                "dap-float",
+                "dapui_scopes",
+                "dapui_breakpoints",
+                "dapui_stacks",
+                "dapui_watches",
+                "dapui_console",
             },
             callback = function()
                 vim.b.miniindentscope_disable = true
+            end,
+        })
+
+        -- dap widget floating buffers have no filetype — disable by buffer name pattern
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            callback = function(args)
+                local name = vim.api.nvim_buf_get_name(args.buf)
+                if name:find("%[dap") or name:find("DAP") then
+                    vim.b[args.buf].miniindentscope_disable = true
+                end
             end,
         })
     end,
