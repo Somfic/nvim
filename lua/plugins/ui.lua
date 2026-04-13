@@ -63,11 +63,12 @@ return {
                 delay = 500,
             })
             pcall(wk.add, {
-                { "<leader>b", group = "Buffer" },
+                { "<leader>b", group = "Debug" },
                 { "<leader>c", desc = "LazyGit" },
                 { "<leader>.", desc = "Code action" },
                 { "<leader>o", desc = "Outline" },
                 { "<leader>d", group = "Diagnostics" },
+                { "<leader>h", group = "Harpoon" },
                 { "<leader>f", group = "Find" },
                 { "<leader>g", group = "Goto" },
                 { "<leader>gc", group = "Calls" },
@@ -80,16 +81,12 @@ return {
                 { "<leader>x", group = "Trouble" },
             })
 
-            -- Collapse harpoon slot families into a single display row each.
-            -- Done in a separate pcall so any failure here can't break the
-            -- group registrations above.
+            -- Collapse harpoon slot keybinds into a single display row.
             local harpoon_entries = {
-                { "<leader>1", desc = "Jump pinned buffer 1..9" },
-                { "<leader>bp1", desc = "Pin buffer to slot 1..9" },
+                { "<leader>1", desc = "Harpoon slot 1..9" },
             }
             for i = 2, 9 do
                 table.insert(harpoon_entries, { "<leader>" .. i, hidden = true })
-                table.insert(harpoon_entries, { "<leader>bp" .. i, hidden = true })
             end
             pcall(wk.add, harpoon_entries)
         end,

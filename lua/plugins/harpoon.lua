@@ -7,19 +7,19 @@ return {
         local harpoon = require("harpoon")
         harpoon:setup()
 
-        vim.keymap.set("n", "<leader>bp", function()
+        vim.keymap.set("n", "<leader>ha", function()
             harpoon:list():add()
-        end, { desc = "Pin buffer" })
+        end, { desc = "Harpoon add" })
 
-        vim.keymap.set("n", "<leader>bp0", function()
+        vim.keymap.set("n", "<leader>hr", function()
             harpoon:list():remove()
-        end, { desc = "Unpin buffer" })
+        end, { desc = "Harpoon remove" })
+
+        vim.keymap.set("n", "<leader>hh", function()
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+        end, { desc = "Harpoon menu" })
 
         for i = 1, 9 do
-            vim.keymap.set("n", "<leader>bp" .. i, function()
-                harpoon:list():replace_at(i)
-            end, { desc = "Pin buffer to slot " .. i })
-
             vim.keymap.set("n", "<leader>" .. i, function()
                 harpoon:list():select(i)
             end, { desc = "Harpoon slot " .. i })

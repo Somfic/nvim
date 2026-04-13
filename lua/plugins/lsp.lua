@@ -51,6 +51,8 @@ return {
                     "prettier",            -- JS/TS/JSON/YAML/MD/HTML/CSS/Svelte formatter
                     "google-java-format",  -- Java formatter
                     "shfmt",               -- Shell formatter
+                    "java-debug-adapter",  -- Java DAP (jdtls bundle)
+                    "java-test",           -- Java test runner (jdtls bundle)
                 },
                 auto_update = false,
                 run_on_start = true,

@@ -21,6 +21,16 @@ local launcher_jar = vim.fn.glob(mason_path .. "/plugins/org.eclipse.equinox.lau
 -- Lombok support
 local lombok_jar = mason_path .. "/lombok.jar"
 
+-- DAP bundles (java-debug-adapter + java-test, installed via Mason)
+local mason_base = vim.fn.stdpath("data") .. "/mason/packages"
+local bundles = {}
+vim.list_extend(bundles, vim.split(vim.fn.glob(
+    mason_base .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
+), "\n", { trimempty = true }))
+vim.list_extend(bundles, vim.split(vim.fn.glob(
+    mason_base .. "/java-test/extension/server/*.jar"
+), "\n", { trimempty = true }))
+
 -- Determine OS config
 local os_config = "linux"
 if vim.fn.has("mac") == 1 then
@@ -54,6 +64,7 @@ local config = {
   root_dir = root_dir,
 
   init_options = {
+    bundles = bundles,
     extendedClientCapabilities = {
       progressReportProvider = false,
       classFileContentsSupport = true,
@@ -151,6 +162,18 @@ local config = {
     vim.keymap.set("n", "<leader>jc", jdtls.extract_constant, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
     vim.keymap.set("v", "<leader>jc", function() jdtls.extract_constant(true) end, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
     vim.keymap.set("v", "<leader>jm", function() jdtls.extract_method(true) end, vim.tbl_extend("force", opts, { desc = "Extract method" }))
+
+    -- DAP integration: register Spring Boot / main-class launch configs, hook test commands
+    local ok_dap = pcall(require, "jdtls.dap")
+    if ok_dap then
+      require("jdtls").setup_dap({ hotcodereplace = "auto" })
+      require("jdtls.dap").setup_dap_main_class_configs()
+    end
+
+    vim.keymap.set("n", "<leader>bt", function() require("jdtls").test_nearest_method() end,
+      vim.tbl_extend("force", opts, { desc = "Debug nearest test" }))
+    vim.keymap.set("n", "<leader>bT", function() require("jdtls").test_class() end,
+      vim.tbl_extend("force", opts, { desc = "Debug test class" }))
   end,
 }
 
