@@ -40,6 +40,20 @@ o.shortmess:append('s') -- suppress search wrap messages
 -- behaviour
 o.mouse = 'a'
 o.clipboard = 'unnamedplus'
+if os.getenv('WAYLAND_DISPLAY') then
+    vim.g.clipboard = {
+        name = 'wl-clipboard',
+        copy = {
+            ['+'] = 'wl-copy',
+            ['*'] = 'wl-copy',
+        },
+        paste = {
+            ['+'] = 'wl-paste --no-newline',
+            ['*'] = 'wl-paste --no-newline',
+        },
+        cache_enabled = 0,
+    }
+end
 o.undofile = true
 o.swapfile = false
 o.backup = false

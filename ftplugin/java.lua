@@ -48,8 +48,8 @@ local config = {
     "-Dosgi.bundles.defaultStartLevel=4",
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
     "-Dlog.level=WARN",
-    "-Xms512m",
-    "-Xmx2g",
+    "-Xms2g",
+    "-Xmx8g",
     "-XX:+UseG1GC",
     "-XX:+UseStringDeduplication",
     "--add-modules=ALL-SYSTEM",
@@ -82,12 +82,28 @@ local config = {
 
   settings = {
     java = {
+      jdt = {
+        ls = {
+          java = {
+            home = vim.env.JAVA_HOME,
+          },
+        },
+      },
+      configuration = {
+        runtimes = {
+          {
+            name = "JavaSE-21",
+            path = vim.env.JAVA_HOME,
+            default = true,
+          },
+        },
+      },
       signatureHelp = { enabled = true },
       inlayHints = {
         parameterNames = { enabled = "all" },
       },
       contentProvider = { preferred = "fernflower" },
-      autobuild = { enabled = true },
+      autobuild = { enabled = false },
       references = { includeDecompiledSources = false },
       implementationsCodeLens = { enabled = false },
       referencesCodeLens = { enabled = false },
@@ -99,7 +115,7 @@ local config = {
       import = {
         gradle = {
           enabled = true,
-          offline = { enabled = false },
+          offline = { enabled = true },
         },
         maven = { enabled = true },
         exclusions = {
