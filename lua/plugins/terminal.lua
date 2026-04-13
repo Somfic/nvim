@@ -114,13 +114,15 @@ return {
                 local opts = { buffer = 0 }
                 -- Esc closes floating terminals, normal mode for others
                 vim.keymap.set("t", "<esc>", function()
+                    local bufname = vim.api.nvim_buf_get_name(0)
+                    if bufname:match("lazygit") then
+                        return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, true, true), "n", false)
+                    end
                     local win = vim.api.nvim_get_current_win()
                     local config = vim.api.nvim_win_get_config(win)
                     if config.relative ~= "" then
-                        -- Floating window - close it
                         vim.cmd("close")
                     else
-                        -- Normal split - go to normal mode
                         vim.cmd([[normal! \<C-\>\<C-n>]])
                     end
                 end, opts)
