@@ -93,6 +93,12 @@ return {
                 from_normal_window(builtin.grep_string),
                 { desc = "Grep word under cursor" }
             )
+            vim.keymap.set(
+                "n",
+                "<leader>fu",
+                from_normal_window(builtin.lsp_references),
+                { desc = "Find usages (references)" }
+            )
             vim.keymap.set("n", "<leader>fS", from_normal_window(function()
                 local clients = vim.lsp.get_clients({ bufnr = 0 })
                 for _, client in ipairs(clients) do
