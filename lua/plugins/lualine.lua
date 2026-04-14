@@ -14,7 +14,14 @@ return {
           globalstatus = true, -- single statusline for all windows
         },
         sections = {
-          lualine_a = { "mode" },
+          lualine_a = {
+            "mode",
+            {
+              function() return " DEBUG" end,
+              cond = function() return vim.g.dap_stopped == true end,
+              color = { fg = "#ffffff", bg = "#e03131", gui = "bold" },
+            },
+          },
           lualine_b = { "branch", "diff", "diagnostics" },
           lualine_c = { { "filename", path = 1 } }, -- relative path
           lualine_x = { "filetype" },
