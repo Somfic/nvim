@@ -24,14 +24,15 @@ function M.setup()
         },
     })
 
-    -- LSP handlers with borders
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = "rounded",
-    })
-
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-        border = "rounded",
-    })
+    -- Default hover/signature_help to a rounded border (vim.lsp.with was removed in 0.11)
+    local orig_hover = vim.lsp.buf.hover
+    vim.lsp.buf.hover = function(cfg)
+        return orig_hover(vim.tbl_extend("force", { border = "rounded" }, cfg or {}))
+    end
+    local orig_sig = vim.lsp.buf.signature_help
+    vim.lsp.buf.signature_help = function(cfg)
+        return orig_sig(vim.tbl_extend("force", { border = "rounded" }, cfg or {}))
+    end
 
     -- Italic inlay hints (preserve existing fg/bg from colorscheme)
     local function italicize_inlay_hints()
