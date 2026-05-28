@@ -86,7 +86,7 @@ return {
             })
 
             telescope.load_extension("ui-select")
-            telescope.load_extension("fzf")
+            pcall(telescope.load_extension, "fzf")
 
             -- keymaps
             local builtin = require("telescope.builtin")
