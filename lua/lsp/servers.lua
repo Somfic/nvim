@@ -31,6 +31,21 @@ return {
     -- ESLint
     eslint = {},
 
+    -- HTML
+    html = {},
+
+    -- CSS
+    cssls = {},
+
+    -- Emmet (HTML/CSS/JSX/TSX/Svelte/Vue abbreviation expansion)
+    emmet_language_server = {
+        filetypes = {
+            "html", "css", "scss", "sass", "less",
+            "javascriptreact", "typescriptreact",
+            "svelte", "vue", "htmldjango",
+        },
+    },
+
     -- C/C++
     clangd = {
         cmd = {

@@ -31,6 +31,9 @@ return {
                     "svelte",        -- Svelte
                     "rust_analyzer", -- Rust
                     "eslint",        -- ESLint
+                    "html",          -- HTML
+                    "cssls",         -- CSS
+                    "emmet_language_server", -- Emmet
                     "jdtls",         -- Java
                 },
                 automatic_installation = true,
