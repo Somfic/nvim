@@ -32,6 +32,7 @@ return {
                     "python",
                     "go",
                     "c",
+                    "c_sharp",
                     "markdown",
                     "markdown_inline",
                 },

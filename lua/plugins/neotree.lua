@@ -18,7 +18,7 @@ return {
             enable_diagnostics = true,
             window = {
                 position = "right",
-                width = 35,
+                width = 50,
                 mappings = {
                     ["<space>"] = "none",
                     ["q"] = "close_window",

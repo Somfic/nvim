@@ -59,7 +59,7 @@ return {
                     dapui.elements.watches.add(expr)
                     vim.notify("Watching: " .. expr, vim.log.levels.INFO)
                 end
-            end, desc = "Add watch", mode = { "n", "v", "i" } },
+            end, desc = "Add watch", mode = { "n", "v" } },
             { "<leader>bv", function()
                 local widgets = require("dap.ui.widgets")
                 widgets.centered_float(widgets.scopes, {

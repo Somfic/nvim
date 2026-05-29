@@ -11,10 +11,10 @@ return {
                 tsserver_file_preferences = {
                     includeInlayParameterNameHints = "all",
                     includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = true,
+                    includeInlayFunctionParameterTypeHints = false,
+                    includeInlayVariableTypeHints = false,
                     includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = false,
                     includeInlayFunctionLikeReturnTypeHints = true,
                     includeInlayEnumMemberValueHints = true,
                 },

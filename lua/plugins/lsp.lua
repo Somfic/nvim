@@ -32,6 +32,7 @@ return {
                     "rust_analyzer", -- Rust
                     "eslint",        -- ESLint
                     "jdtls",         -- Java
+                    "omnisharp",     -- C# / .NET
                 },
                 automatic_installation = true,
                 automatic_enable = false, -- don't auto-enable random Mason packages as LSP
@@ -78,7 +79,7 @@ return {
     {
         "hrsh7th/nvim-cmp",
         enabled = c.lsp,
-        event = "InsertEnter",
+        event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",     -- LSP completion source
             "hrsh7th/cmp-buffer",       -- Buffer completion source

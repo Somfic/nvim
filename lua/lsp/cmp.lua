@@ -68,6 +68,9 @@ cmp.setup.cmdline(":", {
     { name = "path" },
     { name = "cmdline" },
   }),
+  formatting = {
+    fields = { "abbr" },
+  },
 })
 
 -- Search completion

@@ -17,7 +17,7 @@ local function auto_format_and_save()
                     has_formatter = true
                     break
                 end
-                if c.server_capabilities.documentFormattingProvider then
+                if c:supports_method("textDocument/formatting") then
                     has_formatter = true
                 end
             end

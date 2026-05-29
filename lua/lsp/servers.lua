@@ -43,6 +43,25 @@ return {
         },
     },
 
+    -- C# / .NET
+    omnisharp = {
+        cmd = { "omnisharp" },
+        settings = {
+            FormattingOptions = {
+                EnableEditorConfigSupport = true,
+                OrganizeImports = true,
+            },
+            RoslynExtensionsOptions = {
+                EnableAnalyzersSupport = true,
+                EnableImportCompletion = true,
+                AnalyzeOpenDocumentsOnly = true,
+            },
+            Sdk = {
+                IncludePrereleases = true,
+            },
+        },
+    },
+
     -- Rust
     rust_analyzer = {
         settings = {

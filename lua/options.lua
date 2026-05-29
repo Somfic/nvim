@@ -1,10 +1,5 @@
 local o = vim.opt
 
--- silence deprecation warnings from plugins (prevents "press any key" with cmdheight=0)
-local orig_deprecate = vim.deprecate
-vim.deprecate = function() end
-vim.schedule(function() vim.deprecate = orig_deprecate end)
-
 -- line numbers (shown in statusline instead)
 o.number = false
 o.relativenumber = false
