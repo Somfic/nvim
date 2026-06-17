@@ -1,6 +1,6 @@
 return {
   file_explorer = 'oil',
-  theme = 'tokyodark',
+  theme = 'vague',
   lsp = true,
   statusline = true,
   copilot = false,
