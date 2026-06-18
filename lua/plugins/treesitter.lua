@@ -1,92 +1,100 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        branch = "master",
+        branch = "main",
+        -- main branch does not support lazy-loading
+        lazy = false,
         build = ":TSUpdate",
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects",
-            "windwp/nvim-ts-autotag",
-        },
         config = function()
-            require("nvim-ts-autotag").setup({
-                opts = {
-                    enable_close = true,
-                    enable_rename = true,
-                    enable_close_on_slash = true,
+            require("nvim-treesitter").setup()
+
+            local ensure_installed = {
+                "lua",
+                "vim",
+                "vimdoc",
+                "javascript",
+                "typescript",
+                "tsx",
+                "json",
+                "html",
+                "css",
+                "scss",
+                "svelte",
+                "rust",
+                "python",
+                "go",
+                "c",
+                "c_sharp",
+                "markdown",
+                "markdown_inline",
+            }
+            require("nvim-treesitter").install(ensure_installed)
+
+            local ts = require("nvim-treesitter")
+
+            -- main branch has no modules: highlight/indent are wired up by hand.
+            -- (incremental selection and the matchup module no longer exist here;
+            --  vim-matchup still works standalone via lua/plugins/matchup.lua.)
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(args)
+                    local buf = args.buf
+                    local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
+                    if not lang then
+                        return
+                    end
+
+                    if pcall(vim.treesitter.start, buf, lang) then
+                        -- experimental treesitter-based indentation
+                        vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                    else
+                        -- parser missing: install async (auto_install). Highlighting
+                        -- kicks in the next time a file of this type is opened.
+                        pcall(ts.install, { lang })
+                    end
+                end,
+            })
+        end,
+    },
+
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        branch = "main",
+        event = "VeryLazy",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        config = function()
+            require("nvim-treesitter-textobjects").setup({
+                select = {
+                    lookahead = true,
+                },
+                move = {
+                    set_jumps = true,
                 },
             })
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {
-                    "lua",
-                    "vim",
-                    "vimdoc",
-                    "javascript",
-                    "typescript",
-                    "tsx",
-                    "json",
-                    "html",
-                    "css",
-                    "scss",
-                    "svelte",
-                    "rust",
-                    "python",
-                    "go",
-                    "c",
-                    "c_sharp",
-                    "markdown",
-                    "markdown_inline",
-                },
-                auto_install = true,
-                highlight = {
-                    enable = true,
-                    additional_vim_regex_highlighting = false,
-                },
-                indent = {
-                    enable = true,
-                },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection = "<CR>",
-                        node_incremental = "<CR>",
-                        scope_incremental = "<S-CR>",
-                        node_decremental = "<BS>",
-                    },
-                },
-                matchup = {
-                    enable = true,
-                },
-                textobjects = {
-                    select = {
-                        enable = true,
-                        lookahead = true,
-                        keymaps = {
-                            ["af"] = { query = "@function.outer", desc = "around function" },
-                            ["if"] = { query = "@function.inner", desc = "inside function" },
-                            ["ac"] = { query = "@class.outer", desc = "around class" },
-                            ["ic"] = { query = "@class.inner", desc = "inside class" },
-                            ["aa"] = { query = "@parameter.outer", desc = "around argument" },
-                            ["ia"] = { query = "@parameter.inner", desc = "inside argument" },
-                            ["al"] = { query = "@loop.outer", desc = "around loop" },
-                            ["il"] = { query = "@loop.inner", desc = "inside loop" },
-                            ["ai"] = { query = "@conditional.outer", desc = "around conditional" },
-                            ["ii"] = { query = "@conditional.inner", desc = "inside conditional" },
-                        },
-                    },
-                    move = {
-                        enable = true,
-                        set_jumps = true,
-                        goto_next_start = {
-                            ["]f"] = { query = "@function.outer", desc = "next function" },
-                            ["]c"] = { query = "@class.outer", desc = "next class" },
-                        },
-                        goto_previous_start = {
-                            ["[f"] = { query = "@function.outer", desc = "prev function" },
-                            ["[c"] = { query = "@class.outer", desc = "prev class" },
-                        },
-                    },
-                },
-            })
+
+            local select = require("nvim-treesitter-textobjects.select")
+            local move = require("nvim-treesitter-textobjects.move")
+
+            local function map(mode, lhs, fn, desc)
+                vim.keymap.set(mode, lhs, fn, { desc = desc, silent = true })
+            end
+
+            -- select
+            map({ "x", "o" }, "af", function() select.select_textobject("@function.outer", "textobjects") end, "around function")
+            map({ "x", "o" }, "if", function() select.select_textobject("@function.inner", "textobjects") end, "inside function")
+            map({ "x", "o" }, "ac", function() select.select_textobject("@class.outer", "textobjects") end, "around class")
+            map({ "x", "o" }, "ic", function() select.select_textobject("@class.inner", "textobjects") end, "inside class")
+            map({ "x", "o" }, "aa", function() select.select_textobject("@parameter.outer", "textobjects") end, "around argument")
+            map({ "x", "o" }, "ia", function() select.select_textobject("@parameter.inner", "textobjects") end, "inside argument")
+            map({ "x", "o" }, "al", function() select.select_textobject("@loop.outer", "textobjects") end, "around loop")
+            map({ "x", "o" }, "il", function() select.select_textobject("@loop.inner", "textobjects") end, "inside loop")
+            map({ "x", "o" }, "ai", function() select.select_textobject("@conditional.outer", "textobjects") end, "around conditional")
+            map({ "x", "o" }, "ii", function() select.select_textobject("@conditional.inner", "textobjects") end, "inside conditional")
+
+            -- move
+            map({ "n", "x", "o" }, "]f", function() move.goto_next_start("@function.outer", "textobjects") end, "next function")
+            map({ "n", "x", "o" }, "]c", function() move.goto_next_start("@class.outer", "textobjects") end, "next class")
+            map({ "n", "x", "o" }, "[f", function() move.goto_previous_start("@function.outer", "textobjects") end, "prev function")
+            map({ "n", "x", "o" }, "[c", function() move.goto_previous_start("@class.outer", "textobjects") end, "prev class")
         end,
     },
 }
