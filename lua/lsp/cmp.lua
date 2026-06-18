@@ -42,6 +42,7 @@ cmp.setup({
   sources = cmp.config.sources({
     { name = "lazydev", group_index = 0 },
     { name = "nvim_lsp" },
+    { name = "crates" }, -- Cargo.toml dependency versions (crates.nvim)
     { name = "luasnip" },
     { name = "buffer" },
     { name = "path" },
@@ -52,6 +53,7 @@ cmp.setup({
       vim_item.menu = ({
         nvim_lsp = "[LSP]",
         lazydev  = "[Dev]",
+        crates   = "[Crates]",
         luasnip  = "[Snip]",
         buffer   = "[Buf]",
         path     = "[Path]",

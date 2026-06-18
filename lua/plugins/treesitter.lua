@@ -28,6 +28,7 @@ return {
                 "markdown",
                 "markdown_inline",
                 "nix",
+                "just",
             }
             require("nvim-treesitter").install(ensure_installed)
 

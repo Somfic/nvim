@@ -28,6 +28,9 @@ return {
     -- Nix (nixd, installed via nix — see modules/home/development/core.nix)
     nixd = {},
 
+    -- just (just-lsp, installed via nix — see modules/home/development/core.nix)
+    just = {},
+
     -- Svelte
     svelte = {},
 
