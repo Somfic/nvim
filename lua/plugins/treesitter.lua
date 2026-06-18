@@ -32,6 +32,20 @@ return {
 
             local ts = require("nvim-treesitter")
 
+            -- Set of parsers that actually exist, computed once. Used to avoid
+            -- trying to start/install a parser for plugin UI filetypes that map
+            -- to no real grammar (e.g. "notify", "noice").
+            local available
+            local function is_available(lang)
+                if not available then
+                    available = {}
+                    for _, l in ipairs(require("nvim-treesitter.config").get_available()) do
+                        available[l] = true
+                    end
+                end
+                return available[lang]
+            end
+
             -- main branch has no modules: highlight/indent are wired up by hand.
             -- (incremental selection and the matchup module no longer exist here;
             --  vim-matchup still works standalone via lua/plugins/matchup.lua.)
@@ -39,7 +53,7 @@ return {
                 callback = function(args)
                     local buf = args.buf
                     local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
-                    if not lang then
+                    if not lang or not is_available(lang) then
                         return
                     end
 
