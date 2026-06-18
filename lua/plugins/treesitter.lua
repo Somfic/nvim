@@ -27,6 +27,7 @@ return {
                 "c_sharp",
                 "markdown",
                 "markdown_inline",
+                "nix",
             }
             require("nvim-treesitter").install(ensure_installed)
 

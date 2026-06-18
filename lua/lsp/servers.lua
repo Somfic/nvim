@@ -25,6 +25,9 @@ return {
 
     -- TypeScript/JavaScript handled by typescript-tools.nvim (see lua/plugins/typescript-tools.lua)
 
+    -- Nix (nixd, installed via nix — see modules/home/development/core.nix)
+    nixd = {},
+
     -- Svelte
     svelte = {},
 
