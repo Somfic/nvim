@@ -41,6 +41,35 @@ end
 
 local config_path = mason_path .. "/config_" .. os_config
 
+-- Resolve the Eclipse formatter profile jdtls should use. A repo may ship its
+-- own eclipse-formatter.xml (checked first); otherwise fall back to the bundled
+-- BOS profile (derived from Google style: 4-space indent, 8-space continuation,
+-- 120-col line split — see jdtls/bos-java-style.xml). The profile name is read
+-- straight out of the file so any project's own profile name works too.
+local function resolve_java_formatter(root)
+  local candidates = {}
+  if root then
+    table.insert(candidates, root .. "/eclipse-formatter.xml")
+    table.insert(candidates, root .. "/.eclipse-formatter.xml")
+  end
+  table.insert(candidates, vim.fn.expand("~/.config/nvim/jdtls/bos-java-style.xml"))
+  for _, path in ipairs(candidates) do
+    if vim.uv.fs_stat(path) then
+      local name = "BOS"
+      local f = io.open(path, "r")
+      if f then
+        local content = f:read("*a")
+        f:close()
+        name = content:match('<profile[^>]-name="([^"]+)"') or name
+      end
+      return "file://" .. path, name
+    end
+  end
+  return nil, nil
+end
+
+local format_url, format_profile = resolve_java_formatter(root_dir)
+
 local config = {
   cmd = {
     "java",
@@ -133,8 +162,8 @@ local config = {
       },
       format = {
         settings = {
-          url = "file://" .. vim.fn.expand("~/.config/nvim/jdtls/google-java-style.xml"),
-          profile = "GoogleStyle",
+          url = format_url,
+          profile = format_profile,
         },
       },
       completion = {
@@ -164,9 +193,8 @@ local config = {
 
   capabilities = require("cmp_nvim_lsp").default_capabilities(),
   on_attach = function(client, bufnr)
-    -- Disable jdtls formatting
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
+    -- jdtls now owns Java formatting, using the BOS Eclipse profile resolved
+    -- above. conform (formatters_by_ft has no java) falls back to this on save.
 
     handlers.on_attach(client, bufnr)
 
