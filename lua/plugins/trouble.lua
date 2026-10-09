@@ -1,3 +1,36 @@
+-- jdtls reports an entity's generated QueryDSL/jpamodelgen classes and every
+-- `import` of it as usages. Both are genuine references, but neither is ever
+-- what you're looking for, so strip them out of <leader>gu.
+local function strip_reference_noise(items)
+  -- Read each file's lines once: a widely-used entity has hundreds of refs.
+  local by_file = {}
+  for _, item in ipairs(items) do
+    local t = by_file[item.filename]
+    if not t then
+      t = { buf = item.buf, rows = {} }
+      by_file[item.filename] = t
+    end
+    t.rows[#t.rows + 1] = item.pos[1]
+  end
+
+  local util = require("trouble.util")
+  local lines = {}
+  for path, t in pairs(by_file) do
+    lines[path] = util.get_lines({ rows = t.rows, buf = t.buf, path = path }) or {}
+  end
+
+  local kept = {}
+  for _, item in ipairs(items) do
+    local line = lines[item.filename][item.pos[1]] or ""
+    local generated = item.filename:match("/bin/generated%-[^/]*sources/")
+    local import = line:match("^%s*import%s")
+    if not generated and not import then
+      kept[#kept + 1] = item
+    end
+  end
+  return kept
+end
+
 return {
   {
     "folke/trouble.nvim",
@@ -9,6 +42,9 @@ return {
       modes = {
         diagnostics = {
           format = "{severity_icon} {message:md} {code:code}{pos}",
+        },
+        lsp_references = {
+          filter = strip_reference_noise,
         },
       },
     },

@@ -77,10 +77,15 @@ local config = {
     "-Dosgi.bundles.defaultStartLevel=4",
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
     "-Dlog.level=WARN",
-    "-Xms2g",
+    "-Xms4g",
     "-Xmx8g",
-    "-XX:+UseG1GC",
-    "-XX:+UseStringDeduplication",
+    -- Throughput-tuned GC (the upstream jdtls launcher defaults); the workspace
+    -- build cares about total CPU, not pause times, and string dedup costs more
+    -- than it saves here.
+    "-XX:+UseParallelGC",
+    "-XX:GCTimeRatio=4",
+    "-XX:AdaptiveSizePolicyWeight=90",
+    "-Dsun.zip.disableMemoryMapping=true",
     "--add-modules=ALL-SYSTEM",
     "--add-opens", "java.base/java.util=ALL-UNNAMED",
     "--add-opens", "java.base/java.lang=ALL-UNNAMED",
@@ -119,6 +124,8 @@ local config = {
         },
       },
       configuration = {
+        -- Do not silently re-run the Gradle import on every build-file save.
+        updateBuildConfiguration = "interactive",
         runtimes = {
           {
             name = "JavaSE-21",
@@ -132,7 +139,12 @@ local config = {
         parameterNames = { enabled = "all" },
       },
       contentProvider = { preferred = "fernflower" },
+      -- Autobuild recompiles the whole workspace on every save, which on BOS means
+      -- re-running querydsl-apt + jpamodelgen over 3.5k files. Project-wide errors
+      -- come from an explicit <leader>jb/<leader>jB build instead (see on_attach).
       autobuild = { enabled = false },
+      -- Build the Gradle modules in parallel instead of one at a time.
+      maxConcurrentBuilds = 4,
       references = { includeDecompiledSources = false },
       implementationsCodeLens = { enabled = false },
       referencesCodeLens = { enabled = false },
@@ -206,6 +218,13 @@ local config = {
     vim.keymap.set("n", "<leader>jc", jdtls.extract_constant, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
     vim.keymap.set("v", "<leader>jc", function() jdtls.extract_constant(true) end, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
     vim.keymap.set("v", "<leader>jm", function() jdtls.extract_method(true) end, vim.tbl_extend("force", opts, { desc = "Extract method" }))
+
+    -- Build the workspace on demand (IntelliJ's "Build Project"). Results land in
+    -- the quickfix list, so <leader>xq shows project-wide errors in Trouble.
+    vim.keymap.set("n", "<leader>jb", function() jdtls.compile("incremental") end,
+      vim.tbl_extend("force", opts, { desc = "Build project (incremental)" }))
+    vim.keymap.set("n", "<leader>jB", function() jdtls.compile("full") end,
+      vim.tbl_extend("force", opts, { desc = "Build project (full)" }))
 
     -- DAP integration: register Spring Boot / main-class launch configs, hook test commands
     local ok_dap = pcall(require, "jdtls.dap")
