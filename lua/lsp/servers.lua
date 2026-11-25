@@ -75,4 +75,26 @@ return {
             },
         },
     },
+
+    -- som (`som lsp`)
+    som = {
+        cmd = function(dispatchers, config)
+            local root = (config and config.root_dir) or vim.fs.root(0, { ".git" })
+            return vim.lsp.rpc.start({ require("lsp.som").binary(root), "lsp" }, dispatchers, { cwd = root })
+        end,
+        filetypes = { "som" },
+        root_markers = { ".git" },
+        on_attach = function(client, bufnr)
+            require("lsp.handlers").on_attach(client, bufnr)
+            if client:supports_method("textDocument/codeLens") then
+                vim.lsp.codelens.refresh({ bufnr = bufnr })
+                -- diagnostics arriving means an analysis finished, so lenses are current
+                vim.api.nvim_create_autocmd({ "BufEnter", "DiagnosticChanged" }, {
+                    buffer = bufnr,
+                    callback = function() vim.lsp.codelens.refresh({ bufnr = bufnr }) end,
+                })
+                vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { buffer = bufnr, desc = "Run code lens" })
+            end
+        end,
+    },
 }
