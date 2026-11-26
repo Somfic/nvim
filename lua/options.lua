@@ -23,6 +23,7 @@ o.hlsearch = true
 -- ui
 o.fillchars = { eob = ' ' }
 o.termguicolors = true
+o.winborder = 'rounded' -- default border for floats (LSP hover, signature help, ...)
 
 o.signcolumn = 'yes'
 o.cursorline = true

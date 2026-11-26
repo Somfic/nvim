@@ -18,19 +18,10 @@ function M.setup()
         severity_sort = true,
         float = {
             border = "rounded",
-            source = "always",
+            source = true,
             header = "",
             prefix = "",
         },
-    })
-
-    -- LSP handlers with borders
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = "rounded",
-    })
-
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-        border = "rounded",
     })
 
     -- Italic inlay hints (preserve existing fg/bg from colorscheme)
@@ -49,13 +40,12 @@ end
 -- On attach function (runs when LSP attaches to buffer)
 function M.on_attach(client, bufnr)
     -- Enable completion
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
     -- Keybindings
     local opts = { buffer = bufnr, silent = true }
 
     -- Bind a keymap only if the attached LSP supports the given method
-    local tb = require("telescope.builtin")
     local function map_if(method, mode, lhs, rhs, desc)
         if client:supports_method(method) then
             vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
@@ -81,8 +71,10 @@ function M.on_attach(client, bufnr)
     map_if("textDocument/rename",     "n", "<leader>rr", vim.lsp.buf.rename,      "Rename symbol")
 
     -- Diagnostics
-    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
-    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+    vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end,
+        vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
+    vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end,
+        vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
     vim.keymap.set("n", "<leader>dd", vim.diagnostic.open_float,
         vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
     vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist,

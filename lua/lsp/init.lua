@@ -5,8 +5,8 @@ local handlers = require("lsp.handlers")
 -- Setup handlers first
 handlers.setup()
 
--- Get capabilities from cmp
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- Completion capabilities from blink.cmp
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 -- Setup each server using new vim.lsp.config API
 for server_name, server_config in pairs(servers) do

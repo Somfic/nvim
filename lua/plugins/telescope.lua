@@ -1,6 +1,70 @@
+-- Entry maker that makes fuzzy matching ignore directory, matching only on filename
+local function find_files()
+    local default_file_entry = require("telescope.make_entry").gen_from_file({})
+    require("telescope.builtin").find_files({
+        entry_maker = function(line)
+            local entry = default_file_entry(line)
+            if entry then
+                entry.ordinal = vim.fs.basename(entry.value)
+            end
+            return entry
+        end,
+    })
+end
+
+local function workspace_symbols()
+    local builtin = require("telescope.builtin")
+    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+        if client:supports_method("workspace/symbol") then
+            builtin.lsp_dynamic_workspace_symbols()
+            return
+        end
+    end
+    vim.notify("No LSP workspace/symbol support — falling back to live grep", vim.log.levels.INFO)
+    builtin.live_grep()
+end
+
+-- If we trigger a picker from inside a floating window (e.g. the launch oil float),
+-- close that float first so the selected file opens in a normal full-size window
+-- instead of replacing the float's contents. `fn` is a function or a builtin's name.
+local function picker(fn)
+    return function()
+        if vim.api.nvim_win_get_config(0).relative ~= "" then
+            pcall(vim.api.nvim_win_close, 0, false)
+        end
+        if type(fn) == "string" then
+            require("telescope.builtin")[fn]()
+        else
+            fn()
+        end
+    end
+end
+
 return {
     {
         "nvim-telescope/telescope.nvim",
+        cmd = "Telescope",
+        keys = {
+            { "<leader>ff", picker(find_files),                 desc = "Find files" },
+            { "<leader>fg", picker("live_grep"),                desc = "Live grep" },
+            { "<leader>fb", picker("buffers"),                  desc = "Find buffers" },
+            { "<leader>fh", picker("current_buffer_fuzzy_find"), desc = "Fuzzy find in buffer" },
+            { "<leader>fs", picker("lsp_document_symbols"),     desc = "Document symbols" },
+            { "<leader>fw", picker("grep_string"),              desc = "Grep word under cursor" },
+            { "<leader>fS", picker(workspace_symbols),          desc = "Workspace symbols (LSP, fallback live grep)" },
+        },
+        init = function()
+            -- load telescope (and its ui-select extension) on the first vim.ui.select
+            local original = vim.ui.select
+            local function shim(...)
+                require("lazy").load({ plugins = { "telescope.nvim" } })
+                if vim.ui.select == shim then
+                    vim.ui.select = original -- extension didn't take over; don't recurse
+                end
+                return vim.ui.select(...)
+            end
+            vim.ui.select = shim
+        end,
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope-ui-select.nvim",
@@ -87,68 +151,6 @@ return {
 
             telescope.load_extension("ui-select")
             telescope.load_extension("fzf")
-
-            -- keymaps
-            local builtin = require("telescope.builtin")
-
-            -- Entry maker that makes fuzzy matching ignore directory, matching only on filename
-            local default_file_entry = require("telescope.make_entry").gen_from_file({})
-            local function filename_only_entry_maker(line)
-                local entry = default_file_entry(line)
-                if entry then
-                    entry.ordinal = vim.fs.basename(entry.value)
-                end
-                return entry
-            end
-
-            local function find_files()
-                builtin.find_files({ entry_maker = filename_only_entry_maker })
-            end
-
-            -- If we trigger a picker from inside a floating window (e.g. the launch
-            -- oil float), close that float first so the selected file opens in a
-            -- normal full-size window instead of replacing the float's contents.
-            local function from_normal_window(picker)
-                return function()
-                    if vim.api.nvim_win_get_config(0).relative ~= "" then
-                        pcall(vim.api.nvim_win_close, 0, false)
-                    end
-                    picker()
-                end
-            end
-
-            vim.keymap.set("n", "<leader>ff", from_normal_window(find_files), { desc = "Find files" })
-            vim.keymap.set("n", "<leader>fg", from_normal_window(builtin.live_grep), { desc = "Live grep" })
-            vim.keymap.set("n", "<leader>fb", from_normal_window(builtin.buffers), { desc = "Find buffers" })
-            vim.keymap.set(
-                "n",
-                "<leader>fh",
-                from_normal_window(builtin.current_buffer_fuzzy_find),
-                { desc = "Fuzzy find in buffer" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>fs",
-                from_normal_window(builtin.lsp_document_symbols),
-                { desc = "Document symbols" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>fw",
-                from_normal_window(builtin.grep_string),
-                { desc = "Grep word under cursor" }
-            )
-            vim.keymap.set("n", "<leader>fS", from_normal_window(function()
-                local clients = vim.lsp.get_clients({ bufnr = 0 })
-                for _, client in ipairs(clients) do
-                    if client:supports_method("workspace/symbol") then
-                        builtin.lsp_dynamic_workspace_symbols()
-                        return
-                    end
-                end
-                vim.notify("No LSP workspace/symbol support — falling back to live grep", vim.log.levels.INFO)
-                builtin.live_grep()
-            end), { desc = "Workspace symbols (LSP, fallback live grep)" })
         end,
     },
 }

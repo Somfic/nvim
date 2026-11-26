@@ -9,7 +9,7 @@ require('autocmd.quit_with_q')
 
 -- setup lazyvim
 local lazy = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazy) then
+if not vim.uv.fs_stat(lazy) then
   vim.fn.system({
     "git",
     "clone",
@@ -34,3 +34,5 @@ require("lazy").setup("plugins", {
     },
   },
 })
+
+require('terminal')

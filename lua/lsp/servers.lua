@@ -8,7 +8,7 @@ return {
                     globals = { "vim" },
                 },
                 workspace = {
-                    library = vim.api.nvim_get_runtime_file("", true),
+                    -- library paths come from lazydev.nvim
                     checkThirdParty = false,
                 },
                 telemetry = { enable = false },
@@ -37,6 +37,50 @@ return {
     -- CSS
     cssls = {},
 
+    -- JSON (schemas from SchemaStore.nvim, loaded when the server starts)
+    jsonls = {
+        before_init = function(_, config)
+            config.settings.json.schemas = require("schemastore").json.schemas()
+        end,
+        settings = {
+            json = { validate = { enable = true } },
+        },
+    },
+
+    -- YAML (SchemaStore.nvim instead of the server's own schema download)
+    yamlls = {
+        before_init = function(_, config)
+            config.settings.yaml.schemas = require("schemastore").yaml.schemas()
+        end,
+        settings = {
+            yaml = {
+                schemaStore = { enable = false, url = "" },
+                keyOrdering = false,
+            },
+        },
+    },
+
+    -- TOML (Cargo.toml, pyproject.toml, ...)
+    taplo = {},
+
+    -- Bash/sh
+    bashls = {},
+
+    -- Python: basedpyright for types, ruff for lint + format
+    basedpyright = {
+        settings = {
+            basedpyright = {
+                analysis = { typeCheckingMode = "standard" },
+            },
+        },
+    },
+    ruff = {
+        on_attach = function(client, bufnr)
+            client.server_capabilities.hoverProvider = false -- basedpyright's hover is better
+            require("lsp.handlers").on_attach(client, bufnr)
+        end,
+    },
+
     -- Emmet (HTML/CSS/JSX/TSX/Svelte/Vue abbreviation expansion)
     emmet_language_server = {
         filetypes = {
@@ -62,7 +106,7 @@ return {
     rust_analyzer = {
         settings = {
             ["rust-analyzer"] = {
-                checkOnSave = {
+                check = {
                     command = "clippy",
                 },
                 inlayHints = {

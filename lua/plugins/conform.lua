@@ -28,7 +28,11 @@ return {
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
                     return
                 end
-                return { timeout_ms = 1000, lsp_fallback = true }
+                -- Java is formatted by project build tools; <leader>rf still works manually
+                if vim.bo[bufnr].filetype == "java" then
+                    return
+                end
+                return { timeout_ms = 1000, lsp_format = "fallback" }
             end,
         })
 
@@ -51,7 +55,7 @@ return {
 
         -- Manual format keybind (replaces the LSP-only one in handlers.lua)
         vim.keymap.set({ "n", "v" }, "<leader>rf", function()
-            conform.format({ async = true, lsp_fallback = true })
+            conform.format({ async = true, lsp_format = "fallback" })
         end, { desc = "Format buffer/selection" })
     end,
 }
