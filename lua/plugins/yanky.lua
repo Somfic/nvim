@@ -10,10 +10,7 @@ return {
         { "<C-n>", "<Plug>(YankyNextEntry)",     desc = "Yanky next entry" },
         {
             "<leader>p",
-            function()
-                require("telescope").load_extension("yank_history")
-                vim.cmd("Telescope yank_history")
-            end,
+            function() Snacks.picker.yanky() end,
             desc = "Yank history",
         },
     },

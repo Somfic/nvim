@@ -16,9 +16,9 @@ return {
         css_fn = true,
       })
 
-      -- Disable colorizer in telescope
+      -- Disable colorizer in the picker list
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = "TelescopeResults",
+        pattern = "snacks_picker_list",
         callback = function()
           require("colorizer").detach_from_buffer(0)
         end,

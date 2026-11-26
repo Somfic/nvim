@@ -23,7 +23,33 @@ return {
         },
     },
 
-    -- TypeScript/JavaScript handled by typescript-tools.nvim (see lua/plugins/typescript-tools.lua)
+    -- TypeScript/JavaScript
+    vtsls = {
+        settings = (function()
+            local lang = {
+                updateImportsOnFileMove = { enabled = "always" },
+                suggest = { completeFunctionCalls = true },
+                inlayHints = {
+                    parameterNames = { enabled = "all", suppressWhenArgumentMatchesName = true },
+                    parameterTypes = { enabled = true },
+                    variableTypes = { enabled = true, suppressWhenTypeMatchesName = true },
+                    propertyDeclarationTypes = { enabled = true },
+                    functionLikeReturnTypes = { enabled = true },
+                    enumMemberValues = { enabled = true },
+                },
+            }
+            return {
+                complete_function_calls = true,
+                vtsls = {
+                    autoUseWorkspaceTsdk = true, -- the project's own typescript version
+                    enableMoveToFileCodeAction = true,
+                    experimental = { completion = { enableServerSideFuzzyMatch = true } },
+                },
+                typescript = lang,
+                javascript = lang,
+            }
+        end)(),
+    },
 
     -- Svelte
     svelte = {},

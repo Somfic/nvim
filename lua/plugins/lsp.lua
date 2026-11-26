@@ -33,6 +33,7 @@ return {
                 "cssls",                 -- CSS
                 "emmet_language_server", -- Emmet
                 "jdtls",                 -- Java
+                "vtsls",                 -- TypeScript/JavaScript
                 "jsonls",                -- JSON
                 "yamlls",                -- YAML
                 "taplo",                 -- TOML

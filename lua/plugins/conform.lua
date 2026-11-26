@@ -23,6 +23,8 @@ return {
                 java = { "google-java-format" },
                 sh = { "shfmt" },
                 bash = { "shfmt" },
+                python = { "ruff_organize_imports", "ruff_format" },
+                toml = { "taplo" },
             },
             format_on_save = function(bufnr)
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then

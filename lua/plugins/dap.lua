@@ -68,7 +68,7 @@ return {
                     height = math.floor(vim.o.lines * 0.8),
                 })
             end, desc = "Browse variables tree" },
-            { "<leader>bV", function() require("lsp.dap_variables").pick() end, desc = "Search variables (Telescope)" },
+            { "<leader>bV", function() require("lsp.dap_variables").pick() end, desc = "Search variables" },
             { "<leader>bf", function()
                 local widgets = require("dap.ui.widgets")
                 widgets.centered_float(widgets.frames)
@@ -161,6 +161,10 @@ return {
                 cheatsheet_extmarks = {}
             end
 
+            -- Must be declared before exit_debug_mode: clearing with group = nil would
+            -- delete every autocmd that isn't in a group (auto-save included)
+            local debug_mode_aug = vim.api.nvim_create_augroup("DapDebugMode", { clear = true })
+
             local prev_modifiable = {}
             local function enter_debug_mode(bufnr)
                 if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then return end
@@ -196,13 +200,12 @@ return {
                 debug_mapped_bufs = {}
                 prev_modifiable = {}
                 vim.g.dap_stopped = false
-                pcall(vim.api.nvim_clear_autocmds, { group = debug_mode_aug })
+                vim.api.nvim_clear_autocmds({ group = debug_mode_aug })
                 hide_cheatsheet()
                 vim.cmd("redrawstatus")
             end
 
             -- Enforce debug mode on any normal file buffer the user enters while stopped
-            local debug_mode_aug = vim.api.nvim_create_augroup("DapDebugMode", { clear = true })
             local function is_source_buf(bufnr)
                 if not vim.api.nvim_buf_is_valid(bufnr) then return false end
                 local bt = vim.bo[bufnr].buftype
@@ -220,7 +223,9 @@ return {
                     local buf = vim.api.nvim_win_get_buf(win)
                     if is_source_buf(buf) then enter_debug_mode(buf) end
                 end
-                -- Also lock any buffer the user navigates to while stopped
+                -- Also lock any buffer the user navigates to while stopped (one autocmd,
+                -- even when several stops arrive without a "continued" in between)
+                vim.api.nvim_clear_autocmds({ group = debug_mode_aug })
                 vim.api.nvim_create_autocmd("BufEnter", {
                     group = debug_mode_aug,
                     callback = function(args)

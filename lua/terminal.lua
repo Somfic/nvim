@@ -53,7 +53,7 @@ local function create_named_terminal()
     end)
 end
 
--- Pick a named terminal with Telescope, previewing its scrollback
+-- Pick a named terminal, previewing its scrollback
 local function select_terminal()
     local names = vim.tbl_keys(named)
     if #names == 0 then
@@ -62,37 +62,30 @@ local function select_terminal()
     end
     table.sort(names)
 
-    local pickers = require("telescope.pickers")
-    local finders = require("telescope.finders")
-    local conf = require("telescope.config").values
-    local actions = require("telescope.actions")
-    local action_state = require("telescope.actions.state")
-    local previewers = require("telescope.previewers")
+    local items = {}
+    for _, name in ipairs(names) do
+        table.insert(items, { text = name })
+    end
 
-    pickers.new({}, {
-        prompt_title = "Terminals",
-        finder = finders.new_table({ results = names }),
-        sorter = conf.generic_sorter({}),
-        previewer = previewers.new_buffer_previewer({
-            title = "Terminal Preview",
-            define_preview = function(self, entry)
-                local term = Snacks.terminal.get(nil, { count = named[entry[1]], create = false })
-                local lines = { "[Terminal not running]" }
-                if term and term.buf and vim.api.nvim_buf_is_valid(term.buf) then
-                    lines = vim.api.nvim_buf_get_lines(term.buf, 0, -1, false)
-                end
-                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-            end,
-        }),
-        attach_mappings = function(prompt_bufnr)
-            actions.select_default:replace(function()
-                actions.close(prompt_bufnr)
-                local selection = action_state.get_selected_entry()
-                if selection then toggle_named(selection[1]) end
-            end)
-            return true
+    Snacks.picker({
+        title = "Terminals",
+        items = items,
+        format = "text",
+        preview = function(ctx)
+            local term = Snacks.terminal.get(nil, { count = named[ctx.item.text], create = false })
+            local lines = { "[Terminal not running]" }
+            if term and term.buf and vim.api.nvim_buf_is_valid(term.buf) then
+                lines = vim.api.nvim_buf_get_lines(term.buf, 0, -1, false)
+            end
+            ctx.preview:reset()
+            ctx.preview:set_title(ctx.item.text)
+            ctx.preview:set_lines(lines)
         end,
-    }):find()
+        confirm = function(picker, item)
+            picker:close()
+            if item then toggle_named(item.text) end
+        end,
+    })
 end
 
 -- Window navigation out of any terminal (including lazygit)

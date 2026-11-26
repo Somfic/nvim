@@ -42,17 +42,6 @@ return {
     },
 
     {
-        "numToStr/Comment.nvim",
-        keys = {
-            { "gcc", mode = "n", desc = "Toggle comment" },
-            { "gc", mode = { "n", "v" }, desc = "Toggle comment" },
-        },
-        config = function()
-            require("Comment").setup()
-        end,
-    },
-
-    {
         "kylechui/nvim-surround",
         event = "VeryLazy",
         config = function()
