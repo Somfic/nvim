@@ -62,13 +62,12 @@ function M.on_attach(client, bufnr)
     map_if("textDocument/prepareCallHierarchy", "n", "<leader>gco", "<cmd>Trouble lsp_outgoing_calls toggle focus=true<cr>", "Outgoing calls")
 
     -- Hover and help
+    -- signature help: blink shows it while typing; <C-s> in insert mode opens it
     map_if("textDocument/hover",         "n", "K",     vim.lsp.buf.hover,          "Hover documentation")
-    map_if("textDocument/signatureHelp", "n", "<C-k>", vim.lsp.buf.signature_help, "Signature help")
 
     -- Refactor
-    map_if("textDocument/codeAction", "n", "<leader>ra", vim.lsp.buf.code_action, "Code action")
-    map_if("textDocument/codeAction", "n", "<leader>.",  vim.lsp.buf.code_action, "Code action")
-    map_if("textDocument/rename",     "n", "<leader>rr", vim.lsp.buf.rename,      "Rename symbol")
+    map_if("textDocument/codeAction", { "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+    map_if("textDocument/rename",     "n",          "<leader>cr", vim.lsp.buf.rename,      "Rename symbol")
 
     -- Diagnostics
     vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end,

@@ -10,7 +10,7 @@ o.number = false
 o.relativenumber = false
 
 -- indentation
-o.tabstop = 3
+o.tabstop = 4 -- how wide a real tab displays (Go, Makefiles, stylua output)
 o.shiftwidth = 2
 o.expandtab = true
 o.smartindent = true

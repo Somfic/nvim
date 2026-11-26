@@ -1,4 +1,4 @@
--- LazyGit lives in snacks.lua (<leader>c)
+-- LazyGit lives in snacks.lua (<leader>gg)
 return {
     {
         -- Git signs in gutter

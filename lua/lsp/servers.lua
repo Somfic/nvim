@@ -43,6 +43,18 @@ return {
                 vtsls = {
                     autoUseWorkspaceTsdk = true, -- the project's own typescript version
                     enableMoveToFileCodeAction = true,
+                    tsserver = {
+                        -- lets .ts/.js files import .svelte components (types, go to definition,
+                        -- rename across both); the plugin ships with Mason's svelte-language-server
+                        globalPlugins = {
+                            {
+                                name = "typescript-svelte-plugin",
+                                location = vim.fn.stdpath("data")
+                                    .. "/mason/packages/svelte-language-server/node_modules/typescript-svelte-plugin",
+                                enableForWorkspaceTypeScriptVersions = true,
+                            },
+                        },
+                    },
                     experimental = { completion = { enableServerSideFuzzyMatch = true } },
                 },
                 typescript = lang,
@@ -101,9 +113,8 @@ return {
         },
     },
     ruff = {
-        on_attach = function(client, bufnr)
+        on_attach = function(client)
             client.server_capabilities.hoverProvider = false -- basedpyright's hover is better
-            require("lsp.handlers").on_attach(client, bufnr)
         end,
     },
 
@@ -155,7 +166,6 @@ return {
         filetypes = { "som" },
         root_markers = { ".git" },
         on_attach = function(client, bufnr)
-            require("lsp.handlers").on_attach(client, bufnr)
             if client:supports_method("textDocument/codeLens") then
                 vim.lsp.codelens.refresh({ bufnr = bufnr })
                 -- diagnostics arriving means an analysis finished, so lenses are current
@@ -163,7 +173,6 @@ return {
                     buffer = bufnr,
                     callback = function() vim.lsp.codelens.refresh({ bufnr = bufnr }) end,
                 })
-                vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { buffer = bufnr, desc = "Run code lens" })
             end
         end,
     },

@@ -50,7 +50,8 @@ return {
         { "<leader>fS", pick(workspace_symbols),   desc = "Workspace symbols (LSP, fallback live grep)" },
         { "<leader>fr", pick("recent"),            desc = "Recent files" },
         { "<leader>f.", pick("resume"),            desc = "Resume last picker" },
-        { "<leader>c",  function() Snacks.lazygit() end, desc = "LazyGit" },
+        { "<leader>fk", pick("keymaps"),           desc = "Find keymaps" },
+        { "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
         { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification history" },
     },
     opts = {

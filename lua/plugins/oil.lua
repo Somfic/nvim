@@ -103,7 +103,6 @@ return {
 
         -- Keymaps for opening Oil
         vim.keymap.set("n", "<leader>e", "<CMD>Oil --float<CR>", { desc = "Open file explorer" })
-        vim.keymap.set("n", "<leader>E", "<CMD>Oil --float<CR>", { desc = "Open file explorer (root)" })
 
         -- Open Oil float on startup if no file was specified or a directory was opened.
         -- Skip if a persisted session was just restored (real buffers are already open).
