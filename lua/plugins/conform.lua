@@ -103,12 +103,33 @@ return {
                 stylua = { prepend_args = stylua_indent_args },
             },
 
+            -- Only format the lines you've changed (gitsigns hunks vs the index), so
+            -- MRs don't pick up formatting of untouched code. Files gitsigns doesn't
+            -- track (outside git, new untracked files) are formatted in full.
+            -- <leader>cf still formats the whole file.
             format_on_save = function(bufnr)
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
                     return
                 end
                 -- 3s ceiling so jdtls's LSP format has room on larger Java files.
-                return { timeout_ms = 3000, lsp_format = "fallback" }
+                local opts = { timeout_ms = 3000, lsp_format = "fallback" }
+
+                local ok, hunks = pcall(function() return require("gitsigns").get_hunks(bufnr) end)
+                if not ok or hunks == nil then
+                    return opts
+                end
+                -- bottom to top, so formatting a hunk doesn't shift the ones above it
+                for i = #hunks, 1, -1 do
+                    local added = hunks[i].added
+                    if added.count > 0 then
+                        local last = added.start + added.count - 1
+                        local last_line = vim.api.nvim_buf_get_lines(bufnr, last - 1, last, false)[1] or ""
+                        conform.format(vim.tbl_extend("force", opts, {
+                            bufnr = bufnr,
+                            range = { start = { added.start, 0 }, ["end"] = { last, #last_line } },
+                        }))
+                    end
+                end
             end,
         })
 

@@ -36,6 +36,24 @@ local function workspace_symbols()
     Snacks.picker.grep()
 end
 
+-- Colorschemes, previewed on the file being edited (at the cursor) instead of the
+-- theme's own source; only installed theme plugins, not the dated nvim built-ins
+local function colorschemes()
+    local buf = vim.api.nvim_get_current_buf()
+    local is_file = vim.bo[buf].buftype == "" and vim.api.nvim_buf_get_name(buf) ~= ""
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    Snacks.picker.colorschemes({
+        transform = function(item)
+            if vim.startswith(item.file, vim.env.VIMRUNTIME) then
+                return false
+            end
+            if is_file then
+                item.buf, item.file, item.pos = buf, nil, cursor
+            end
+        end,
+    })
+end
+
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -51,6 +69,7 @@ return {
         { "<leader>fr", pick("recent"),            desc = "Recent files" },
         { "<leader>f.", pick("resume"),            desc = "Resume last picker" },
         { "<leader>fk", pick("keymaps"),           desc = "Find keymaps" },
+        { "<leader>uc", pick(colorschemes),        desc = "Colorscheme (live preview)" },
         { "gg",         function() Snacks.lazygit() end, desc = "LazyGit" },
         { "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
         { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification history" },

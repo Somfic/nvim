@@ -6,6 +6,7 @@ require('autocmd.auto_save')
 require('autocmd.auto_create_directory')
 require('autocmd.highlight_yank')
 require('autocmd.quit_with_q')
+require('autocmd.kitty_theme')
 
 -- setup lazyvim
 local lazy = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -36,4 +37,5 @@ require("lazy").setup("plugins", {
   },
 })
 
+require('theme')
 require('terminal')

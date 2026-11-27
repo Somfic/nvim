@@ -1,15 +1,13 @@
-local c = require("config")
-
 return {
-    -- Theme
+    -- Themes: all installed so the picker (<leader>uc) can switch between them, and
+    -- loaded on demand (lazy loads a theme plugin on :colorscheme). Which
+    -- one is applied, and whether it is made transparent, is decided in lua/theme.lua.
     {
         "vague2k/vague.nvim",
-        enabled = c.theme == "vague",
-        lazy = false,
-        priority = 1000,
+        lazy = true, -- loaded by :colorscheme
         config = function()
             require("vague").setup({
-                transparent = true,
+                transparent = false, -- transparency is a toggle in lua/theme.lua (<leader>ut)
                 style = {
                     boolean = "none",
                     number = "none",
@@ -24,18 +22,15 @@ return {
                     variables = "none",
                 },
             })
-            vim.cmd("colorscheme vague")
         end,
     },
 
     {
         "tiagovla/tokyodark.nvim",
-        enabled = c.theme == "tokyodark",
-        lazy = false,
-        priority = 1000,
+        lazy = true,
         config = function()
             require("tokyodark").setup({
-                transparent_background = true,
+                transparent_background = false, -- see lua/theme.lua
                 gamma = 1.00,
                 styles = {
                     comments = { italic = true },
@@ -45,9 +40,34 @@ return {
                     variables = {},
                 },
             })
-            vim.cmd("colorscheme tokyodark")
         end,
     },
+
+    {
+        "catppuccin/nvim",
+        name = "catppuccin",
+        lazy = true,
+        config = function()
+            require("catppuccin").setup({
+                flavour = "mocha", -- latte, frappe, macchiato, mocha
+                transparent_background = false, -- see lua/theme.lua
+                auto_integrations = true, -- theme the plugins lazy has installed
+                styles = {
+                    comments = { "italic" },
+                    conditionals = {},
+                },
+            })
+        end,
+    },
+
+    -- More themes, on their defaults (each ships several variants in the picker)
+    { "folke/tokyonight.nvim", lazy = true },             -- tokyonight-night/storm/moon/day
+    { "rebelot/kanagawa.nvim", lazy = true },             -- kanagawa-wave/dragon/lotus
+    { "rose-pine/neovim", name = "rose-pine", lazy = true }, -- rose-pine-main/moon/dawn
+    { "EdenEast/nightfox.nvim", lazy = true },            -- nightfox, carbonfox, nordfox, terafox, duskfox, ...
+    { "sainnhe/gruvbox-material", lazy = true },
+    { "sainnhe/everforest", lazy = true },
+    { "navarasu/onedark.nvim", lazy = true },
 
     -- Icons
     { "nvim-tree/nvim-web-devicons", lazy = true },
@@ -74,7 +94,7 @@ return {
                 { "<leader>gp", group = "Peek" },
                 { "<leader>s", group = "Session" },
                 { "<leader>t", group = "Terminal" },
-                { "<leader>u", group = "UI / Toggle" },
+                { "<leader>u", group = "UI" },
                 { "<leader>x", group = "Trouble" },
             })
 
