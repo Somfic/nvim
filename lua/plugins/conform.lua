@@ -45,10 +45,10 @@ return {
         conform.setup({
             formatters_by_ft = {
                 lua = { "stylua" },
-                javascript = { "prettierd", "prettier", stop_after_first = true },
-                javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-                typescript = { "prettierd", "prettier", stop_after_first = true },
-                typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+                javascript = { "prettierd", "prettier", "eslint_d", stop_after_first = true },
+                javascriptreact = { "prettierd", "prettier", "eslint_d", stop_after_first = true },
+                typescript = { "prettierd", "prettier", "eslint_d", stop_after_first = true },
+                typescriptreact = { "prettierd", "prettier", "eslint_d", stop_after_first = true },
                 -- prettier only understands .svelte with prettier-plugin-svelte; without it
                 -- in the project, the svelte server formats (it bundles prettier + plugin)
                 svelte = function(bufnr)
@@ -77,9 +77,22 @@ return {
             -- Feed the file's own indentation to each formatter. shfmt already
             -- reads expandtab/shiftwidth (and .editorconfig) on its own, so it
             -- isn't listed here.
+            --
+            -- prettier/eslint_d only run in projects configured for them, so a repo
+            -- that doesn't use prettier (e.g. bos) isn't reformatted on every save.
+            -- With neither, the lsp fallback formats instead.
             formatters = {
-                prettier = { prepend_args = prettier_indent_args },
+                prettier = { require_cwd = true, prepend_args = prettier_indent_args },
+                eslint_d = {
+                    require_cwd = true,
+                    cwd = require("conform.util").root_file({
+                        ".eslintrc", ".eslintrc.js", ".eslintrc.cjs", ".eslintrc.json", ".eslintrc.yml",
+                        ".eslintrc.yaml", "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs",
+                        "eslint.config.ts",
+                    }),
+                },
                 prettierd = {
+                    require_cwd = true,
                     -- prettierd wants the filename first, options after.
                     args = function(self, ctx)
                         local a = { "$FILENAME" }

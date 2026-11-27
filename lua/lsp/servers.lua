@@ -75,6 +75,12 @@ return {
     -- ESLint
     eslint = {},
 
+    -- GraphQL (schema + gql/graphql() tags in TS; reads graphql.config.*)
+    graphql = {},
+
+    -- Dockerfile
+    dockerls = {},
+
     -- HTML
     html = {},
 
@@ -129,7 +135,7 @@ return {
         filetypes = {
             "html", "css", "scss", "sass", "less",
             "javascriptreact", "typescriptreact",
-            "svelte", "vue", "htmldjango",
+            "svelte", "vue", "htmldjango", "velocity",
         },
     },
 

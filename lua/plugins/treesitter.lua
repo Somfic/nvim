@@ -3,7 +3,8 @@
 local parsers = {
     "lua", "vim", "vimdoc", "query",
     "javascript", "typescript", "tsx", "json", "html", "css", "scss", "svelte",
-    "rust", "python", "go", "c", "c_sharp", "java", "bash", "toml", "yaml", "nix", "just",
+    "rust", "python", "go", "c", "c_sharp", "java", "kotlin", "bash", "toml", "yaml", "nix", "just",
+    "graphql", "sql", "xml", "dockerfile", "properties",
     "markdown", "markdown_inline", "regex",
 }
 

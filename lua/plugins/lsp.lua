@@ -29,6 +29,8 @@ return {
                 "svelte",                -- Svelte
                 "rust_analyzer",         -- Rust
                 "eslint",                -- ESLint
+                "graphql",               -- GraphQL
+                "dockerls",              -- Dockerfile
                 "html",                  -- HTML
                 "cssls",                 -- CSS
                 "emmet_language_server", -- Emmet
