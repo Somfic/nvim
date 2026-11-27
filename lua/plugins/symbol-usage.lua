@@ -97,10 +97,56 @@ return {
                 return count
             end
 
-            -- text_format doesn't get the buffer, so the problems are added here
+            -- Methods the framework calls, so "no usages" would be misleading:
+            -- annotation -> what to show instead
+            local entry_points = {
+                DgsQuery = "GraphQL query", QueryMapping = "GraphQL query",
+                DgsMutation = "GraphQL mutation", MutationMapping = "GraphQL mutation",
+                DgsData = "GraphQL field", SchemaMapping = "GraphQL field", BatchMapping = "GraphQL field",
+                DgsSubscription = "GraphQL subscription", SubscriptionMapping = "GraphQL subscription",
+                GetMapping = "GET endpoint", PostMapping = "POST endpoint", PutMapping = "PUT endpoint",
+                PatchMapping = "PATCH endpoint", DeleteMapping = "DELETE endpoint", RequestMapping = "endpoint",
+                ExceptionHandler = "exception handler",
+                Scheduled = "scheduled",
+                EventListener = "event listener", TransactionalEventListener = "event listener",
+                KafkaListener = "message listener", JmsListener = "message listener",
+                RabbitListener = "message listener", SqsListener = "message listener",
+                Bean = "Spring bean",
+                PostConstruct = "runs on startup", PreDestroy = "runs on shutdown",
+                Test = "test", ParameterizedTest = "test", RepeatedTest = "test", TestFactory = "test",
+                BeforeEach = "test setup", BeforeAll = "test setup",
+                AfterEach = "test teardown", AfterAll = "test teardown",
+            }
+
+            -- What the framework uses the symbol on `line` (0-based) for, from the
+            -- annotations on it and the lines directly above it
+            local function entry_point(bufnr, line)
+                local ft = vim.bo[bufnr].filetype
+                if ft ~= "java" and ft ~= "kotlin" then return nil end
+                local lines = vim.api.nvim_buf_get_lines(bufnr, math.max(0, line - 15), line + 1, false)
+                for i = #lines, 1, -1 do
+                    local l = lines[i]
+                    for name in l:gmatch("@([%w_]+)") do
+                        if entry_points[name] then return entry_points[name] end
+                    end
+                    -- stop at the end of the previous member/statement
+                    if i < #lines and l:match("[;{}]%s*$") then break end
+                end
+            end
+
+            -- text_format doesn't get the buffer, so these are added here
             local utils = require("symbol-usage.utils")
             local orig_extmark_opts = utils.make_extmark_opts
             utils.make_extmark_opts = function(text, opts, line, bufnr, id)
+                if type(text) == "table" and text[1] and text[1][1] == "no usages" then
+                    local kind = entry_point(bufnr, line)
+                    if kind then
+                        -- resolvers: where the schema defines them (<leader>gq jumps there)
+                        local def = kind:match("^GraphQL") and require("graphql_schema").resolve(bufnr, line)
+                        text = vim.deepcopy(text)
+                        text[1][1] = def and ("%s · %s"):format(kind, vim.fs.basename(def.file)) or kind
+                    end
+                end
                 local problems = type(text) == "table" and related_problems(bufnr, line) or 0
                 if problems > 0 then
                     text = vim.list_extend(vim.deepcopy(text), {

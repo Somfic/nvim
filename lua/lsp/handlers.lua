@@ -85,16 +85,15 @@ function M.setup()
         return orig_inlay_handler(err, result, ctx, config)
     end
 
-    -- Italic inlay hints (preserve existing fg/bg from colorscheme)
-    local function italicize_inlay_hints()
-        local existing = vim.api.nvim_get_hl(0, { name = "LspInlayHint", link = false })
-        existing.italic = true
-        existing.cterm = vim.tbl_extend("force", existing.cterm or {}, { italic = true })
-        vim.api.nvim_set_hl(0, "LspInlayHint", existing)
+    -- Inlay hints (and the schedule hints, which reuse this group) in the same
+    -- italic comment colour as the usages above methods, no background
+    local function style_inlay_hints()
+        local comment = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
+        vim.api.nvim_set_hl(0, "LspInlayHint", { fg = comment.fg, ctermfg = comment.ctermfg, italic = true })
     end
-    italicize_inlay_hints()
+    style_inlay_hints()
     vim.api.nvim_create_autocmd("ColorScheme", {
-        callback = italicize_inlay_hints,
+        callback = style_inlay_hints,
     })
 end
 
