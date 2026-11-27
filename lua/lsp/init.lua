@@ -1,28 +1,25 @@
--- LSP setup orchestrator (using new nvim 0.11 API)
+-- LSP setup orchestrator (vim.lsp.config / vim.lsp.enable, nvim 0.11+)
 local servers = require("lsp.servers")
 local handlers = require("lsp.handlers")
 
--- Setup handlers first
 handlers.setup()
 
--- Get capabilities from cmp
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- Shared keymaps for every client (including jdtls), via LspAttach rather than
+-- on_attach, so servers keep the on_attach nvim-lspconfig ships for them
+-- (svelte's TS sync, :LspEslintFixAll, :LspPyrightOrganizeImports, ...)
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("LspSharedKeymaps", { clear = true }),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client then handlers.on_attach(client, ev.buf) end
+  end,
+})
 
--- Setup each server using new vim.lsp.config API
+-- Completion capabilities from blink.cmp
+local capabilities = require("blink.cmp").get_lsp_capabilities()
+
 for server_name, server_config in pairs(servers) do
-  local opts = {
-    capabilities = capabilities,
-    on_attach = handlers.on_attach,
-  }
-
-  -- Merge server-specific config
-  if server_config then
-    opts = vim.tbl_deep_extend("force", opts, server_config)
-  end
-
-  -- Use new vim.lsp.config API
-  vim.lsp.config(server_name, opts)
+  vim.lsp.config(server_name, vim.tbl_deep_extend("force", { capabilities = capabilities }, server_config or {}))
 end
 
--- Enable servers
 vim.lsp.enable(vim.tbl_keys(servers))

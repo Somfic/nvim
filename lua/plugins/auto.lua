@@ -32,20 +32,13 @@ return {
     {
         "windwp/nvim-ts-autotag",
         ft = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "xml", "svelte" },
-        config = function()
-            require("nvim-ts-autotag").setup()
-        end,
-    },
-
-    {
-        "numToStr/Comment.nvim",
-        keys = {
-            { "gcc", mode = "n", desc = "Toggle comment" },
-            { "gc", mode = { "n", "v" }, desc = "Toggle comment" },
+        opts = {
+            opts = {
+                enable_close = true,
+                enable_rename = true,
+                enable_close_on_slash = true,
+            },
         },
-        config = function()
-            require("Comment").setup()
-        end,
     },
 
     {

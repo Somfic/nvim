@@ -1,5 +1,4 @@
 local jdtls = require("jdtls")
-local handlers = require("lsp.handlers")
 
 -- Set 4-space indentation for Java
 vim.bo.tabstop = 4
@@ -203,21 +202,21 @@ local config = {
     },
   },
 
-  capabilities = require("cmp_nvim_lsp").default_capabilities(),
+  capabilities = require("blink.cmp").get_lsp_capabilities(),
   on_attach = function(client, bufnr)
     -- jdtls now owns Java formatting, using the BOS Eclipse profile resolved
     -- above. conform (formatters_by_ft has no java) falls back to this on save.
 
-    handlers.on_attach(client, bufnr)
+    -- shared LSP keymaps come from the LspAttach autocmd in lua/lsp/init.lua
 
     -- jdtls specific keymaps
     local opts = { buffer = bufnr, silent = true }
-    vim.keymap.set("n", "<leader>jo", jdtls.organize_imports, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
-    vim.keymap.set("n", "<leader>jv", jdtls.extract_variable, vim.tbl_extend("force", opts, { desc = "Extract variable" }))
-    vim.keymap.set("v", "<leader>jv", function() jdtls.extract_variable(true) end, vim.tbl_extend("force", opts, { desc = "Extract variable" }))
-    vim.keymap.set("n", "<leader>jc", jdtls.extract_constant, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
-    vim.keymap.set("v", "<leader>jc", function() jdtls.extract_constant(true) end, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
-    vim.keymap.set("v", "<leader>jm", function() jdtls.extract_method(true) end, vim.tbl_extend("force", opts, { desc = "Extract method" }))
+    vim.keymap.set("n", "<leader>co", jdtls.organize_imports, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
+    vim.keymap.set("n", "<leader>cv", jdtls.extract_variable, vim.tbl_extend("force", opts, { desc = "Extract variable" }))
+    vim.keymap.set("v", "<leader>cv", function() jdtls.extract_variable(true) end, vim.tbl_extend("force", opts, { desc = "Extract variable" }))
+    vim.keymap.set("n", "<leader>cc", jdtls.extract_constant, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
+    vim.keymap.set("v", "<leader>cc", function() jdtls.extract_constant(true) end, vim.tbl_extend("force", opts, { desc = "Extract constant" }))
+    vim.keymap.set("v", "<leader>cm", function() jdtls.extract_method(true) end, vim.tbl_extend("force", opts, { desc = "Extract method" }))
 
     -- Build the workspace on demand (IntelliJ's "Build Project"). Results land in
     -- the quickfix list, so <leader>xq shows project-wide errors in Trouble.

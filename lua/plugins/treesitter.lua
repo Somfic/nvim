@@ -1,71 +1,101 @@
+-- nvim-treesitter `main` branch: it only installs parsers and queries. Highlighting,
+-- folds and indent are started per buffer here; textobjects are mapped explicitly.
+local parsers = {
+    "lua", "vim", "vimdoc", "query",
+    "javascript", "typescript", "tsx", "json", "html", "css", "scss", "svelte",
+    "rust", "python", "go", "c", "c_sharp", "java", "bash", "toml", "yaml", "nix", "just",
+    "markdown", "markdown_inline", "regex",
+}
+
 return {
     {
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
-        -- main branch does not support lazy-loading
-        lazy = false,
+        lazy = false, -- the main branch doesn't support lazy-loading
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter").setup()
-
-            local ensure_installed = {
-                "lua",
-                "vim",
-                "vimdoc",
-                "javascript",
-                "typescript",
-                "tsx",
-                "json",
-                "html",
-                "css",
-                "scss",
-                "svelte",
-                "rust",
-                "python",
-                "go",
-                "c",
-                "c_sharp",
-                "markdown",
-                "markdown_inline",
-                "nix",
-                "just",
-            }
-            require("nvim-treesitter").install(ensure_installed)
-
             local ts = require("nvim-treesitter")
+            ts.install(parsers) -- async; already-installed parsers are skipped
 
-            -- Set of parsers that actually exist, computed once. Used to avoid
-            -- trying to start/install a parser for plugin UI filetypes that map
-            -- to no real grammar (e.g. "notify", "noice").
-            local available
-            local function is_available(lang)
-                if not available then
-                    available = {}
-                    for _, l in ipairs(require("nvim-treesitter.config").get_available()) do
-                        available[l] = true
-                    end
-                end
-                return available[lang]
+            -- parsers nvim-treesitter knows about, for installing on first use
+            local available = {}
+            for _, lang in ipairs(ts.get_available()) do
+                available[lang] = true
             end
 
-            -- main branch has no modules: highlight/indent are wired up by hand.
-            -- (incremental selection and the matchup module no longer exist here;
-            --  vim-matchup still works standalone via lua/plugins/matchup.lua.)
-            vim.api.nvim_create_autocmd("FileType", {
-                callback = function(args)
-                    local buf = args.buf
-                    local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
-                    if not lang or not is_available(lang) then
-                        return
-                    end
+            -- Incremental selection (removed from the main branch): <CR> selects the node
+            -- under the cursor, <CR> again grows to the parent, <BS> shrinks back.
+            local history = {} -- buf -> stack of selected nodes
 
-                    if pcall(vim.treesitter.start, buf, lang) then
-                        -- experimental treesitter-based indentation
-                        vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-                    else
-                        -- parser missing: install async (auto_install). Highlighting
-                        -- kicks in the next time a file of this type is opened.
-                        pcall(ts.install, { lang })
+            local function select_node(node)
+                local sr, sc, er, ec = node:range()
+                -- an end column of 0 means the node ends at the end of the previous line
+                if ec == 0 and er > sr then
+                    er = er - 1
+                    ec = #vim.api.nvim_buf_get_lines(0, er, er + 1, false)[1]
+                end
+                -- leave visual mode, then select charwise from start to end
+                if vim.api.nvim_get_mode().mode:match("^[vV\22]") then
+                    vim.cmd("normal! \27")
+                end
+                vim.api.nvim_win_set_cursor(0, { sr + 1, sc })
+                vim.cmd("normal! v")
+                vim.api.nvim_win_set_cursor(0, { er + 1, math.max(ec - 1, 0) })
+            end
+
+            local function init_selection()
+                local node = vim.treesitter.get_node()
+                if not node then return end
+                history[vim.api.nvim_get_current_buf()] = { node }
+                select_node(node)
+            end
+
+            local function node_incremental()
+                local buf = vim.api.nvim_get_current_buf()
+                local stack = history[buf]
+                if not stack or #stack == 0 then return init_selection() end
+                local node = stack[#stack]
+                local range = { node:range() }
+                -- skip parents that cover exactly the same text
+                local parent = node:parent()
+                while parent and vim.deep_equal({ parent:range() }, range) do
+                    parent = parent:parent()
+                end
+                if not parent then return end
+                table.insert(stack, parent)
+                select_node(parent)
+            end
+
+            local function node_decremental()
+                local stack = history[vim.api.nvim_get_current_buf()]
+                if not stack or #stack < 2 then return end
+                table.remove(stack)
+                select_node(stack[#stack])
+            end
+
+            local function start(buf, lang)
+                if not pcall(vim.treesitter.start, buf, lang) then return end
+                -- only where the parser ships indent queries
+                if vim.treesitter.query.get(lang, "indents") then
+                    vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                end
+                vim.keymap.set("n", "<CR>", init_selection, { buffer = buf, desc = "Start node selection" })
+                vim.keymap.set("x", "<CR>", node_incremental, { buffer = buf, desc = "Grow node selection" })
+                vim.keymap.set("x", "<BS>", node_decremental, { buffer = buf, desc = "Shrink node selection" })
+            end
+
+            vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("TreesitterStart", { clear = true }),
+                callback = function(ev)
+                    local lang = vim.treesitter.language.get_lang(ev.match)
+                    if not lang then return end
+                    if vim.treesitter.language.add(lang) then
+                        start(ev.buf, lang)
+                    elseif available[lang] then
+                        -- auto_install: fetch the parser, then start once it's built
+                        ts.install(lang):await(function()
+                            if vim.api.nvim_buf_is_valid(ev.buf) then start(ev.buf, lang) end
+                        end)
                     end
                 end,
             })
@@ -76,41 +106,43 @@ return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         branch = "main",
         event = "VeryLazy",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
         config = function()
             require("nvim-treesitter-textobjects").setup({
-                select = {
-                    lookahead = true,
-                },
-                move = {
-                    set_jumps = true,
-                },
+                select = { lookahead = true },
+                move = { set_jumps = true },
             })
 
             local select = require("nvim-treesitter-textobjects.select")
-            local move = require("nvim-treesitter-textobjects.move")
-
-            local function map(mode, lhs, fn, desc)
-                vim.keymap.set(mode, lhs, fn, { desc = desc, silent = true })
+            local objects = {
+                af = { "@function.outer", "around function" },
+                ["if"] = { "@function.inner", "inside function" },
+                ac = { "@class.outer", "around class" },
+                ic = { "@class.inner", "inside class" },
+                aa = { "@parameter.outer", "around argument" },
+                ia = { "@parameter.inner", "inside argument" },
+                al = { "@loop.outer", "around loop" },
+                il = { "@loop.inner", "inside loop" },
+                ai = { "@conditional.outer", "around conditional" },
+                ii = { "@conditional.inner", "inside conditional" },
+            }
+            for lhs, spec in pairs(objects) do
+                vim.keymap.set({ "x", "o" }, lhs, function()
+                    select.select_textobject(spec[1], "textobjects")
+                end, { desc = spec[2] })
             end
 
-            -- select
-            map({ "x", "o" }, "af", function() select.select_textobject("@function.outer", "textobjects") end, "around function")
-            map({ "x", "o" }, "if", function() select.select_textobject("@function.inner", "textobjects") end, "inside function")
-            map({ "x", "o" }, "ac", function() select.select_textobject("@class.outer", "textobjects") end, "around class")
-            map({ "x", "o" }, "ic", function() select.select_textobject("@class.inner", "textobjects") end, "inside class")
-            map({ "x", "o" }, "aa", function() select.select_textobject("@parameter.outer", "textobjects") end, "around argument")
-            map({ "x", "o" }, "ia", function() select.select_textobject("@parameter.inner", "textobjects") end, "inside argument")
-            map({ "x", "o" }, "al", function() select.select_textobject("@loop.outer", "textobjects") end, "around loop")
-            map({ "x", "o" }, "il", function() select.select_textobject("@loop.inner", "textobjects") end, "inside loop")
-            map({ "x", "o" }, "ai", function() select.select_textobject("@conditional.outer", "textobjects") end, "around conditional")
-            map({ "x", "o" }, "ii", function() select.select_textobject("@conditional.inner", "textobjects") end, "inside conditional")
-
-            -- move
-            map({ "n", "x", "o" }, "]f", function() move.goto_next_start("@function.outer", "textobjects") end, "next function")
-            map({ "n", "x", "o" }, "]c", function() move.goto_next_start("@class.outer", "textobjects") end, "next class")
-            map({ "n", "x", "o" }, "[f", function() move.goto_previous_start("@function.outer", "textobjects") end, "prev function")
-            map({ "n", "x", "o" }, "[c", function() move.goto_previous_start("@class.outer", "textobjects") end, "prev class")
+            local move = require("nvim-treesitter-textobjects.move")
+            local moves = {
+                ["]f"] = { move.goto_next_start, "@function.outer", "next function" },
+                ["]c"] = { move.goto_next_start, "@class.outer", "next class" },
+                ["[f"] = { move.goto_previous_start, "@function.outer", "prev function" },
+                ["[c"] = { move.goto_previous_start, "@class.outer", "prev class" },
+            }
+            for lhs, spec in pairs(moves) do
+                vim.keymap.set({ "n", "x", "o" }, lhs, function()
+                    spec[1](spec[2], "textobjects")
+                end, { desc = spec[3] })
+            end
         end,
     },
 }

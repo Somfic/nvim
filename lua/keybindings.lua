@@ -26,9 +26,8 @@ maps("n", {
   { "q?", "<nop>", "Disable backward search history window" },
 })
 
--- qq and q: both quit the current window
+-- q: quits the current window (typo-friendly); qq is left free for recording macros
 maps("n", {
-  { "qq", "<cmd>q<cr>", "Quit window" },
   { "q:", "<cmd>q<cr>", "Quit window (typo-friendly)" },
 })
 

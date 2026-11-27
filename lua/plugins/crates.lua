@@ -7,15 +7,12 @@ return {
         config = function()
             local crates = require("crates")
             crates.setup({
-                completion = {
-                    -- expose versions/features as an nvim-cmp source
-                    cmp = { enabled = true },
-                },
                 lsp = {
-                    -- act as a pseudo-LSP for hover (K) and code actions
+                    -- act as a pseudo-LSP for hover (K), code actions and completion
+                    -- (blink.cmp picks the completions up through its lsp source)
                     enabled = true,
                     actions = true,
-                    completion = false, -- completion handled by cmp source above
+                    completion = true,
                     hover = true,
                 },
             })

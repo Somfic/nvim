@@ -22,6 +22,7 @@ end
 vim.opt.rtp:prepend(lazy)
 require("lazy").setup("plugins", {
   ui = { border = "rounded" },
+  rocks = { enabled = false }, -- no plugin here needs luarocks
   performance = {
     rtp = {
       disabled_plugins = {
@@ -34,3 +35,5 @@ require("lazy").setup("plugins", {
     },
   },
 })
+
+require('terminal')

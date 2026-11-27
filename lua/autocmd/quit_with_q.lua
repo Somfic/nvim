@@ -71,7 +71,12 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function(ev)
         if launched_empty then
             launched_empty = false
-            bind_quit(ev.buf)
+            -- a restored session means this oil buffer wasn't the launch float
+            if vim.g.session_loaded then
+                bind_close(ev.buf)
+            else
+                bind_quit(ev.buf)
+            end
         else
             bind_close(ev.buf)
         end

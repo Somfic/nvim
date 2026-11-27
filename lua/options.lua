@@ -5,7 +5,7 @@ o.number = false
 o.relativenumber = false
 
 -- indentation
-o.tabstop = 3
+o.tabstop = 4 -- how wide a real tab displays (Go, Makefiles, stylua output)
 o.shiftwidth = 2
 o.expandtab = true
 o.smartindent = true
@@ -18,6 +18,7 @@ o.hlsearch = true
 -- ui
 o.fillchars = { eob = ' ' }
 o.termguicolors = true
+o.winborder = 'rounded' -- default border for floats (LSP hover, signature help, ...)
 
 o.signcolumn = 'yes'
 o.cursorline = true

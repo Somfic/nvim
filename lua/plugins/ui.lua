@@ -50,7 +50,7 @@ return {
     },
 
     -- Icons
-    { "nvim-tree/nvim-web-devicons" },
+    { "nvim-tree/nvim-web-devicons", lazy = true },
 
     -- Which-key (keybinding hints)
     {
@@ -64,8 +64,7 @@ return {
             })
             pcall(wk.add, {
                 { "<leader>b", group = "Debug" },
-                { "<leader>c", desc = "LazyGit" },
-                { "<leader>.", desc = "Code action" },
+                { "<leader>c", group = "Code" },
                 { "<leader>o", desc = "Outline" },
                 { "<leader>d", group = "Diagnostics" },
                 { "<leader>h", group = "Harpoon" },
@@ -73,8 +72,6 @@ return {
                 { "<leader>g", group = "Goto" },
                 { "<leader>gc", group = "Calls" },
                 { "<leader>gp", group = "Peek" },
-                { "<leader>j", group = "Java" },
-                { "<leader>r", group = "Refactor" },
                 { "<leader>s", group = "Session" },
                 { "<leader>t", group = "Terminal" },
                 { "<leader>u", group = "UI / Toggle" },
