@@ -32,9 +32,41 @@ function M.setup()
         end
         return s
     end
+    -- Name of the function whose argument list contains `col` (0-based), from the
+    -- unmatched "(" before it; nil when the call starts on an earlier line
+    local function callee(line, col)
+        local depth = 0
+        for i = math.min(col, #line), 1, -1 do
+            local c = line:sub(i, i)
+            if c == ")" then
+                depth = depth + 1
+            elseif c == "(" then
+                if depth == 0 then return line:sub(1, i - 1):match("([%w_]+)%s*$") end
+                depth = depth - 1
+            end
+        end
+    end
+
+    -- Parameter hints the call already spells out, like IntelliJ:
+    -- setSystemExternalEta(systemExternalEta: ...), withName(name: ...)
+    local function redundant(hint, bufnr)
+        if hint.kind ~= 2 then return false end -- 2 = Parameter
+        local label = type(hint.label) == "string" and hint.label
+            or table.concat(vim.tbl_map(function(p) return p.value or "" end, hint.label))
+        local param = vim.trim(label):gsub("[:=]$", "")
+        if param == "" then return false end
+        local line = vim.api.nvim_buf_get_lines(bufnr, hint.position.line, hint.position.line + 1, false)[1]
+        local name = line and callee(line, hint.position.character)
+        if not name then return false end
+        -- ends with the parameter name at a camelCase boundary (or is it)
+        local capitalized = param:sub(1, 1):upper() .. param:sub(2)
+        return name == param or name:sub(-#capitalized) == capitalized
+    end
+
     local orig_inlay_handler = vim.lsp.handlers["textDocument/inlayHint"]
     vim.lsp.handlers["textDocument/inlayHint"] = function(err, result, ctx, config)
         if result then
+            result = vim.tbl_filter(function(hint) return not redundant(hint, ctx.bufnr) end, result)
             for _, hint in ipairs(result) do
                 if type(hint.label) == "string" then
                     hint.label = truncate(hint.label)
