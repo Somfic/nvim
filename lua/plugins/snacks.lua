@@ -51,6 +51,7 @@ return {
         { "<leader>fr", pick("recent"),            desc = "Recent files" },
         { "<leader>f.", pick("resume"),            desc = "Resume last picker" },
         { "<leader>fk", pick("keymaps"),           desc = "Find keymaps" },
+        { "gg",         function() Snacks.lazygit() end, desc = "LazyGit" },
         { "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
         { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification history" },
     },
@@ -106,6 +107,7 @@ return {
         lazygit = { enabled = true },
         terminal = { enabled = true },
         styles = {
+            lazygit = { width = 0, height = 0 }, -- fullscreen (0 = full size)
             notification = { border = "rounded" },
             input = { border = "rounded" },
         },

@@ -26,9 +26,48 @@ maps("n", {
   { "q?", "<nop>", "Disable backward search history window" },
 })
 
--- q: quits the current window (typo-friendly); qq is left free for recording macros
+-- q: quits the current window (typo-friendly)
 maps("n", {
   { "q:", "<cmd>q<cr>", "Quit window (typo-friendly)" },
+})
+
+-- qq closes every non-file window in this tab (references/Trouble, quickfix, help,
+-- file tree, terminals, ...) and keeps the file splits. Macros: record into another
+-- register (qw, qe, ...) since qq is taken.
+map("n", "qq", function()
+  local wins = vim.api.nvim_tabpage_list_wins(0)
+  local files = 0
+  for _, win in ipairs(wins) do
+    if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then files = files + 1 end
+  end
+  for _, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    -- never close the last window
+    if vim.bo[buf].buftype ~= "" and (files > 0 or #vim.api.nvim_tabpage_list_wins(0) > 1) then
+      pcall(vim.api.nvim_win_close, win, false)
+    end
+  end
+end, "Close non-file windows")
+
+-- top/bottom of file ([[ ]] instead of gg/G, which frees gg up for lazygit)
+maps({ "n", "x", "o" }, {
+  { "[[", "gg", "Top of file" },
+  { "]]", "G",  "Bottom of file" },
+})
+
+-- several runtime ftplugins (sql, markdown, rust, go, python, ...) map their own
+-- buffer-local [[ ]] section jumps, which would shadow the ones above
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("TopBottomKeys", { clear = true }),
+  callback = function(ev)
+    vim.schedule(function()
+      if not vim.api.nvim_buf_is_valid(ev.buf) then return end
+      for _, mode in ipairs({ "n", "x", "o" }) do
+        pcall(vim.keymap.del, mode, "[[", { buffer = ev.buf })
+        pcall(vim.keymap.del, mode, "]]", { buffer = ev.buf })
+      end
+    end)
+  end,
 })
 
 -- jump list
