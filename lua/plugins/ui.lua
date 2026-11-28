@@ -68,6 +68,18 @@ return {
     { "sainnhe/gruvbox-material", lazy = true },
     { "sainnhe/everforest", lazy = true },
     { "navarasu/onedark.nvim", lazy = true },
+    { "AlexvZyl/nordic.nvim", lazy = true },
+    { "scottmckendry/cyberdream.nvim", lazy = true },
+    { "nyoom-engineering/oxocarbon.nvim", lazy = true },
+    { "craftzdog/solarized-osaka.nvim", lazy = true },
+    { "projekt0n/github-nvim-theme", name = "github-theme", lazy = true }, -- github_dark, github_dark_dimmed, ...
+    { "Shatur/neovim-ayu", lazy = true },                 -- ayu-dark/mirage/light
+    { "ribru17/bamboo.nvim", lazy = true },
+    { "savq/melange-nvim", lazy = true },
+    { "Mofiqul/dracula.nvim", lazy = true },
+    { "dgox16/oldworld.nvim", lazy = true },
+    { "olivercederborg/poimandres.nvim", lazy = true },
+    { "Mofiqul/vscode.nvim", lazy = true },
 
     -- Icons
     { "nvim-tree/nvim-web-devicons", lazy = true },
