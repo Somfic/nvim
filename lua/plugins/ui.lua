@@ -145,10 +145,37 @@ return {
                 end
             end
 
+            local function color(group, attr)
+                local v = vim.api.nvim_get_hl(0, { name = group, link = false })[attr]
+                return v and ("#%06x"):format(v) or nil
+            end
+
+            -- Color of the current mode: lualine's mode block when it's loaded,
+            -- else a theme color per mode.
+            local fallback = {
+                i = "String", v = "Statement", V = "Statement", ["\22"] = "Statement",
+                s = "Statement", S = "Statement", R = "Error", c = "Constant", t = "String",
+            }
+            local function mode_color()
+                local ok, lualine_hl = pcall(require, "lualine.highlight")
+                local bg = ok and (color("lualine_a" .. lualine_hl.get_mode_suffix(), "bg")
+                    or color("lualine_a_normal", "bg"))
+                return bg or color(fallback[vim.fn.mode():sub(1, 1)] or "Function", "fg")
+            end
+
             require("bufferline").setup({
                 options = {
                     mode = "buffers",
-                    separator_style = "thick",
+                    -- No separator blocks: tabs are plain text on the editor's
+                    -- background, the current one marked by a bar in the mode's color.
+                    separator_style = { "", "" },
+                    indicator = { icon = "▎", style = "icon" },
+                    modified_icon = "", -- buffers are auto-saved
+                    tab_size = 14,
+                    diagnostics_indicator = function(_, level)
+                        local icons = { error = " ", warning = " " }
+                        return icons[level] or ""
+                    end,
                     always_show_bufferline = true,
                     show_buffer_close_icons = false,
                     show_close_icon = false,
@@ -157,9 +184,11 @@ return {
                     icon_pinned = "",
                     show_duplicate_prefix = false,
                     sort_by = _G.bufferline_harpoon_sort,
-                    numbers = function(opts)
-                        local i = harpoon_index_for(vim.api.nvim_buf_get_name(opts.id))
-                        return i and (" " .. i) or ""
+                    -- Harpoon slot goes in the name, not `numbers`: bufferline pads
+                    -- after the number even when it's empty, pushing unpinned tabs right.
+                    name_formatter = function(buf)
+                        local i = harpoon_index_for(buf.path)
+                        return i and (i .. " " .. buf.name) or buf.name
                     end,
                     offsets = {
                         {
@@ -170,14 +199,45 @@ return {
                         },
                     },
                 },
-                highlights = {
-                    buffer_selected = {
-                        italic = false,
-                    },
-                    fill = {
-                        bg = "none",
-                    },
-                },
+                -- Re-run on every :colorscheme (so it follows the theme and the
+                -- transparency toggle, which lua/theme.lua applies first) and on
+                -- every mode change (see below).
+                highlights = function(defaults)
+                    local base = color("Normal", "bg") or "NONE"
+                    local selected = color("CursorLine", "bg") or base
+                    local dim = color("Comment", "fg")
+                    local bright = color("Normal", "fg")
+
+                    local hl = {}
+                    for name in pairs(defaults.highlights) do
+                        hl[name] = { bg = name:match("_selected$") and selected or base }
+                    end
+                    hl.fill = { bg = base }
+                    hl.background = { fg = dim, bg = base }
+                    hl.buffer_visible = { fg = dim, bg = base }
+                    hl.buffer_selected = { fg = bright, bg = selected, bold = true, italic = false }
+                    hl.indicator_selected = { fg = mode_color(), bg = selected }
+                    hl.indicator_visible = { fg = base, bg = base }
+                    hl.separator = { fg = base, bg = base }
+                    hl.separator_visible = { fg = base, bg = base }
+                    hl.separator_selected = { fg = base, bg = selected }
+                    hl.offset_separator = { fg = dim, bg = base }
+                    return hl
+                end,
+            })
+
+            -- Recolor the current tab's bar on mode change. Set directly: bufferline
+            -- sets its groups as `default`, which won't overwrite an existing one.
+            vim.api.nvim_create_autocmd("ModeChanged", {
+                group = vim.api.nvim_create_augroup("BufferlineModeColor", { clear = true }),
+                callback = function()
+                    local hl = vim.api.nvim_get_hl(0, { name = "BufferLineIndicatorSelected" })
+                    local fg = mode_color()
+                    if not fg or hl.fg == tonumber(fg:sub(2), 16) then return end
+                    hl.fg = fg
+                    hl.default = nil
+                    vim.api.nvim_set_hl(0, "BufferLineIndicatorSelected", hl)
+                end,
             })
         end,
     },
